@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lucaspellier <lucaspellier@student.42.f    +#+  +:+       +#+         #
+#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2020/03/26 21:44:20 by lucaspellie      ###   ########.fr        #
+#    Updated: 2021/02/24 12:30:08 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ $(NAME) : $(OBJS)
 	@make -C libft
 	@cp libft/libft.a ./$(NAME)
 	@ar rc $(NAME) $(OBJS)
+	@gcc $(FLAGS) $(NAME) -o minishell 
 
 clean :
 	@rm -rf $(OBJS)
