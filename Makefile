@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/02/24 12:30:08 by lpellier         ###   ########.fr        #
+#    Updated: 2021/02/25 10:50:25 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,12 @@ LIBFT = libft/libft.a
 
 FLAGS = -Wall -Werror -Wextra
 
-SRCS = main.c
+SRCS = parsing.c \
+		built_in.c \
+		built_in2.c \
+		free.c \
+		init.c \
+		main.c 
 
 OBJS = $(SRCS:.c=.o)
 
