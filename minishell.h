@@ -41,7 +41,6 @@ typedef struct s_cmd
 typedef struct s_info
 {
     char cur_path[PATH_MAX];
-	int crashed;
 	t_cmd	*head;
 }               t_info;
 
@@ -87,7 +86,7 @@ t_cmd	*ft_list_last(t_cmd *list);
 void	ft_list_push_back(t_cmd **begin_list, char *cmd, char *input, int bui, char *option);
 // t_cmd	*ft_list_push_strs(int size, char **strs);
 void	free_cmd(t_cmd *list);
-void	ft_list_clear(t_cmd *begin_list, void (*free_cmd)(t_cmd *cmd));
+void	ft_list_clear(t_cmd *begin_list);
 t_cmd	*ft_list_at(t_cmd *begin_list, unsigned int nbr);
 void	ft_list_reverse(t_cmd **begin_list);
 

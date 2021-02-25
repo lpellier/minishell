@@ -22,7 +22,7 @@ int ft_cd (t_cmd *cmd)
 // actually sets bui according to command string
 void    compare_cmd(t_cmd *cmd)
 {
-    if (!(ft_strncmp(cmd->cmd, "echo-n", 6)))
+    if (!(ft_strncmp(cmd->cmd, "echo -n", 6)))
         cmd->bui = ECHO_N;
     else if (!(ft_strncmp(cmd->cmd, "echo", 4)))
         cmd->bui = ECHO;

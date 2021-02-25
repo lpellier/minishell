@@ -27,7 +27,7 @@ int ft_pwd (t_cmd *cmd)
     char cwd[1024];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL)
-        printf("%s\n", cwd);
+        ft_printf("%s\n", cwd);
     return (0);
 }
 

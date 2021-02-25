@@ -88,8 +88,6 @@ int get_cmd(char *line, t_cmd *cmd)
 	free_tab(words);
 	return (ft_strlen(cmd->cmd));
 }
-
-#include <string.h>
 // recursive function that allows creating as many linked lists as there are commands 
 // is there another cmd determined by whether there is a pipe | or a semi-colon ;
 void read_cmd(char *line, t_cmd *cmd)
@@ -98,20 +96,26 @@ void read_cmd(char *line, t_cmd *cmd)
 
 	index = get_cmd(line, cmd);
 	if (*line)
-		line = ft_strnstr(line, cmd->cmd, ft_strlen(line));
+		line = ft_strnstr(line, cmd->cmd, ft_strlen(line)) + index;
 	if (*line)
 	{	
-		index = get_input(line, cmd);
-		line = ft_strnstr(line, cmd->input, ft_strlen(line)) + index;
+		if (*(line + 1))
+		{
+			index = get_input(line, cmd);
+			line = ft_strnstr(line, cmd->input, ft_strlen(line)) + index;
+		}
 	}
 	compare_cmd(cmd);
-	if (cmd->bui == 9)
+	// ft_printf("---\n%s | %s | %d\n", cmd->cmd, cmd->input, cmd->bui);
+	if (cmd->bui == 9 || cmd->bui == 8)
 		ft_printf("Invalid command bitch\n");
 	else
 		(*built_in[cmd->bui]) (cmd);
+	ft_printf("---\n");
 	if (pipe_or_colon(*line) == 1)
 	{
-		ft_list_push_back(&cmd, NULL, NULL, 0, 0);
+		ft_list_push_back(&cmd, NULL, NULL, 9, NULL);
+		line++;
 		read_cmd(line, cmd->next);
 	}
 }
@@ -122,13 +126,8 @@ void read_line(t_info *info)
 	char *line;
 	char **separated;
 
-	get_next_line(0, &line); 
-	// separated = ft_split(line, ' ');
+	get_next_line(0, &line);
 	read_cmd(line, info->head);
-	// if (separated[0] && separated[1] && !(ft_strncmp(separated[1], "-n", 2)))
-	// 	separated[0] = ft_strjoin(separated[0], separated[1]);
-	// reads cmd and assigns bui right number if cmd exists
-	// compare_cmd(separated[0], &bui);
 }
 
 // This function will be used to check for executables in directories addressed in $PATH
