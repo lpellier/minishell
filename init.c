@@ -1,11 +1,10 @@
 #include "minishell.h"
 
-void    reset_info(t_info *info)
+// is used to reset all of the info after enter is pressed
+int    reset_info(t_info *info)
 {
-    if (info->input)
-        free(info->input);
-    info->input = ft_strdup("");
-    info->option = 0;
+	ft_list_clear(info->head, (*free_cmd));
+	return (1);
 }
 
 void init_built_in()

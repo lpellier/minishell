@@ -6,10 +6,8 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/02/25 10:50:25 by lpellier         ###   ########.fr        #
+#    Updated: 2021/02/25 11:57:09 by lpellier         ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
-
 # **************************************************************************** #
 
 NAME = minishell.a
@@ -23,6 +21,7 @@ SRCS = parsing.c \
 		built_in2.c \
 		free.c \
 		init.c \
+		linked_lists.c \
 		main.c 
 
 OBJS = $(SRCS:.c=.o)
