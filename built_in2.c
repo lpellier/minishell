@@ -23,6 +23,12 @@ int ft_cd (t_cmd *cmd)
     return (0);
 }
 
+//int ft_inpath (t_cmd *cmd)
+//{
+//    (void) cmd;
+//    // chdir(ft_strjoin(info->cur_path, info->head->input));
+//    return (0);
+//}
 // actually sets bui according to command string
 void    compare_cmd(t_cmd *cmd)
 {
