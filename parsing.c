@@ -15,18 +15,16 @@ int get_input(char *line, t_cmd *cmd)
 	int index;
 
 	index = 1;
-	ft_printf("line = %s$\n", line);
 	while (line[index] && !pipe_or_colon(line[index]))
 		index++;
 	if (!(cmd->input = malloc(sizeof(char) * index)))
 		return (-1);
 	index = 1;
-	while (line[index] && pipe_or_colon(line[index]) == 0)
+	while (line[index] && !pipe_or_colon(line[index]))
 	{
 		cmd->input[index -1] = line[index];
 		index++;
 	}
-	ft_printf("input = %s$\n", line);
 	return (ft_strlen(cmd->input));
 }
 
@@ -78,17 +76,15 @@ int get_cmd(char *line, t_cmd *cmd)
 	{
 		cmd->option = ft_strdup(words[1]);
 		if (!ft_strncmp(words[0], "echo", 4) && option_only_n(cmd->option))
-			cmd->cmd = ft_strjoin(ft_strjoin(words[0], spaces), cmd->option);
-		else
 			cmd->cmd = ft_strdup(words[0]);
 	}
 	else if (words[0])
-	{
 		cmd->cmd = ft_strdup(words[0]);
-	}
 	free_tab(words);
 	return (ft_strlen(cmd->cmd));
 }
+
+#include <string.h>
 // recursive function that allows creating as many linked lists as there are commands 
 // is there another cmd determined by whether there is a pipe | or a semi-colon ;
 void read_cmd(char *line, t_cmd *cmd)
@@ -96,18 +92,18 @@ void read_cmd(char *line, t_cmd *cmd)
 	int index;
 
 	index = get_cmd(line, cmd);
-	if (*line)
-		line = ft_strnstr(line, cmd->cmd, ft_strlen(line)) + index;
-	if (*line)
+	if (line && *line)
+		line = strnstr(line, cmd->cmd, ft_strlen(line)) + index;
+	if (line && *line)
 	{	
 		if (*(line + 1))
 		{
 			index = get_input(line, cmd);
-			line = ft_strnstr(line, cmd->input, ft_strlen(line)) + index;
+			line = strnstr(line, cmd->input, ft_strlen(line)) + index;
 		}
 	}
 	compare_cmd(cmd);
-	// ft_printf("---\n%s | %s | %d\n", cmd->cmd, cmd->input, cmd->bui);
+	ft_printf("---\n%s | %s | %s | %d\n", cmd->cmd, cmd->option, cmd->input, cmd->bui);
 	if (cmd->bui == 9 || cmd->bui == 8)
 		ft_printf("Invalid command bitch\n");
 	else

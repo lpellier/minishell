@@ -80,33 +80,7 @@ void	ft_list_push_back(t_cmd **begin_list, char *cmd, char *input, int bui, char
 	list->next = ft_create_elem(cmd, input, bui, option);
 }
 
-void	free_cmd(t_cmd *list)
-{
-	if (list->cmd)
-		free(list->cmd);
-	list->cmd = NULL;
-	if (list->input)
-		free(list->input);
-	list->input = NULL;
-	list->bui = 0;
-	if (list->option)
-		list->option = NULL;
-	list->option = NULL;
-}
 
-void	ft_list_clear(t_cmd *begin_list)
-{
-	t_cmd	*ptr;
-
-	while (begin_list)
-	{
-		ptr = begin_list->next;
-		free_cmd(begin_list);
-		free(begin_list);
-		begin_list = ptr;
-	}
-	begin_list = 0;
-}
 
 t_cmd	*ft_list_at(t_cmd *begin_list, unsigned int nbr)
 {

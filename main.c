@@ -17,7 +17,7 @@ void    shell_loop()
         // reads cmd and stocks it into cmd var
         read_line(&info);
         // ft_printf("---\n%s | %s | %d\n", info.head->cmd, info.head->input, info.head->bui);
-        reset_info(&info);
+        ft_list_clear(info.head);
     }
 }
 
