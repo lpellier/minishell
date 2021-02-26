@@ -66,7 +66,7 @@ OBJS		=	$(SRCS:.c=.o)
 
 CC			=	clang
 
-CFLAGS		=	-Wall -Wextra -Werror -Weverything
+CFLAGS		=	-Wall -Wextra -Werror
 
 RM			=	rm -f
 

@@ -125,7 +125,6 @@ void read_cmd(char *line, t_cmd *cmd)
 void read_line(t_info *info)
 {
 	char *line;
-	char **separated;
 
 	get_next_line(0, &line);
 	read_cmd(line, info->head);

@@ -6,15 +6,17 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/02/26 10:53:36 by lpellier         ###   ########.fr        #
+#    Updated: 2021/02/26 11:04:37 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell.a
+NAME = minishell
 
 LIBFT = libft/libft.a
 
-FLAGS = -Wall -Werror -Wextra -Weverything
+CFLAGS = -Wall -Werror -Wextra -pedantic
+
+CC = clang
 
 SRCS = parsing.c \
 		built_in.c \
@@ -29,17 +31,17 @@ OBJS = $(SRCS:.c=.o)
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	@make -C libft
-	@cp libft/libft.a ./$(NAME)
-	@clang $(FLAGS) $(SRCS) -o minishell 
+	make -C libft
+	cp libft/libft.a ./$(NAME)
+	$(CC) $(CFLAGS) $(SRCS) -o minishell $(LIBFT)
 
 clean :
-	@rm -rf $(OBJS)
-	@make clean -C libft
+	rm -rf $(OBJS)
+	make clean -C libft
 
 fclean : clean
-	@rm -rf $(NAME)
-	@rm -rf minishell
-	@make fclean -C libft
+	rm -rf $(NAME)
+	rm -rf minishell
+	make fclean -C libft
 
 re : fclean all

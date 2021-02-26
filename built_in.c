@@ -17,6 +17,7 @@ int ft_echo_n (t_cmd *cmd)
 // exits terminal
 int ft_exit (t_cmd *cmd)
 {
+    (void) cmd;
     exit (0);
 }
 
@@ -34,5 +35,6 @@ int ft_pwd (t_cmd *cmd)
 // exports a variable to environnment
 int ft_export (t_cmd *cmd)
 {
+    (void) cmd;
     return (0);
 }

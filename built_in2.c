@@ -3,18 +3,21 @@
 // destroys a environment variable from memory
 int ft_unset (t_cmd *cmd)
 {
+    (void) cmd;
     return (0);
 }
 
 // outputs all environment variables
 int ft_env (t_cmd *cmd)
 {
+    (void) cmd;
     return (0);
 }
 
 // change directory, will need a find function in linked list to check for right bui and right input
 int ft_cd (t_cmd *cmd)
 {
+    (void) cmd;
     // chdir(ft_strjoin(info->cur_path, info->head->input));
     return (0);
 }
