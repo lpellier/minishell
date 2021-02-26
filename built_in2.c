@@ -11,6 +11,7 @@ int ft_unset (t_cmd *cmd)
 int ft_env (t_cmd *cmd)
 {
     (void) cmd;
+
     return (0);
 }
 

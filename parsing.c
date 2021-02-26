@@ -28,31 +28,6 @@ int get_input(char *line, t_cmd *cmd)
 	return (ft_strlen(cmd->input));
 }
 
-char	*how_many_spaces(char *line)
-{
-	int i;
-	char *spaces;
-
-	i = 0;
-	while (*line && *line == ' ')
-		line++;
-	while (*line && *line != ' ')
-		line++;
-	while (*line && *line == ' ')
-	{
-		line++;
-		i++;
-	}
-	if (!(spaces = malloc(sizeof(char) * i + 1)))
-		return (NULL);
-	while (i)
-	{
-		*spaces = ' ';
-		i--;
-	}
-	return (spaces);
-}
-
 int option_only_n(char *option)
 {
 	option += 1;
@@ -67,11 +42,9 @@ int option_only_n(char *option)
 
 int get_cmd(char *line, t_cmd *cmd)
 {
-	char *spaces;
 	char **words;
 
 	words = ft_split(line, ' ');
-	spaces = how_many_spaces(line);
 	if (words[0] && words[1] && words[1][0] == '-')
 	{
 		cmd->option = ft_strdup(words[1]);
@@ -87,21 +60,10 @@ int get_cmd(char *line, t_cmd *cmd)
 #include <string.h>
 // recursive function that allows creating as many linked lists as there are commands 
 // is there another cmd determined by whether there is a pipe | or a semi-colon ;
-void read_cmd(char *line, t_cmd *cmd)
+void read_cmd(char *line, t_cmd *cmd, int index)
 {
-	int index;
-
-	index = get_cmd(line, cmd);
-	if (line && *line)
-		line = strnstr(line, cmd->cmd, ft_strlen(line)) + index;
-	if (line && *line)
-	{	
-		if (*(line + 1))
-		{
-			index = get_input(line, cmd);
-			line = strnstr(line, cmd->input, ft_strlen(line)) + index;
-		}
-	}
+	index += get_cmd(&line[index], cmd);
+	index += get_input(&line[index], cmd);
 	compare_cmd(cmd);
 	ft_printf("---\n%s | %s | %s | %d\n", cmd->cmd, cmd->option, cmd->input, cmd->bui);
 	if (cmd->bui == 9 || cmd->bui == 8)
@@ -111,10 +73,9 @@ void read_cmd(char *line, t_cmd *cmd)
 	ft_printf("---\n");
 	if (pipe_or_colon(*line) == 1)
 	{
-		ft_list_push_back(&cmd, NULL, NULL, 9, NULL);
-		line++;
-		read_cmd(line, cmd->next);
-	}
+        ft_list_push_back(&cmd, NULL, NULL, 9, NULL);
+        read_cmd(line, cmd->next, index + 1);
+    }
 }
 
 // reads line using gnl and feeds t_cmd linked lists
@@ -123,26 +84,29 @@ void read_line(t_info *info)
 	char *line;
 
 	get_next_line(0, &line);
-	read_cmd(line, info->head);
+	read_cmd(line, info->head, 0);
+	if (line)
+	    free(line);
+	line = NULL;
 }
 
 // This function will be used to check for executables in directories addressed in $PATH
-int    directories()
-{
-    DIR *d;
-    struct dirent *dir;
-    d = opendir(".");
-    if (d)
-    {
-        while ((dir = readdir(d)) != NULL)
-        {
-            printf("%s\n", dir->d_name);
-        }
-        closedir(d);
-    }
-
-    return(0);
-}
+//int    directories()
+//{
+//    DIR *d;
+//    struct dirent *dir;
+//    d = opendir(".");
+//    if (d)
+//    {
+//        while ((dir = readdir(d)) != NULL)
+//        {
+//            printf("%s\n", dir->d_name);
+//        }
+//        closedir(d);
+//    }
+//
+//    return(0);
+//}
 
 char *get_cur_dir(t_info *info)
 {
