@@ -15,6 +15,7 @@ int get_input(char *line, t_cmd *cmd)
 	int index;
 
 	index = 1;
+	ft_printf("line = %s$\n", line);
 	while (line[index] && !pipe_or_colon(line[index]))
 		index++;
 	if (!(cmd->input = malloc(sizeof(char) * index)))
@@ -25,8 +26,8 @@ int get_input(char *line, t_cmd *cmd)
 		cmd->input[index -1] = line[index];
 		index++;
 	}
+	ft_printf("input = %s$\n", line);
 	return (ft_strlen(cmd->input));
-	return (0);
 }
 
 char	*how_many_spaces(char *line)

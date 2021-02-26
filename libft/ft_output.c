@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_output.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaspellier <lucaspellier@student.42.f    +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 11:52:38 by lpellier          #+#    #+#             */
-/*   Updated: 2020/03/25 19:53:31 by lucaspellie      ###   ########.fr       */
+/*   Updated: 2021/02/26 10:50:08 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	output_char(t_printf *info, va_list ap)
 		res = '%';
 	else if (info->perc == 0)
 		res = va_arg(ap, int);
+	else
+		res = 0;
 	info->outputlen += 1;
 	info->len = 1;
 	if (info->padding == 2)

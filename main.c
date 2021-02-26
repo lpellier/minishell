@@ -16,7 +16,7 @@ void    shell_loop()
         info.head = ft_create_elem(NULL, NULL, 9, NULL);
         // reads cmd and stocks it into cmd var
         read_line(&info);
-        ft_printf("---\n%s | %s | %d\n", info.head->cmd, info.head->input, info.head->bui);
+        // ft_printf("---\n%s | %s | %d\n", info.head->cmd, info.head->input, info.head->bui);
         reset_info(&info);
     }
 }

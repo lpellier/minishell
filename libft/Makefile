@@ -64,9 +64,9 @@ SRCS	=		./ft_atoi.c \
 
 OBJS		=	$(SRCS:.c=.o)
 
-CC			=	gcc
+CC			=	clang
 
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -Weverything
 
 RM			=	rm -f
 

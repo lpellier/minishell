@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/02/25 11:57:09 by lpellier         ###   ########.fr        #
+#    Updated: 2021/02/26 10:53:36 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell.a
 
 LIBFT = libft/libft.a
 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -Weverything
 
 SRCS = parsing.c \
 		built_in.c \
@@ -31,8 +31,7 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	@make -C libft
 	@cp libft/libft.a ./$(NAME)
-	@ar rc $(NAME) $(OBJS)
-	@gcc $(FLAGS) $(NAME) -o minishell 
+	@clang $(FLAGS) $(SRCS) -o minishell 
 
 clean :
 	@rm -rf $(OBJS)
