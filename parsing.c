@@ -17,7 +17,7 @@ int get_input(char *line, t_cmd *cmd)
 	index = 0;
 	while (line[index] && !pipe_or_colon(line[index]))
 		index++;
-	if (!(cmd->input = malloc(sizeof(char) * index)))
+	if (!(cmd->input = malloc(sizeof(char) * index + 1)))
 		return (-1);
 	index = 0;
 	while (line[index] && !pipe_or_colon(line[index]))
@@ -25,6 +25,7 @@ int get_input(char *line, t_cmd *cmd)
 		cmd->input[index] = line[index];
 		index++;
 	}
+	cmd->input[index] = '\0';
 	return (ft_strlen(cmd->input));
 }
 
@@ -90,10 +91,8 @@ void read_cmd(char *line, t_cmd *cmd, int index)
 	ft_printf("---\n");
 	if (pipe_or_colon(line[index]) == 1)
 	{
-        while (is_whitespace(line[index]))
-            index++;
         ft_list_push_back(&cmd, NULL, NULL, 9, NULL);
-        read_cmd(&line[index], cmd->next, index);
+        read_cmd(line, cmd->next, index + 1);
     }
 }
 
