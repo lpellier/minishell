@@ -16,6 +16,8 @@
 #define CYAN    "\x1b[36m"
 #define RESET   "\x1b[0m"
 
+#define SEPARATOR "|'<;>\""
+
 enum built_in_index {
     ECHO,
     ECHO_N,

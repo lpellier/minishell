@@ -17,7 +17,7 @@ int ft_echo_n (t_cmd *cmd)
 // exits terminal
 int ft_exit (t_cmd *cmd)
 {
-    (void) cmd;
+    ft_printf("%s\n", cmd->cmd);
     exit (0);
 }
 
