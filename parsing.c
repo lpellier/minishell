@@ -81,14 +81,14 @@ void read_cmd(char *line, t_cmd *cmd, int index)
         index++;
     //printf("%s\n", line + index);
 	compare_cmd(cmd);
-	ft_printf("---\n%s | %s | %s | %d\n", cmd->cmd, cmd->option, cmd->input, cmd->bui);
+	//ft_printf("---\n%s | %s | %s | %d\n", cmd->cmd, cmd->option, cmd->input, cmd->bui);
 	if (cmd->bui == 9 || cmd->bui == 8)
 		ft_printf("Invalid command bitch\n");
 	else
 		(*built_in[cmd->bui]) (cmd);
     while (is_whitespace(line[index]))
         index++;
-	ft_printf("---\n");
+	//ft_printf("---\n");
 	if (pipe_or_colon(line[index]) == 1)
 	{
         ft_list_push_back(&cmd, NULL, NULL, 9, NULL);
