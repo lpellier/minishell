@@ -18,7 +18,15 @@ int ft_env (t_cmd *cmd)
 // change directory, will need a find function in linked list to check for right bui and right input
 int ft_cd (t_cmd *cmd)
 {
-    (void) cmd;
+    char cwd[PATH_MAX];
+
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    {
+        if (chdir(ft_strjoin(cwd, cmd->input)))
+            ft_printf("Couldn't access folder, check directory listing\n%s\n", ft_strjoin(ft_strjoin(cwd, "/"), cmd->input));
+    }
+    else
+        ft_printf("Error\n");
     // chdir(ft_strjoin(info->cur_path, info->head->input));
     return (0);
 }
@@ -48,6 +56,6 @@ void    compare_cmd(t_cmd *cmd)
         cmd->bui = ENV;
     else if (!(ft_strncmp(cmd->cmd, "cd", 2)))
         cmd->bui = CD;
-    else
+    else // here we'll need to check for $PATH and exec binaries if when find them
         cmd->bui = NONEXISTENT;
 }

@@ -39,9 +39,9 @@ typedef struct s_cmd
 {
 	char *cmd;
 	char *input;
-	char *output;
+	char *output; // this will eventually be useful for stocking what a command should output so that we feed it to another cmd
 	int bui;
-    char *option; // option tells program if an option is being used or not : 0 / 1
+    char *option;
 }               t_cmd;
 
 typedef struct s_info

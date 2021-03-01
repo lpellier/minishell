@@ -25,7 +25,7 @@ int ft_exit (t_cmd *cmd)
 int ft_pwd (t_cmd *cmd)
 {
     (void)cmd;
-    char cwd[1024];
+    char cwd[PATH_MAX];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         ft_printf("%s\n", cwd);
