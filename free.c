@@ -12,30 +12,44 @@ void    free_tab(char **tab)
     }
 }
 
-int    reset_info(t_info *info)
+/*int    reset_info(t_info *info)
 {
 	ft_list_clear(info->cmd_head, free_cmd_struct);
+    ft_list_clear(info->env_head, free_env_struct);
 	return (1);
-}
+}*/
 
 void	free_cmd_struct(void *data)
 {
-    t_cmd *test;
+    t_cmd *ptr;
 
-    test = (t_cmd *)data;
-    test->bui = 9;
-    if (test->cmd)
-        free(test->cmd);
-    test->cmd = NULL;
-    if (test->input)
-        free(test->input);
-    test->input = NULL;
-    if (test->option)
-        free(test->option);
-    test->option = NULL;
-    if (test->output)
-        free(test->output);
-    test->output = NULL;
+    ptr = (t_cmd *)data;
+    ptr->bui = 9;
+    if (ptr->cmd)
+        free(ptr->cmd);
+    ptr->cmd = NULL;
+    if (ptr->input)
+        free(ptr->input);
+    ptr->input = NULL;
+    if (ptr->option)
+        free(ptr->option);
+    ptr->option = NULL;
+    if (ptr->output)
+        free(ptr->output);
+    ptr->output = NULL;
+}
+
+void	free_env_struct(void *data)
+{
+    t_env *ptr;
+
+    ptr = (t_env *)data;
+    if (ptr->value)
+        free(ptr->value);
+    ptr->value = NULL;
+    if (ptr->key)
+        free(ptr->key);
+    ptr->key = NULL;
 }
 
 void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))

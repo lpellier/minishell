@@ -1,43 +1,23 @@
 #include "minishell.h"
 
-//char **ft_getbase_env(char *s)
-//{
-//    int i;
-//    char **res;
-//
-//    i = 0;
-//    while (s[i] && s[i] != '=')
-//        i++;
-//    if (s[i])
-//    {
-//        if (!(res = (char**)ft_calloc(sizeof(char *), 3)))
-//            return (NULL);
-//        res[0] = ft_substr(s, 0, i);
-//        res[1] = ft_strdup(&s[i +1]);
-//        res[2] = NULL;
-//        return (res);
-//    }
-//    return (NULL);
-//}
-//
-//void    ft_begin_env(char **envp, t_info info)
-//{
-//    int i;
-//    char **line;
-//
-//    i = 0;
-//    while (envp[i])
-//    {
-//        line = ft_getbase_env(envp[i]);
-//        if (line != NULL)
-//        {
-//            ft_add_env(info, line[0], line[1]);
-//            safe_free((void **)&line);
-//        }
-//        i++;
-//    }
-//}
+int     init_env(t_info *info, char **envp)
+{
+    int i;
+    char **key_value;
 
+    i = 0;
+    while (envp[i])
+    {
+        key_value = ft_split(envp[i], '=');
+        ft_list_push_back(&info->env_head, create_env_struct(key_value[0], key_value[1]));
+        free(key_value);
+        i++;
+    }
+    return (0);
+    // might wanna start adding actual error codes in functions
+}
+
+// mallocs and creates cmd struct, returns pointer on struct
 t_cmd   *create_cmd_struct()
 {
     t_cmd *cmd;
@@ -52,29 +32,47 @@ t_cmd   *create_cmd_struct()
     return (cmd);
 }
 
-_Noreturn void    shell_loop(char **envp)
+// same as above for env struct
+t_env   *create_env_struct(char *key, char *value)
+{
+    t_env *env;
+
+    if (!(env = (t_env *)malloc(sizeof(t_env))))
+        return NULL;
+    env->value = value;
+    env->key = key;
+    return (env);
+}
+
+void    shell_loop(char **envp)
 {
     t_info info; // info struct : keeps track of various information
     char *cur_dir; // current directory
 
     // simply assigns each built in function to a number, according to built in index enum
     init_built_in();
-//    ft_begin_env(envp, info);
+    info.crashed = FALSE;
+    info.env_head = ft_create_elem(create_env_struct(NULL, NULL));
+    init_env(&info, envp);
     ft_printf(RED     "Welcome to Minisheh\n"     RESET);
-    while (1)
+    // need to remove infinite loop by adding crashed int to info struct
+    // so that i can free env linked list
+    while (!info.crashed)
     {
         // gets current directory as string by splitting current path with '/'
         if (!(cur_dir = get_cur_dir(&info)))
             cur_dir = ft_strdup("/");
         ft_printf(BLUE "~ %s > " RESET, cur_dir);
         info.cmd_head = ft_create_elem(create_cmd_struct());
+
         // reads cmd and stocks it into cmd var
-        read_line(&info, envp);
+        read_line(&info);
         // ft_printf("---\n%s | %s | %d\n", info.head->cmd, info.head->input, info.head->bui);
         ft_list_clear(info.cmd_head, free_cmd_struct);
         ft_bzero(info.cur_path, 4096);
         free(cur_dir);
     }
+    ft_list_clear(info.env_head, free_env_struct);
 }
 
 int main(int argc, char **argv, char **envp)

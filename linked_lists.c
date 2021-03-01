@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-void		free_list(void **element)
-{
-    if (element && *element)
-    {
-        free(*element);
-        *element = NULL;
-    }
-}
-
 t_list	*ft_create_elem(void *data)
 {
     t_list *res;
@@ -30,43 +21,6 @@ t_list	*ft_create_elem(void *data)
     res->data = data;
     res->next = NULL;
     return (res);
-}
-
-void	ft_list_push_front(t_list **list, void *data)
-{
-    t_list *elem;
-
-    elem = ft_create_elem(data);
-    if (*list)
-        elem->next = *list;
-    *list = elem;
-}
-
-int		ft_list_size(t_list *list)
-{
-    t_list	*current;
-    int		i;
-
-    i = 0;
-    current = list;
-    while (current)
-    {
-        i++;
-        current = current->next;
-    }
-    return (i);
-}
-
-t_list	*ft_list_last(t_list *list)
-{
-    t_list *current;
-
-    current = list;
-    while (current->next)
-    {
-        current = current->next;
-    }
-    return (current);
 }
 
 void	ft_list_push_back(t_list **begin_list, void *data)
@@ -94,11 +48,86 @@ t_list	*ft_list_at(t_list *begin_list, unsigned int nbr)
     while (i < nbr)
     {
         if (!list)
-            return (0);
+            return (NULL);
         list = list->next;
         i++;
     }
     return (list);
 }
 
-// NEEDS A FIND FUNCTION (MAYBE)
+void    print_env_struct(void *data)
+{
+    t_env *ptr;
+
+    ptr = (t_env *)data;
+    ft_printf("%s=%s\n", ptr->key, ptr->value);
+}
+
+void	ft_list_foreach(t_list *begin_list, void (*f)(void *))
+{
+    t_list *el;
+
+    if (!begin_list)
+        return ;
+    el = begin_list;
+    while (el)
+    {
+        f(el->data);
+        el = el->next;
+    }
+}
+
+int     cmp_env(void *data, void *data_ref)
+{
+    t_env *env;
+    t_env *env_ref;
+
+    env = (t_env *)data;
+    env_ref = (t_env *)data_ref;
+
+    if (!(ft_strncmp(env->key, env_ref->key, ft_strlen(env_ref->key))))
+        return (0);
+    else
+        return (1);
+}
+
+/*t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
+{
+    t_list *el;
+
+    el = begin_list;
+    while (el)
+    {
+        if (cmp(el->data, data_ref) == 0)
+            return (el);
+        el = el->next;
+    }
+    return (NULL);
+}*/
+
+void	ft_list_remove_if(t_list **begin_list, void *data_ref,
+                          int (*cmp)(), void (*free_fct)(void *))
+{
+    t_list	*tmp;
+    t_list	*el;
+
+    while (*begin_list && cmp((*begin_list)->data, data_ref) == 0)
+    {
+        tmp = *begin_list;
+        *begin_list = (*begin_list)->next;
+        free_fct(tmp->data);
+        free(tmp);
+    }
+    el = *begin_list;
+    while (el && el->next)
+    {
+        if (cmp(el->next->data, data_ref) == 0)
+        {
+            tmp = el->next;
+            el->next = tmp->next;
+            free_fct(tmp->data);
+            free(tmp);
+        }
+        el = el->next;
+    }
+}

@@ -67,10 +67,9 @@ int is_whitespace(char c)
     return (0);
 }
 
-#include <string.h>
 // recursive function that allows creating as many linked lists as there are commands 
 // is there another cmd determined by whether there is a pipe | or a semi-colon ;
-void read_cmd(char *line, t_info *info, int index, int index_cmd, char **envp)
+void read_cmd(char *line, t_info *info, int index, int index_cmd)
 {
     t_cmd *cmd;
 
@@ -95,24 +94,24 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd, char **envp)
 	if (cmd->bui == 9 || cmd->bui == 8)
 		ft_printf("Invalid command bitch\n");
 	else
-		(*built_in[cmd->bui]) (cmd, envp);
+		(*built_in[cmd->bui]) (info, index_cmd);
     while (is_whitespace(line[index]))
         index++;
 	ft_printf("---\n");
 	if (pipe_or_colon(line[index]) == 1)
 	{
         ft_list_push_back(&info->cmd_head, create_cmd_struct());
-        read_cmd(line, info, index + 1, index_cmd + 1, envp);
+        read_cmd(line, info, index + 1, index_cmd + 1);
     }
 }
 
 // reads line using gnl and feeds t_cmd linked lists
-void read_line(t_info *info, char **envp)
+void read_line(t_info *info)
 {
 	char *line;
 
 	get_next_line(0, &line);
-	read_cmd(line, info, 0, 0, envp);
+	read_cmd(line, info, 0, 0);
 	if (line)
 	    free(line);
 	line = NULL;
