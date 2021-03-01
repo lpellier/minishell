@@ -39,16 +39,7 @@ SET(LIBFT_SRC
 ./libft/ft_split.c  
 ./libft/ft_strmapi.c  
 ./libft/ft_strtrim.c  
-./libft/ft_itoa.c  
-./libft/ft_lstnew.c  
-./libft/ft_lstsize.c  
-./libft/ft_lstadd_front.c  
-./libft/ft_lstlast.c  
-./libft/ft_lstadd_back.c  
-./libft/ft_lstdelone.c  
-./libft/ft_lstclear.c  
-./libft/ft_lstiter.c  
-./libft/ft_lstmap.c  
+./libft/ft_itoa.c
 ./libft/ft_intlen.c  
 ./libft/ft_putunbr_fd.c  
 ./libft/ft_uintlen.c  

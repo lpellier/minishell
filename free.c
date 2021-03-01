@@ -14,36 +14,42 @@ void    free_tab(char **tab)
 
 int    reset_info(t_info *info)
 {
-	ft_list_clear(info->head);
+	ft_list_clear(info->cmd_head, free_cmd_struct);
 	return (1);
 }
 
-void	free_cmd(t_cmd *list)
+void	free_cmd_struct(void *data)
 {
-	if (list->cmd)
-		free(list->cmd);
-	list->cmd = NULL;
-	if (list->input)
-		free(list->input);
-	list->input = NULL;
-	list->bui = 0;
-	if (list->option)
-		free(list->option);
-	list->option = NULL;
+    t_cmd *test;
+
+    test = (t_cmd *)data;
+    test->bui = 9;
+    if (test->cmd)
+        free(test->cmd);
+    test->cmd = NULL;
+    if (test->input)
+        free(test->input);
+    test->input = NULL;
+    if (test->option)
+        free(test->option);
+    test->option = NULL;
+    if (test->output)
+        free(test->output);
+    test->output = NULL;
 }
 
-void	ft_list_clear(t_cmd *begin_list)
+void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
 {
-	t_cmd	*ptr;
+    t_list	*ptr;
 
-	while (begin_list)
-	{
-		ptr = begin_list->next;
-		free_cmd(begin_list);
-		free(begin_list);
-		begin_list = ptr;
-	}
-	begin_list = 0;
+    while (begin_list)
+    {
+        ptr = begin_list->next;
+        free_fct(begin_list->data);
+        free(begin_list);
+        begin_list = ptr;
+    }
+    begin_list = NULL;
 }
 
 // void    free_everything(t_info *info, char **tab, char *cmd)

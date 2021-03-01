@@ -29,19 +29,25 @@ enum built_in_index {
     NONEXISTENT
 };
 
+typedef struct	s_list
+{
+    struct s_list	*next;
+    void			*data;
+}				t_list;
+
 typedef struct s_cmd
 {
 	char *cmd;
 	char *input;
+	char *output;
 	int bui;
     char *option; // option tells program if an option is being used or not : 0 / 1
-	struct s_cmd *next;
 }               t_cmd;
 
 typedef struct s_info
 {
     char cur_path[PATH_MAX];
-	t_cmd	*head;
+	t_list	*cmd_head;
 }               t_info;
 
 int (*built_in[8]) (t_cmd *cmd);
@@ -79,15 +85,16 @@ void    free_everything(t_info *info, char **tab, char *cmd);
 
 // linked lists
 
-t_cmd	*ft_create_elem(char *cmd, char *input, int bui, char *option);
-void	ft_list_push_front(t_cmd **list, char *cmd, char *input, int bui, char *option);
-int		ft_list_size(t_cmd *list);
-t_cmd	*ft_list_last(t_cmd *list);
-void	ft_list_push_back(t_cmd **begin_list, char *cmd, char *input, int bui, char *option);
+t_cmd   *create_cmd_struct();
+t_list	*ft_create_elem(void *data);
+void	ft_list_push_front(t_list **list, void *data);
+int		ft_list_size(t_list *list);
+t_list	*ft_list_last(t_list *list);
+void	ft_list_push_back(t_list **begin_list, void *data);
 // t_cmd	*ft_list_push_strs(int size, char **strs);
-void	free_cmd(t_cmd *list);
-void	ft_list_clear(t_cmd *begin_list);
-t_cmd	*ft_list_at(t_cmd *begin_list, unsigned int nbr);
-void	ft_list_reverse(t_cmd **begin_list);
+void	free_cmd_struct(void *data);
+void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
+t_list	*ft_list_at(t_list *begin_list, unsigned int nbr);
+/*void	ft_list_reverse(t_list **begin_list);*/
 
 #endif

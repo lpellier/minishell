@@ -12,110 +12,84 @@
 
 #include "minishell.h"
 
-t_cmd	*ft_create_elem(char *cmd, char *input, int bui, char *option)
+t_list	*ft_create_elem(void *data)
 {
-	t_cmd *res;
+    t_list *res;
 
-	res = 0;
-	if ((res = malloc(sizeof(t_cmd))))
-	{
-		res->cmd = cmd;
-		res->input = input;
-		res->bui = bui;
-		res->option = option;
-		res->next = 0;
-	}
-	return (res);
+    if (!(res = (t_list *)malloc(sizeof(t_list))))
+        return NULL;
+    res->data = data;
+    res->next = NULL;
+    return (res);
 }
 
-void	ft_list_push_front(t_cmd **list, char *cmd, char *input, int bui, char *option)
+void	ft_list_push_front(t_list **list, void *data)
 {
-	t_cmd *elem;
+    t_list *elem;
 
-	elem = ft_create_elem(cmd, input, bui, option);
-	if (*list)
-		elem->next = *list;
-	*list = elem;
+    elem = ft_create_elem(data);
+    if (*list)
+        elem->next = *list;
+    *list = elem;
 }
 
-int		ft_list_size(t_cmd *list)
+int		ft_list_size(t_list *list)
 {
-	t_cmd	*current;
-	int		i;
+    t_list	*current;
+    int		i;
 
-	i = 0;
-	current = list;
-	while (current)
-	{
-		i++;
-		current = current->next;
-	}
-	return (i);
+    i = 0;
+    current = list;
+    while (current)
+    {
+        i++;
+        current = current->next;
+    }
+    return (i);
 }
 
-t_cmd	*ft_list_last(t_cmd *list)
+t_list	*ft_list_last(t_list *list)
 {
-	t_cmd *current;
+    t_list *current;
 
-	current = list;
-	while (current->next)
-	{
-		current = current->next;
-	}
-	return (current);
+    current = list;
+    while (current->next)
+    {
+        current = current->next;
+    }
+    return (current);
 }
 
-void	ft_list_push_back(t_cmd **begin_list, char *cmd, char *input, int bui, char *option)
+void	ft_list_push_back(t_list **begin_list, void *data)
 {
-	t_cmd *list;
+    t_list *list;
 
-	if (!(*begin_list))
-	{
-		*begin_list = ft_create_elem(cmd, input, bui, option);
-		return ;
-	}
-	list = *begin_list;
-	while (list->next)
-		list = list->next;
-	list->next = ft_create_elem(cmd, input, bui, option);
+    if (!(*begin_list))
+    {
+        *begin_list = ft_create_elem(data);
+        return ;
+    }
+    list = *begin_list;
+    while (list->next)
+        list = list->next;
+    list->next = ft_create_elem(data);
 }
 
-
-
-t_cmd	*ft_list_at(t_cmd *begin_list, unsigned int nbr)
+t_list	*ft_list_at(t_list *begin_list, unsigned int nbr)
 {
-	t_cmd			*list;
-	unsigned int	i;
+    t_list			*list;
+    unsigned int	i;
 
-	i = 0;
-	list = begin_list;
-	while (i < nbr)
-	{
-		if (!list)
-			return (0);
-		list = list->next;
-		i++;
-	}
-	return (list);
-}
-
-void	ft_list_reverse(t_cmd **begin_list)
-{
-	t_cmd *prev;
-	t_cmd *next;
-	t_cmd *current;
-
-	prev = 0;
-	next = 0;
-	current = *begin_list;
-	while (current)
-	{
-		next = current->next;
-		current->next = prev;
-		prev = current;
-		current = next;
-	}
-	*begin_list = prev;
+    i = 0;
+    list = begin_list;
+    while (i < nbr)
+    {
+        if (!list)
+            return (0);
+        list = list->next;
+        i++;
+    }
+    return (list);
 }
 
 // NEEDS A FIND FUNCTION (MAYBE)
