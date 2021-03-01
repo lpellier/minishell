@@ -8,10 +8,12 @@ int ft_unset (t_cmd *cmd)
 }
 
 // outputs all environment variables
-int ft_env (t_cmd *cmd)
+int ft_env (t_cmd *cmd, char **envp)
 {
     (void) cmd;
-
+    int i = 0;
+    while (envp[i])
+        ft_printf("%s\n", envp[i++]);
     return (0);
 }
 

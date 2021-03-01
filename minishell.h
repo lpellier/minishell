@@ -35,6 +35,13 @@ typedef struct	s_list
     void			*data;
 }				t_list;
 
+typedef struct s_env
+{
+    char *value;
+    char *key;
+}               t_env;
+
+
 typedef struct s_cmd
 {
 	char *cmd;
@@ -48,6 +55,8 @@ typedef struct s_info
 {
     char cur_path[PATH_MAX];
 	t_list	*cmd_head;
+    t_list  env;
+    t_env   base_env;
 }               t_info;
 
 int (*built_in[8]) (t_cmd *cmd);
@@ -73,7 +82,7 @@ int ft_echo_n (t_cmd *cmd);
 int ft_pwd (t_cmd *cmd);
 int ft_export (t_cmd *cmd);
 int ft_unset (t_cmd *cmd);
-int ft_env (t_cmd *cmd);
+int ft_env (t_cmd *cmd, char **envp);
 int ft_cd (t_cmd *cmd);
 void    compare_cmd(t_cmd *cmd);
 

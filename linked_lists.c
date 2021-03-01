@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+void		free_list(void **element)
+{
+    if (element && *element)
+    {
+        free(*element);
+        *element = NULL;
+    }
+}
+
 t_list	*ft_create_elem(void *data)
 {
     t_list *res;
