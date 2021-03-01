@@ -80,6 +80,10 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
     while (is_whitespace(line[index]))
         index++;
 	index += get_cmd(&line[index], cmd);
+    while (is_whitespace(line[index]))
+        index++;
+	if (cmd->option)
+	    index += ft_strlen(cmd->option);
 	//printf("%s\n", line + index);
     while (is_whitespace(line[index]))
         index++;
