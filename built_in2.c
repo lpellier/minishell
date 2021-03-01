@@ -1,9 +1,10 @@
 #include "minishell.h"
 
 // destroys a environment variable from memory
-int ft_unset (t_cmd *cmd)
+int ft_unset (t_cmd *cmd, char **envp)
 {
     (void) cmd;
+    (void) envp;
     return (0);
 }
 
@@ -18,9 +19,10 @@ int ft_env (t_cmd *cmd, char **envp)
 }
 
 // change directory, will need a find function in linked list to check for right bui and right input
-int ft_cd (t_cmd *cmd)
+int ft_cd (t_cmd *cmd, char **envp)
 {
     (void) cmd;
+    (void) envp;
     // chdir(ft_strjoin(info->cur_path, info->head->input));
     return (0);
 }

@@ -59,13 +59,13 @@ typedef struct s_info
     t_env   base_env;
 }               t_info;
 
-int (*built_in[8]) (t_cmd *cmd);
+int (*built_in[8]) (t_cmd *cmd, char **envp);
 
 void    shell_loop();
 
 // parsing
 
-void read_line(t_info *info);
+void read_line(t_info *info, char **envp);
 char *get_cur_dir(t_info *info);
 int    directories();
 
@@ -76,14 +76,14 @@ void init_built_in();
 
 // built-in
 
-int ft_echo (t_cmd *cmd);
-int ft_exit (t_cmd *cmd);
-int ft_echo_n (t_cmd *cmd);
-int ft_pwd (t_cmd *cmd);
-int ft_export (t_cmd *cmd);
-int ft_unset (t_cmd *cmd);
+int ft_echo (t_cmd *cmd, char **envp);
+int ft_exit (t_cmd *cmd, char **envp);
+int ft_echo_n (t_cmd *cmd, char **envp);
+int ft_pwd (t_cmd *cmd, char **envp);
+int ft_export (t_cmd *cmd, char **envp);
+int ft_unset (t_cmd *cmd, char **envp);
 int ft_env (t_cmd *cmd, char **envp);
-int ft_cd (t_cmd *cmd);
+int ft_cd (t_cmd *cmd, char **envp);
 void    compare_cmd(t_cmd *cmd);
 
 

@@ -68,7 +68,7 @@ void    shell_loop(char **envp)
         ft_printf(BLUE "~ %s > " RESET, cur_dir);
         info.cmd_head = ft_create_elem(create_cmd_struct());
         // reads cmd and stocks it into cmd var
-        read_line(&info);
+        read_line(&info, envp);
         // ft_printf("---\n%s | %s | %d\n", info.head->cmd, info.head->input, info.head->bui);
         ft_list_clear(info.cmd_head, free_cmd_struct);
     }
