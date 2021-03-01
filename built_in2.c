@@ -20,10 +20,14 @@ int ft_cd (t_cmd *cmd)
 {
     char cwd[PATH_MAX];
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    if (cmd->input[0] == '/'){
+        if (chdir(cmd->input))
+            ft_printf("Couldn't access folder, check directory listing\n");
+    }
+    else if (getcwd(cwd, sizeof(cwd)))
     {
-        if (chdir(ft_strjoin(cwd, cmd->input)))
-            ft_printf("Couldn't access folder, check directory listing\n%s\n", ft_strjoin(ft_strjoin(cwd, "/"), cmd->input));
+        if (chdir(ft_strjoin(ft_strjoin(cwd, "/"), cmd->input)))
+            ft_printf("Couldn't access folder, check directory listing\n");
     }
     else
         ft_printf("Error\n");

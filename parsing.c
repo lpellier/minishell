@@ -140,11 +140,17 @@ char *get_cur_dir(t_info *info)
 {
     int i;
     char **split;
+    char *res;
 
     i = 0;
     getcwd(info->cur_path, sizeof(info->cur_path));
     split = ft_split(info->cur_path, '/');
     while (split[i])
         i++;
-    return split[i - 1];
+    if (i == 0)
+    	res = NULL;
+    else
+    	res = ft_strdup(split[i - 1]);
+	free(split);
+    return res;
 }

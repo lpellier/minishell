@@ -52,7 +52,7 @@ typedef struct s_info
 
 int (*built_in[8]) (t_cmd *cmd);
 
-void    shell_loop();
+_Noreturn void    shell_loop();
 
 // parsing
 
