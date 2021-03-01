@@ -16,6 +16,8 @@
 #define CYAN    "\x1b[36m"
 #define RESET   "\x1b[0m"
 
+#define SEPARATOR "|'<;>\""
+
 enum built_in_index {
     ECHO,
     ECHO_N,
@@ -46,9 +48,9 @@ typedef struct s_cmd
 {
 	char *cmd;
 	char *input;
-	char *output;
+	char *output; // this will eventually be useful for stocking what a command should output so that we feed it to another cmd
 	int bui;
-    char *option; // option tells program if an option is being used or not : 0 / 1
+    char *option;
 }               t_cmd;
 
 typedef struct s_info
@@ -61,7 +63,7 @@ typedef struct s_info
 
 int (*built_in[8]) (t_cmd *cmd, char **envp);
 
-void    shell_loop();
+_Noreturn void    shell_loop();
 
 // parsing
 

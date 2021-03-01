@@ -20,7 +20,7 @@ int ft_echo_n (t_cmd *cmd, char **envp)
 int ft_exit (t_cmd *cmd, char ** envp)
 {
     (void) envp;
-    (void) cmd;
+    ft_printf("%s\n", cmd->cmd);
     exit (0);
 }
 
@@ -29,7 +29,7 @@ int ft_pwd (t_cmd *cmd, char ** envp)
 {
     (void) envp;
     (void)cmd;
-    char cwd[1024];
+    char cwd[PATH_MAX];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         ft_printf("%s\n", cwd);
