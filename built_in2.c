@@ -59,14 +59,16 @@ int ft_cd (t_info *info, int index_cmd)
 // actually sets bui according to command string
 void    compare_cmd(t_cmd *cmd)
 {
-    if (!(ft_strncmp(cmd->cmd, "echo", 4)) && cmd->option && !(ft_strncmp(cmd->option, "-n", 2)))
-        cmd->bui = ECHO_N;
+    if (!cmd->cmd)
+        cmd->bui = NONEXISTENT;
+    else if (!(ft_strncmp(cmd->cmd, "echo", 4)) && cmd->option && !(ft_strncmp(cmd->option, "-n", 2)))
+        cmd->bui = ECHO_N; // 1
     else if (!(ft_strncmp(cmd->cmd, "echo", 4)))
-        cmd->bui = ECHO;
+        cmd->bui = ECHO; // 0
     else if (!(ft_strncmp(cmd->cmd, "exit", 4)))
-        cmd->bui = EXIT;
+        cmd->bui = EXIT; // 2
     else if (!(ft_strncmp(cmd->cmd, "pwd", 3)))
-        cmd->bui = PWD;
+        cmd->bui = PWD; // etc
     else if (!(ft_strncmp(cmd->cmd, "export", 6)))
         cmd->bui = EXPORT;
     else if (!(ft_strncmp(cmd->cmd, "unset", 5)))
@@ -74,7 +76,7 @@ void    compare_cmd(t_cmd *cmd)
     else if (!(ft_strncmp(cmd->cmd, "env", 3)))
         cmd->bui = ENV;
     else if (!(ft_strncmp(cmd->cmd, "cd", 2)))
-        cmd->bui = CD;
+        cmd->bui = CD; // 7
     else // here we'll need to check for $PATH and exec binaries if when find them
-        cmd->bui = NONEXISTENT;
+        cmd->bui = NONEXISTENT; // 9
 }

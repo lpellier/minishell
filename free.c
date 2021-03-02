@@ -12,13 +12,6 @@ void    free_tab(char **tab)
     }
 }
 
-/*int    reset_info(t_info *info)
-{
-	ft_list_clear(info->cmd_head, free_cmd_struct);
-    ft_list_clear(info->env_head, free_env_struct);
-	return (1);
-}*/
-
 void	free_cmd_struct(void *data)
 {
     t_cmd *ptr;
@@ -65,8 +58,3 @@ void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
     }
     begin_list = NULL;
 }
-
-// void    free_everything(t_info *info, char **tab, char *cmd)
-// {
-//     free_tab(tab);
-// }

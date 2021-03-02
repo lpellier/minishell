@@ -55,8 +55,6 @@ void    shell_loop(char **envp)
     info.env_head = ft_create_elem(create_env_struct(NULL, NULL));
     init_env(&info, envp);
     ft_printf(RED     "Welcome to Minisheh\n"     RESET);
-    // need to remove infinite loop by adding crashed int to info struct
-    // so that i can free env linked list
     while (!info.crashed)
     {
         // gets current directory as string by splitting current path with '/'

@@ -41,7 +41,7 @@ int ft_pwd (t_info *info, int index_cmd)
     return (0);
 }
 
-// exports a variable to environnment
+// exports a variable to environment
 // need to figure out return codes for built in
 int ft_export (t_info *info, int index_cmd)
 {

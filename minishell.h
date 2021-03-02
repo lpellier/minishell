@@ -1,3 +1,5 @@
+#include <__wctype.h>
+
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
@@ -8,15 +10,16 @@
 #define PATH_MAX 4096
 #define TRUE 1
 #define FALSE 0
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
+#define RED     "\033[31m"
+#define BLUE    "\033[34m"
 #define CYAN    "\x1b[36m"
 #define RESET   "\x1b[0m"
 
-#define SEPARATOR "|'<;>\""
+//#define GREEN   "\x1b[32m"
+//#define YELLOW  "\x1b[33m"
+//#define MAGENTA "\x1b[35m"
+
+//#define SEPARATOR "|'<;>\""
 
 enum built_in_index {
     ECHO,
@@ -27,9 +30,17 @@ enum built_in_index {
     UNSET,
     ENV,
     CD,
-	IN_PATH, // in_path will be for binaries found in dirs in $PATH
+	IN_PATH __unused, // in_path will be for binaries found in dirs in $PATH
     NONEXISTENT
 };
+
+// maybe will use this for return codes of all functions in code,
+// for more consistency
+/*enum status_codes {
+    SUCCESS,
+    FAILURE,
+    OTHER
+};*/
 
 typedef struct	s_list
 {
@@ -84,11 +95,10 @@ void    shell_loop();
 
 void read_line(t_info *info);
 char *get_cur_dir(t_info *info);
-int    directories();
+//int    directories();
 
 // init
 
-int    reset_info(t_info *info);
 void init_built_in();
 
 // built-in
@@ -121,7 +131,7 @@ t_env   *create_env_struct(char *key, char *value);
 t_list	*ft_create_elem(void *data);
 void	ft_list_push_back(t_list **begin_list, void *data);
 void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
-t_list	*ft_list_at(t_list *begin_list, unsigned int nbr);‡
+t_list	*ft_list_at(t_list *begin_list, unsigned int nbr);
 void	ft_list_remove_if(t_list **begin_list, void *data_ref,
                           int (*cmp)(), void (*free_fct)(void *));
 void	ft_list_foreach(t_list *begin_list, void (*f)(void *));

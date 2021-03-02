@@ -67,6 +67,17 @@ int is_whitespace(char c)
     return (0);
 }
 
+void test(t_cmd *cmd)
+{
+    ft_printf(CYAN"%s"RESET, cmd->cmd);
+    ft_printf(RED" | "RESET);
+    ft_printf(CYAN"%s"RESET, cmd->option);
+    ft_printf(RED" | "RESET);
+    ft_printf(CYAN"%s"RESET, cmd->input);
+    ft_printf(RED" | "RESET);
+    ft_printf(CYAN"bui : %d\n"RESET, cmd->bui);
+}
+
 // recursive function that allows creating as many linked lists as there are commands 
 // is there another cmd determined by whether there is a pipe | or a semi-colon ;
 void read_cmd(char *line, t_info *info, int index, int index_cmd)
@@ -90,14 +101,15 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
     while (is_whitespace(line[index]))
         index++;
 	compare_cmd(cmd);
-	ft_printf("---\n%s | %s | %s | %d\n", cmd->cmd, cmd->option, cmd->input, cmd->bui);
-	if (cmd->bui == 9 || cmd->bui == 8)
+	test(cmd);
+	if (cmd->cmd && (cmd->bui == 9 || cmd->bui == 8)) // bui : 8 will be used for path var and binaries
 		ft_printf("Invalid command bitch\n");
+	else if (!cmd->cmd)
+	    ft_printf("");
 	else
 		(*built_in[cmd->bui]) (info, index_cmd);
     while (is_whitespace(line[index]))
         index++;
-	ft_printf("---\n");
 	if (pipe_or_colon(line[index]) == 1)
 	{
         ft_list_push_back(&info->cmd_head, create_cmd_struct());
