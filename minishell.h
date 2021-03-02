@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <signal.h>
 #define PATH_MAX 4096
 #define TRUE 1
 #define FALSE 0
@@ -103,6 +104,11 @@ int ft_env (t_info *info, int index_cmd);
 int ft_cd (t_info *info, int index_cmd);
 void    compare_cmd(t_cmd *cmd);
 
+// signal
+
+void	ft_sigquit(int sig);
+void	ft_sigint(int sig);
+void	ft_sigterm(int sig, t_info *info);
 
 // free
 
@@ -114,6 +120,7 @@ void	free_env_struct(void *data);
 
 void    print_env_struct(void *data);
 int     cmp_env(void *data, void *data_ref);
+
 // linked lists
 
 t_cmd   *create_cmd_struct();
@@ -121,7 +128,7 @@ t_env   *create_env_struct(char *key, char *value);
 t_list	*ft_create_elem(void *data);
 void	ft_list_push_back(t_list **begin_list, void *data);
 void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
-t_list	*ft_list_at(t_list *begin_list, unsigned int nbr);‡
+t_list	*ft_list_at(t_list *begin_list, unsigned int nbr);
 void	ft_list_remove_if(t_list **begin_list, void *data_ref,
                           int (*cmp)(), void (*free_fct)(void *));
 void	ft_list_foreach(t_list *begin_list, void (*f)(void *));

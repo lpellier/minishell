@@ -69,7 +69,8 @@ set(MINISHELL_SRC
         ./main.c
         ./parsing.c
         ./minishell.h
-        
+        ./all_signal.c
+
         )
 add_library(LIBFT
         ${LIBFT_SRC}

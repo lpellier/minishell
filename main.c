@@ -70,6 +70,9 @@ void    shell_loop(char **envp)
         // ft_printf("---\n%s | %s | %d\n", info.head->cmd, info.head->input, info.head->bui);
         ft_list_clear(info.cmd_head, free_cmd_struct);
         ft_bzero(info.cur_path, 4096);
+//        signal(SIGQUIT, ft_sigquit); // ctrl + \
+//        signal(SIGINT, ft_sigint); // ctrl + c
+        signal(SIGTERM, (void (*)(int)) ft_sigterm); // ctrl + d
         free(cur_dir);
     }
     ft_list_clear(info.env_head, free_env_struct);
