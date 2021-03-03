@@ -13,7 +13,7 @@ int     init_env(t_info *info, char **envp)
         free(key_value);
         i++;
     }
-    return (0);
+    return (SUCCESS);
     // might wanna start adding actual error codes in functions
 }
 
@@ -44,7 +44,7 @@ t_env   *create_env_struct(char *key, char *value)
     return (env);
 }
 
-void    shell_loop(char **envp)
+int    shell_loop(char **envp)
 {
     t_info info; // info struct : keeps track of various information
     char *cur_dir; // current directory
@@ -71,6 +71,7 @@ void    shell_loop(char **envp)
         free(cur_dir);
     }
     ft_list_clear(info.env_head, free_env_struct);
+    return (SUCCESS);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -78,5 +79,5 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     system("clear");
-    shell_loop(envp);
+    exit(shell_loop(envp));
 }

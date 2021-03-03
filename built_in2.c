@@ -9,7 +9,7 @@ int ft_unset (t_info *info, int index_cmd)
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     ft_list_remove_if(&info->env_head, create_env_struct(cmd->input, NULL), cmp_env, free_env_struct);
 
-    return (0);
+    return (SUCCESS);
 }
 
 // outputs all environment variables
@@ -18,9 +18,9 @@ int ft_env (t_info *info, int index_cmd)
     (void) index_cmd;
 
     if (!info->env_head || !info->env_head->next)
-        return (1);
+        return (FAILURE);
     ft_list_foreach(info->env_head->next, print_env_struct);
-    return (0);
+    return (SUCCESS);
 }
 
 // change directory, will need a find function in linked list to check for right bui and right input
@@ -47,7 +47,7 @@ int ft_cd (t_info *info, int index_cmd)
     }
     else
         ft_printf("Error\n");
-    return (0);
+    return (SUCCESS);
 }
 
 //int ft_inpath (t_cmd *cmd)
@@ -66,9 +66,9 @@ int    compare_size(char *s1, char *s2)
     len1 = ft_strlen(s1);
     len2 = ft_strlen(s2);
     if (!ft_strncmp(s1, s2, len1) && len1 == len2)
-        return (0);
+        return (SUCCESS);
     else
-        return (1);
+        return (FAILURE);
 }
 
 void    compare_cmd(t_cmd *cmd)

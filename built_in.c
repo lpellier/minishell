@@ -10,7 +10,7 @@ int ft_echo (t_info *info, int index_cmd)
         ft_printf("\n");
     else
         ft_printf("%s\n", cmd->input);
-    return (0);
+    return (SUCCESS);
 }
 
 // outputs input without \n
@@ -21,7 +21,7 @@ int ft_echo_n (t_info *info, int index_cmd)
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     if (cmd->input)
         ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
-    return (0);
+    return (SUCCESS);
 }
 
 // exits terminal
@@ -30,7 +30,7 @@ int ft_exit (t_info *info, int index_cmd)
     (void) index_cmd;
     info->crashed = TRUE;
     ft_printf("exit\n");
-    return (0);
+    return (SUCCESS);
 }
 
 // outputs current path
@@ -42,7 +42,7 @@ int ft_pwd (t_info *info, int index_cmd)
 
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         ft_printf("%s\n", cwd);
-    return (0);
+    return (SUCCESS);
 }
 
 // exports a variable to environment
@@ -54,11 +54,11 @@ int ft_export (t_info *info, int index_cmd)
 
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     if (!cmd->input || !ft_strchr(cmd->input, '='))
-        return (1);
+        return (FAILURE);
     key_value = ft_split(cmd->input, '=');
     if (!key_value[1])
-        return (1);
+        return (FAILURE);
     ft_list_push_back(&info->env_head, create_env_struct(key_value[0], key_value[1]));
     free(key_value);
-    return (0);
+    return (SUCCESS);
 }

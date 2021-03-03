@@ -3,11 +3,11 @@
 int		pipe_or_colon(char c)
 {
 	if (c == '|' || c == ';')
-		return (1);
+		return (SUCCESS);
 	else if (c == '\0')
-		return (-1);
+		return (OTHER);
 	else
-		return (0);
+		return (FAILURE);
 }
 
 int get_input(char *line, t_cmd *cmd)
@@ -15,12 +15,12 @@ int get_input(char *line, t_cmd *cmd)
 	int index;
 
 	index = 0;
-	while (line[index] && !pipe_or_colon(line[index]))
+	while (line[index] && pipe_or_colon(line[index]))
 		index++;
 	if (!(cmd->input = malloc(sizeof(char) * index + 1)))
-		return (-1);
+		return (FAILURE);
 	index = 0;
-	while (line[index] && !pipe_or_colon(line[index]))
+	while (line[index] && pipe_or_colon(line[index]))
 	{
 		cmd->input[index] = line[index];
 		index++;
@@ -37,10 +37,10 @@ int option_only_n(char *option)
 	while (*option)
 	{
 		if (*option != 'n')
-			return (0);
+			return (FAILURE);
 		option++;
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 int get_cmd(char *line, t_cmd *cmd)
@@ -51,7 +51,7 @@ int get_cmd(char *line, t_cmd *cmd)
 	if (words[0] && words[1] && words[1][0] == '-')
 	{
 		cmd->option = ft_strdup(words[1]);
-		if (!ft_strncmp(words[0], "echo", 4) && option_only_n(cmd->option))
+		if (!compare_size(words[0], "echo") && !option_only_n(cmd->option))
 			cmd->cmd = ft_strdup(words[0]);
 	}
 	else if (words[0])
@@ -63,8 +63,20 @@ int get_cmd(char *line, t_cmd *cmd)
 int is_whitespace(char c)
 {
     if (c == 32 || (c >= 9 && c <= 13))
-        return (1);
-    return (0);
+        return (SUCCESS);
+    return (FAILURE);
+}
+
+int spaces(char *s)
+{
+    int i;
+    int count;
+
+    i = 0;
+    count = 0;
+    while (!is_whitespace(s[i++]))
+        count++;
+    return (count);
 }
 
 void test(t_cmd *cmd)
@@ -85,18 +97,14 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
     t_cmd *cmd;
 
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-    while (is_whitespace(line[index]))
-        index++;
+    index += spaces(&line[index]);
 	index += get_cmd(&line[index], cmd);
-    while (is_whitespace(line[index]))
-        index++;
+    index += spaces(&line[index]);
 	if (cmd->option)
 	    index += ft_strlen(cmd->option);
-    while (is_whitespace(line[index]))
-        index++;
+    index += spaces(&line[index]);
 	index += get_input(&line[index], cmd);
-    while (is_whitespace(line[index]))
-        index++;
+    index += spaces(&line[index]);
 	compare_cmd(cmd);
 	test(cmd);
 	if (cmd->cmd && (cmd->bui == 9 || cmd->bui == 8)) // bui : 8 will be used for path var and binaries
@@ -105,9 +113,8 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
 	    ft_printf("");
 	else
 		(*built_in[cmd->bui]) (info, index_cmd);
-    while (is_whitespace(line[index]))
-        index++;
-	if (pipe_or_colon(line[index]) == 1)
+    index += spaces(&line[index]);
+	if (!pipe_or_colon(line[index]))
 	{
         ft_list_push_back(&info->cmd_head, create_cmd_struct());
         read_cmd(line, info, index + 1, index_cmd + 1);
@@ -160,5 +167,5 @@ char *get_cur_dir(t_info *info)
     else
     	res = ft_strdup(split[i - 1]);
 	free(split);
-    return res;
+    return (res);
 }

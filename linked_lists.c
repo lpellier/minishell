@@ -86,9 +86,9 @@ int     cmp_env(void *data, void *data_ref)
     env_ref = (t_env *)data_ref;
 
     if (!(ft_strncmp(env->key, env_ref->key, ft_strlen(env_ref->key))))
-        return (0);
+        return (SUCCESS);
     else
-        return (1);
+        return (FAILURE);
 }
 
 /*t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
@@ -111,7 +111,7 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref,
     t_list	*tmp;
     t_list	*el;
 
-    while (*begin_list && cmp((*begin_list)->data, data_ref) == 0)
+    while (*begin_list && !cmp((*begin_list)->data, data_ref))
     {
         tmp = *begin_list;
         *begin_list = (*begin_list)->next;
@@ -121,7 +121,7 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref,
     el = *begin_list;
     while (el && el->next)
     {
-        if (cmp(el->next->data, data_ref) == 0)
+        if (!cmp(el->next->data, data_ref))
         {
             tmp = el->next;
             el->next = tmp->next;

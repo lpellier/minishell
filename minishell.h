@@ -36,11 +36,11 @@ enum built_in_index {
 
 // maybe will use this for return codes of all functions in code,
 // for more consistency
-/*enum status_codes {
+enum status_codes {
     SUCCESS,
     FAILURE,
     OTHER
-};*/
+};
 
 typedef struct	s_list
 {
@@ -89,7 +89,7 @@ int (*built_in[8]) (t_info *info, int index_cmd);
 
 // _Noreturn permits shutting up warning about infinite loop
 // don't leave it here, remove before validation
-void    shell_loop();
+int    shell_loop();
 
 // parsing
 
@@ -112,7 +112,7 @@ int ft_unset (t_info *info, int index_cmd);
 int ft_env (t_info *info, int index_cmd);
 int ft_cd (t_info *info, int index_cmd);
 void    compare_cmd(t_cmd *cmd);
-
+int    compare_size(char *s1, char *s2);
 
 // free
 
