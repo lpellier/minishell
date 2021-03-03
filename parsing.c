@@ -84,8 +84,6 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
 {
     t_cmd *cmd;
 
-    // for now cmd is first list in chain
-    // should adapt and iterate with index
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     while (is_whitespace(line[index]))
         index++;
@@ -94,7 +92,6 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
         index++;
 	if (cmd->option)
 	    index += ft_strlen(cmd->option);
-	//printf("%s\n", line + index);
     while (is_whitespace(line[index]))
         index++;
 	index += get_input(&line[index], cmd);

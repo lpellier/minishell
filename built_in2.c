@@ -57,25 +57,39 @@ int ft_cd (t_info *info, int index_cmd)
 //    return (0);
 //}
 // actually sets bui according to command string
+
+int    compare_size(char *s1, char *s2)
+{
+    int len1;
+    int len2;
+
+    len1 = ft_strlen(s1);
+    len2 = ft_strlen(s2);
+    if (!ft_strncmp(s1, s2, len1) && len1 == len2)
+        return (0);
+    else
+        return (1);
+}
+
 void    compare_cmd(t_cmd *cmd)
 {
     if (!cmd->cmd)
         cmd->bui = NONEXISTENT;
-    else if (!(ft_strncmp(cmd->cmd, "echo", 4)) && cmd->option && !(ft_strncmp(cmd->option, "-n", 2)))
+    else if (!compare_size(cmd->cmd, "echo") && cmd->option && !compare_size(cmd->option, "-n"))
         cmd->bui = ECHO_N; // 1
-    else if (!(ft_strncmp(cmd->cmd, "echo", 4)))
+    else if (!compare_size(cmd->cmd, "echo"))
         cmd->bui = ECHO; // 0
-    else if (!(ft_strncmp(cmd->cmd, "exit", 4)))
+    else if (!compare_size(cmd->cmd, "exit"))
         cmd->bui = EXIT; // 2
-    else if (!(ft_strncmp(cmd->cmd, "pwd", 3)))
+    else if (!compare_size(cmd->cmd, "pwd"))
         cmd->bui = PWD; // etc
-    else if (!(ft_strncmp(cmd->cmd, "export", 6)))
+    else if (!compare_size(cmd->cmd, "export"))
         cmd->bui = EXPORT;
-    else if (!(ft_strncmp(cmd->cmd, "unset", 5)))
+    else if (!compare_size(cmd->cmd, "unset"))
     	cmd->bui = UNSET;
-    else if (!(ft_strncmp(cmd->cmd, "env", 3)))
+    else if (!compare_size(cmd->cmd, "env"))
         cmd->bui = ENV;
-    else if (!(ft_strncmp(cmd->cmd, "cd", 2)))
+    else if (!compare_size(cmd->cmd, "cd"))
         cmd->bui = CD; // 7
     else // here we'll need to check for $PATH and exec binaries if when find them
         cmd->bui = NONEXISTENT; // 9

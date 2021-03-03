@@ -6,7 +6,10 @@ int ft_echo (t_info *info, int index_cmd)
     t_cmd *cmd;
 
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-    ft_printf("%s\n", cmd->input);
+    if (!cmd->input)
+        ft_printf("\n");
+    else
+        ft_printf("%s\n", cmd->input);
     return (0);
 }
 
@@ -16,7 +19,8 @@ int ft_echo_n (t_info *info, int index_cmd)
     t_cmd *cmd;
 
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-    ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
+    if (cmd->input)
+        ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
     return (0);
 }
 
