@@ -88,6 +88,8 @@ void test(t_cmd *cmd)
     ft_printf(CYAN"%s"RESET, cmd->input);
     ft_printf(RED" | "RESET);
     ft_printf(CYAN"bui : %d\n"RESET, cmd->bui);
+    ft_printf(RED" -> "RESET);
+    ft_printf(CYAN"%s\n"RESET, cmd->output);
 }
 
 // recursive function that allows creating as many linked lists as there are commands 
@@ -106,19 +108,28 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
 	index += get_input(&line[index], cmd);
     index += spaces(&line[index]);
 	compare_cmd(cmd);
-	test(cmd);
+    test(cmd);
+	if (cmd->output && !cmd->input)
+    {
+	    cmd->input = ft_strdup(cmd->output);
+        free(cmd->output);
+        cmd->output = NULL;
+    }
+    test(cmd);
 	if (cmd->cmd && (cmd->bui == 9 || cmd->bui == 8)) // bui : 8 will be used for path var and binaries
 		ft_printf("Invalid command bitch\n");
 	else if (!cmd->cmd)
 	    ft_printf("");
 	else
-		(*built_in[cmd->bui]) (info, index_cmd);
+        pipe_for_exec(info, index_cmd);
     index += spaces(&line[index]);
 	if (!pipe_or_colon(line[index]))
 	{
         ft_list_push_back(&info->cmd_head, create_cmd_struct());
         read_cmd(line, info, index + 1, index_cmd + 1);
     }
+	if (cmd->output)
+	    ft_printf("%s", cmd->output);
 }
 
 // reads line using gnl and feeds t_cmd linked lists

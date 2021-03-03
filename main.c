@@ -1,49 +1,5 @@
 #include "minishell.h"
 
-int     init_env(t_info *info, char **envp)
-{
-    int i;
-    char **key_value;
-
-    i = 0;
-    while (envp[i])
-    {
-        key_value = ft_split(envp[i], '=');
-        ft_list_push_back(&info->env_head, create_env_struct(key_value[0], key_value[1]));
-        free(key_value);
-        i++;
-    }
-    return (SUCCESS);
-    // might wanna start adding actual error codes in functions
-}
-
-// mallocs and creates cmd struct, returns pointer on struct
-t_cmd   *create_cmd_struct()
-{
-    t_cmd *cmd;
-
-    if (!(cmd = (t_cmd *)malloc(sizeof(t_cmd))))
-        return NULL;
-    cmd->bui = 9;
-    cmd->cmd = NULL;
-    cmd->input = NULL;
-    cmd->option = NULL;
-    cmd->output = NULL;
-    return (cmd);
-}
-
-// same as above for env struct
-t_env   *create_env_struct(char *key, char *value)
-{
-    t_env *env;
-
-    if (!(env = (t_env *)malloc(sizeof(t_env))))
-        return NULL;
-    env->value = value;
-    env->key = key;
-    return (env);
-}
-
 int    shell_loop(char **envp)
 {
     t_info info; // info struct : keeps track of various information

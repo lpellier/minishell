@@ -87,8 +87,6 @@ typedef struct s_info
 
 int (*built_in[8]) (t_info *info, int index_cmd);
 
-// _Noreturn permits shutting up warning about infinite loop
-// don't leave it here, remove before validation
 int    shell_loop();
 
 // parsing
@@ -125,6 +123,9 @@ void	free_env_struct(void *data);
 void    print_env_struct(void *data);
 int     cmp_env(void *data, void *data_ref);
 // linked lists
+
+int pipe_for_exec(t_info *info, int index_cmd);
+int     init_env(t_info *info, char **envp);
 
 t_cmd   *create_cmd_struct();
 t_env   *create_env_struct(char *key, char *value);
