@@ -13,6 +13,28 @@ int ft_echo (t_info *info, int index_cmd)
     return (SUCCESS);
 }
 
+void store_output(t_cmd *cmd)
+{
+    char *str;
+
+    get_next_line(STDIN_FILENO, &str);
+    cmd->output = ft_strdup(str);
+    if (cmd->bui != 1 && cmd->bui != 9)
+        cmd->output = ft_strjoin(str, "\n"); // storing it in output variable
+    else
+        cmd->output = ft_strdup(str);
+    while (get_next_line(STDIN_FILENO, &str))
+    {
+        if (cmd->bui != 1 && cmd->bui != 9)
+            cmd->output = ft_strjoin(ft_strjoin(cmd->output, str), "\n"); // storing it in output variable
+        else
+            cmd->output = ft_strjoin(cmd->output, str);
+    }
+    if (str)
+        free(str);
+    str = NULL;
+}
+
 int pipe_for_exec(t_info *info, int index_cmd)
 {
     // stores fd extremes from pipe : pipefd[0] is reading and pipefd[1] is writing
@@ -36,28 +58,17 @@ int pipe_for_exec(t_info *info, int index_cmd)
     {
          close(pipefd[0]); // closing useless writing extremity of pipe
          dup2(pipefd[1], STDOUT_FILENO); // duplicating reading extremity of pipe into stdout so i can
-         // print cmd and retrieve output
+         // print cmd to retrieve output
          _exit((*built_in[cmd->bui]) (info, index_cmd)); // exiting with cmd exit code
     }
     else
     {
-        char *str;
         waitpid(cpid, &status, 0); // waits for child process and returns status
         close(pipefd[1]); // closing useless reading extremity of pipe
         dup2(pipefd[0], STDIN_FILENO); // reading what cmd wrote
-        get_next_line(STDIN_FILENO, &str);
-        cmd->output = ft_strdup(str);
-        if (cmd->bui != 1 && cmd->bui != 9)
-            cmd->output = ft_strjoin(str, "\n"); // storing it in output variable
-        else
-            cmd->output = ft_strdup(str);
-        while (get_next_line(STDIN_FILENO, &str))
-        {
-            if (cmd->bui != 1 && cmd->bui != 9)
-                cmd->output = ft_strjoin(ft_strjoin(cmd->output, str), "\n"); // storing it in output variable
-            else
-                cmd->output = ft_strjoin(cmd->output, str);
-        }
+        store_output(cmd);
+        if (cmd->bui == 2)
+            info->crashed = TRUE;
         close(pipefd[0]); // closing last pipe fd
         dup2(saved_stdout, STDOUT_FILENO); // restoring stdout and stdin to original fds
         dup2(saved_stdin, STDIN_FILENO);
