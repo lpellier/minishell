@@ -78,10 +78,40 @@ void    shell_loop(char **envp)
     ft_list_clear(info.env_head, free_env_struct);
 }
 
+char	*ft_move_until(char *str)
+{
+    if (str)
+    {
+        while (*str && ft_isalpha(*str))
+            str++;
+        str++;
+    }
+    return (str);
+}
+
+char	*ft_get_path(char **envp)
+{
+    char	*line;
+    char    **tab;
+    int i;
+
+    i = 0;
+    // parcours tant que tu trouves pas PATH
+    while (ft_strncmp(envp[i], "PATH", 4))
+        i++;
+    // clone la ligne PATH dans line en enlevant PATH=
+    line = ft_strdup(ft_move_until(envp[i]));
+    tab = ft_split(line, ':');
+    ft_printf("%s", tab[0]);
+    free(line);
+    return("coucou");
+}
+
 int main(int argc, char **argv, char **envp)
 {
     (void)argc;
     (void)argv;
+    ft_get_path(envp);
     system("clear");
     shell_loop(envp);
 }
