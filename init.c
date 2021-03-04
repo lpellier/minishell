@@ -12,6 +12,7 @@ void init_built_in()
     built_in[5] = ft_unset;
     built_in[6] = ft_env;
     built_in[7] = ft_cd;
+    built_in[8] = exec_binary;
 }
 
 int     init_env(t_info *info, char **envp)
@@ -42,6 +43,7 @@ t_cmd   *create_cmd_struct()
     cmd->input = NULL;
     cmd->option = NULL;
     cmd->output = NULL;
+    cmd->path = NULL;
     return (cmd);
 }
 
@@ -52,7 +54,7 @@ t_env   *create_env_struct(char *key, char *value)
 
     if (!(env = (t_env *)malloc(sizeof(t_env))))
         return NULL;
-    env->value = value;
     env->key = key;
+    env->value = value;
     return (env);
 }

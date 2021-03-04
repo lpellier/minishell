@@ -30,6 +30,9 @@ void	free_cmd_struct(void *data)
     if (ptr->output)
         free(ptr->output);
     ptr->output = NULL;
+    if (ptr->path)
+        free(ptr->path);
+    ptr->path = NULL;
 }
 
 void	free_env_struct(void *data)

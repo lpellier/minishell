@@ -24,6 +24,7 @@ SRCS = parsing.c \
 		free.c \
 		init.c \
 		linked_lists.c \
+		all_signal.c \
 		main.c 
 
 OBJS = $(SRCS:.c=.o)

@@ -85,13 +85,17 @@ int     cmp_env(void *data, void *data_ref)
     env = (t_env *)data;
     env_ref = (t_env *)data_ref;
 
-    if (!(ft_strncmp(env->key, env_ref->key, ft_strlen(env_ref->key))))
+    if (!(compare_size(env->key, env_ref->key)))
+    {
         return (SUCCESS);
+    }
     else
+    {
         return (FAILURE);
+    }
 }
 
-/*t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
+t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
 {
     t_list *el;
 
@@ -103,7 +107,7 @@ int     cmp_env(void *data, void *data_ref)
         el = el->next;
     }
     return (NULL);
-}*/
+}
 
 void	ft_list_remove_if(t_list **begin_list, void *data_ref,
                           int (*cmp)(), void (*free_fct)(void *))

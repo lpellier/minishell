@@ -105,7 +105,7 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
     index += spaces(&line[index]);
 	index += get_input(&line[index], cmd);
     index += spaces(&line[index]);
-	compare_cmd(cmd);
+	compare_cmd(info, cmd);
 	if (cmd->output && !cmd->input)
     {
 	    cmd->input = ft_strdup(cmd->output);
@@ -115,7 +115,7 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
 	if (cmd->cmd && (cmd->bui == 9 || cmd->bui == 8)) // bui : 8 will be used for path var and binaries
 		cmd->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd), ": command not found\n");
 	else
-        pipe_for_exec(info, index_cmd);
+        pipe_for_exec(info, index_cmd); // this should only apply to non-built-ins. so bui = 8
     test(cmd);
     index += spaces(&line[index]);
 	if (!pipe_or_colon(line[index]))
@@ -140,22 +140,20 @@ void read_line(t_info *info)
 }
 
 // This function will be used to check for executables in directories addressed in $PATH
-//int    directories()
-//{
-//    DIR *d;
-//    struct dirent *dir;
-//    d = opendir(".");
-//    if (d)
-//    {
-//        while ((dir = readdir(d)) != NULL)
-//        {
-//            printf("%s\n", dir->d_name);
-//        }
-//        closedir(d);
-//    }
-//
-//    return(0);
-//}
+int    directories(char *path, char *cmd)
+{
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(path);
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+            if (!compare_size(cmd, dir->d_name))
+                return (SUCCESS);
+        closedir(d);
+    }
+    return (FAILURE);
+}
 
 char *get_cur_dir(t_info *info)
 {

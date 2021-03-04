@@ -50,13 +50,12 @@ int ft_cd (t_info *info, int index_cmd)
     return (SUCCESS);
 }
 
-//int ft_inpath (t_cmd *cmd)
-//{
-//    (void) cmd;
-//    // chdir(ft_strjoin(info->cur_path, info->head->input));
-//    return (0);
-//}
-// actually sets bui according to command string
+int exec_binary(t_info *info, int index_cmd)
+{
+    (void) info;
+    (void) index_cmd;
+    return (0);
+}
 
 int    compare_size(char *s1, char *s2)
 {
@@ -71,7 +70,25 @@ int    compare_size(char *s1, char *s2)
         return (FAILURE);
 }
 
-void    compare_cmd(t_cmd *cmd)
+int     find_binary(t_info *info, t_cmd *cmd)
+{
+    int i;
+
+    i = 0;
+    while (info->dir_paths[i])
+    {
+        if (!directories(info->dir_paths[i], cmd->cmd))
+        {
+            cmd->path = ft_strjoin(ft_strjoin(info->dir_paths[i], "/"), cmd->cmd);
+            ft_printf("binary path : %s\n", cmd->path);
+            return (SUCCESS);
+        }
+        i++;
+    }
+    return (FAILURE);
+}
+
+void    compare_cmd(t_info *info, t_cmd *cmd)
 {
     if (!cmd->cmd)
         cmd->bui = NONEXISTENT;
@@ -91,6 +108,8 @@ void    compare_cmd(t_cmd *cmd)
         cmd->bui = ENV;
     else if (!compare_size(cmd->cmd, "cd"))
         cmd->bui = CD; // 7
-    else // here we'll need to check for $PATH and exec binaries if when find them
+    else if (!find_binary(info, cmd))
+        cmd->bui = BINARY; // 8
+    else
         cmd->bui = NONEXISTENT; // 9
 }
