@@ -1,5 +1,35 @@
 #include "minishell.h"
 
+
+char	*ft_move_until(char *str)
+{
+    if (str)
+    {
+        // deplace le pointeur si str existe et si le char est alpha
+        while (*str && ft_isalpha(*str))
+            str++;
+        // passe un char de place, le =
+        str++;
+    }
+    return (str);
+}
+
+void	ft_get_path(char **envp, t_info *info)
+{
+    char	*line;
+    int i;
+
+    i = 0;
+    // parcours tant que tu trouves pas PATH
+    while (ft_strncmp(envp[i], "PATH", 4))
+        i++;
+    // clone la ligne PATH dans line en enlevant PATH=
+    line = ft_strdup(ft_move_until(envp[i]));
+    // recupere dans un tableau les differents dossier
+    info->tab = ft_split(line, ':');
+    free(line);
+}
+
 int     init_env(t_info *info, char **envp)
 {
     int i;
@@ -54,6 +84,7 @@ void    shell_loop(char **envp)
     info.crashed = FALSE;
     info.env_head = ft_create_elem(create_env_struct(NULL, NULL));
     init_env(&info, envp);
+    ft_get_path(envp, &info);
     ft_printf(RED     "Welcome to Minisheh\n"     RESET);
     // need to remove infinite loop by adding crashed int to info struct
     // so that i can free env linked list
@@ -78,40 +109,10 @@ void    shell_loop(char **envp)
     ft_list_clear(info.env_head, free_env_struct);
 }
 
-char	*ft_move_until(char *str)
-{
-    if (str)
-    {
-        while (*str && ft_isalpha(*str))
-            str++;
-        str++;
-    }
-    return (str);
-}
-
-char	*ft_get_path(char **envp)
-{
-    char	*line;
-    char    **tab;
-    int i;
-
-    i = 0;
-    // parcours tant que tu trouves pas PATH
-    while (ft_strncmp(envp[i], "PATH", 4))
-        i++;
-    // clone la ligne PATH dans line en enlevant PATH=
-    line = ft_strdup(ft_move_until(envp[i]));
-    tab = ft_split(line, ':');
-    ft_printf("%s", tab[0]);
-    free(line);
-    return("coucou");
-}
-
 int main(int argc, char **argv, char **envp)
 {
     (void)argc;
     (void)argv;
-    ft_get_path(envp);
     system("clear");
     shell_loop(envp);
 }

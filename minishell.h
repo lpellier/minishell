@@ -73,6 +73,7 @@ typedef struct s_info
 	t_list	*cmd_head;
     // head of env linked list
 	t_list  *env_head;
+	char **tab;
 }               t_info;
 
 int (*built_in[8]) (t_info *info, int index_cmd);
