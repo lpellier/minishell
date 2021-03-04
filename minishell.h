@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <signal.h>
 #define PATH_MAX 4096
 #define TRUE 1
 #define FALSE 0
@@ -83,11 +84,12 @@ typedef struct s_info
 	t_list	*cmd_head;
     // head of env linked list
 	t_list  *env_head;
+	char **tab;
 }               t_info;
 
 int (*built_in[8]) (t_info *info, int index_cmd);
 
-int    shell_loop();
+int    shell_loop(char **envp);
 
 // parsing
 
@@ -112,6 +114,12 @@ int ft_cd (t_info *info, int index_cmd);
 void    compare_cmd(t_cmd *cmd);
 int    compare_size(char *s1, char *s2);
 
+// signal
+
+void	ft_sigquit(int sig);
+void	ft_sigint(int sig);
+void	ft_sigterm(int sig, t_info *info);
+
 // free
 
 void    free_tab(char **tab);
@@ -122,6 +130,7 @@ void	free_env_struct(void *data);
 
 void    print_env_struct(void *data);
 int     cmp_env(void *data, void *data_ref);
+
 // linked lists
 
 int pipe_for_exec(t_info *info, int index_cmd);
