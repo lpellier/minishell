@@ -112,11 +112,16 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
         free(cmd->output);
         cmd->output = NULL;
     }
-	if (cmd->cmd && (cmd->bui == 9 || cmd->bui == 8)) // bui : 8 will be used for path var and binaries
-		cmd->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd), ": command not found\n");
-	else
-        pipe_for_exec(info, index_cmd); // this should only apply to non-built-ins. so bui = 8
     test(cmd);
+    if (cmd->cmd && cmd->bui == 9)
+        cmd->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd), ": command not found\n");
+    else if (cmd->bui == 8)
+        pipe_for_exec(info, index_cmd); // this should only apply to non-built-ins. so bui = 8
+    else if (!cmd->cmd)
+        cmd->output = ft_strdup("");
+    else
+        (*built_in[cmd->bui]) (info, index_cmd);
+
     index += spaces(&line[index]);
 	if (!pipe_or_colon(line[index]))
 	{

@@ -35,8 +35,6 @@ enum built_in_index {
     NONEXISTENT
 };
 
-// maybe will use this for return codes of all functions in code,
-// for more consistency
 enum status_codes {
     SUCCESS,
     FAILURE,
@@ -53,9 +51,9 @@ typedef struct	s_list
 
 typedef struct s_env
 {
-    // the key part of the env var -- i.e. "lucaspellier"
+    // the key part of the env var -- i.e. "user"
     char *key;
-    // the value part of the env var -- i.e. "user"
+    // the value part of the env var -- i.e. "lucaspellier"
     char *value;
 }               t_env;
 
@@ -86,6 +84,7 @@ typedef struct s_info
 	t_list	*cmd_head;
     // head of env linked list
 	t_list  *env_head;
+	char **envp;
 	char **dir_paths;
 }               t_info;
 
@@ -143,6 +142,7 @@ int     init_env(t_info *info, char **envp);
 t_cmd   *create_cmd_struct();
 t_env   *create_env_struct(char *key, char *value);
 t_list	*ft_create_elem(void *data);
+int		ft_list_size(t_list *list);
 void	ft_list_push_back(t_list **begin_list, void *data);
 void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 t_list	*ft_list_at(t_list *begin_list, unsigned int nbr);

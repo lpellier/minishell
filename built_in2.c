@@ -32,7 +32,7 @@ int ft_cd (t_info *info, int index_cmd)
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     if (!cmd->input)
     {
-        if (chdir("~"))
+        if (chdir("/Users/lucaspellier")) // need to find user in env var and feed it there
             ft_printf("Couldn't access folder, check directory listing\n");
     }
     else if (cmd->input[0] == '/')
@@ -50,11 +50,91 @@ int ft_cd (t_info *info, int index_cmd)
     return (SUCCESS);
 }
 
+// this is used to count different arguments for binaries
+// this WILL be tricky as we'll need to account for ""  and '' as a single argument
+// and there might be backspaces canceling quotes -> it's going to be tough
+char **count_args(t_cmd *cmd, int *count)
+{
+    char **split;
+    int i;
+
+    split = ft_split(cmd->input, ' ');
+    *count = 0;
+    i = 0;
+    if (cmd->cmd)
+        *count += 1;
+    while (split[i])
+        i++;
+    *count += i;
+    if (cmd->option)
+        *count += 1;
+    return (split);
+}
+
+char **list_to_tab(t_list *begin_list)
+{
+    t_list *next;
+    t_env *env;
+    char **ret;
+    int i;
+
+    i = 0;
+    next = begin_list->next;
+    if (!(ret = (char **)malloc(sizeof(char *) * ft_list_size(next) + 1)))
+        return (NULL);
+    while (next)
+    {
+        env = (t_env *)next->data;
+        ret[i] = ft_strjoin(ft_strjoin(env->key, "="), env->value);
+        next = next->next;
+        i++;
+    }
+    ret[i] = NULL;
+    return (ret);
+}
+
 int exec_binary(t_info *info, int index_cmd)
 {
-    (void) info;
-    (void) index_cmd;
-    return (0);
+    t_cmd *cmd;
+    int count;
+    char **argv;
+    char **split;
+    char **env; // env needs to contain all env variables
+    // so we'll need to convert our linked lists to a char **
+    // shouldn't be too hard
+    // we could also get it at the source while creating the linked lists
+    // shouldn't have removed your functions sorry teo
+    cmd = ft_list_at(info->cmd_head, index_cmd)->data;
+    // this is where the complex split depending on quotes and backslashes will happen
+    // for now it's only split by spaces for simplicity
+    env = list_to_tab(info->env_head);
+    split = count_args(cmd, &count);
+    if (!(argv = (char **)malloc(sizeof(char *) * count + 1)))
+        return (FAILURE);
+    argv[0] = ft_strdup(cmd->cmd);
+    int i = 0;
+    int j = 1;
+    while (split[i])
+    {
+        argv[j] = ft_strdup(split[i]);
+        i++;
+        j++;
+    }
+    argv[j] = NULL;
+    //i = 0;
+    //while (argv[i])
+    //{
+    //    ft_printf("%d = %s\n", i, argv[i]);
+    //    i++;
+    //}
+    //ft_printf("first word : %s and count : %d\n", split[0], count);
+    if (execve(cmd->path, argv, env) == -1)
+        return (FAILURE);
+    free_tab(split);
+    free_tab(argv);
+    free_tab(env);
+    // might need to free before returning when there's an error
+    return (SUCCESS);
 }
 
 int    compare_size(char *s1, char *s2)
@@ -80,7 +160,6 @@ int     find_binary(t_info *info, t_cmd *cmd)
         if (!directories(info->dir_paths[i], cmd->cmd))
         {
             cmd->path = ft_strjoin(ft_strjoin(info->dir_paths[i], "/"), cmd->cmd);
-            ft_printf("binary path : %s\n", cmd->path);
             return (SUCCESS);
         }
         i++;

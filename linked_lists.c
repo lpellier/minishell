@@ -23,6 +23,21 @@ t_list	*ft_create_elem(void *data)
     return (res);
 }
 
+int		ft_list_size(t_list *list)
+{
+    t_list	*current;
+    int		i;
+
+    i = 0;
+    current = list;
+    while (current)
+    {
+        i++;
+        current = current->next;
+    }
+    return (i);
+}
+
 void	ft_list_push_back(t_list **begin_list, void *data)
 {
     t_list *list;

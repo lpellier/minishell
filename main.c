@@ -11,7 +11,6 @@ int    shell_loop(char **envp)
     info.env_head = ft_create_elem(create_env_struct(NULL, NULL));
     init_env(&info, envp);
     info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head, create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ':');
-    //ft_get_path(envp, &info);
     ft_printf(RED     "Welcome to Minisheh\n"     RESET);
     while (!info.crashed)
     {

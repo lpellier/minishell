@@ -59,7 +59,7 @@ int pipe_for_exec(t_info *info, int index_cmd)
          close(pipefd[0]); // closing useless writing extremity of pipe
          dup2(pipefd[1], STDOUT_FILENO); // duplicating reading extremity of pipe into stdout so i can
          // print cmd to retrieve output
-         _exit((*built_in[cmd->bui]) (info, index_cmd)); // exiting with cmd exit code
+         _exit((*built_in[cmd->bui]) (info, index_cmd)); // exiting with cmd exit code, here built_in is only for binaries
     }
     else
     {
