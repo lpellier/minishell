@@ -28,12 +28,15 @@ int ft_cd (t_info *info, int index_cmd)
 {
     t_cmd *cmd;
     char cwd[PATH_MAX];
+    char *user;
 
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
+    user = ft_strjoin("/Users/", ((t_env *)ft_list_find(info->env_head, create_env_struct("USER", NULL), cmp_env)->data)->value);
     if (!cmd->input)
     {
         if (chdir("/Users/lucaspellier")) // need to find user in env var and feed it there
             ft_printf("Couldn't access folder, check directory listing\n");
+        free(user);
     }
     else if (cmd->input[0] == '/')
     {
