@@ -13,29 +13,31 @@ int ft_echo (t_info *info, int index_cmd)
     return (SUCCESS);
 }
 
-void store_output(t_cmd *cmd)
+void store_output(t_info *info, int index_cmd)
 {
     char *str;
+    t_cmd *cmd;
 
+    cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     get_next_line(STDIN_FILENO, &str);
-    cmd->output = ft_strdup(str);
+    info->output = ft_strdup(str);
     if (cmd->bui != 1 && cmd->bui != 9)
-        cmd->output = ft_strjoin(str, "\n"); // storing it in output variable
+        info->output = ft_strjoin(str, "\n"); // storing it in output variable
     else
-        cmd->output = ft_strdup(str);
+        info->output = ft_strdup(str);
     while (get_next_line(STDIN_FILENO, &str))
     {
         if (cmd->bui != 1 && cmd->bui != 9)
-            cmd->output = ft_strjoin(ft_strjoin(cmd->output, str), "\n"); // storing it in output variable
+            info->output = ft_strjoin(ft_strjoin(info->output, str), "\n"); // storing it in output variable
         else
-            cmd->output = ft_strjoin(cmd->output, str);
+            info->output = ft_strjoin(info->output, str);
     }
     if (str)
         free(str);
     str = NULL;
 }
 
-int pipe_for_exec(t_info *info, int index_cmd)
+int pipe_for_exec(t_info *info, int index_cmd, char *line, int index, int piped)
 {
     // stores fd extremes from pipe : pipefd[0] is reading and pipefd[1] is writing
     int pipefd[2];
@@ -66,7 +68,16 @@ int pipe_for_exec(t_info *info, int index_cmd)
         waitpid(cpid, &status, 0); // waits for child process and returns status
         close(pipefd[1]); // closing useless reading extremity of pipe
         dup2(pipefd[0], STDIN_FILENO); // reading what cmd wrote
-        store_output(cmd);
+        // need for pipe functions to read from std input
+        // shouldn't be too hard, almost there
+        // fuck
+        if (piped)
+        {
+            ft_list_push_back(&info->cmd_head, create_cmd_struct());
+            read_cmd(line, info, index + 1, index_cmd + 1);
+        }
+        else
+            store_output(info, index_cmd);
         if (cmd->bui == 2)
             info->crashed = TRUE;
         close(pipefd[0]); // closing last pipe fd
@@ -119,7 +130,7 @@ int ft_export (t_info *info, int index_cmd)
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     if (!cmd->input || !ft_strchr(cmd->input, '='))
         return (FAILURE);
-    key_value = ft_split(cmd->input, '=');
+    key_value = ft_split(cmd->input, "=");
     if (!key_value[1])
         return (FAILURE);
     ft_list_push_back(&info->env_head, create_env_struct(key_value[0], key_value[1]));

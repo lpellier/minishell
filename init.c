@@ -23,7 +23,7 @@ int     init_env(t_info *info, char **envp)
     i = 0;
     while (envp[i])
     {
-        key_value = ft_split(envp[i], '=');
+        key_value = ft_split(envp[i], "=");
         ft_list_push_back(&info->env_head, create_env_struct(key_value[0], key_value[1]));
         free(key_value);
         i++;
@@ -42,7 +42,6 @@ t_cmd   *create_cmd_struct()
     cmd->cmd = NULL;
     cmd->input = NULL;
     cmd->option = NULL;
-    cmd->output = NULL;
     cmd->path = NULL;
     return (cmd);
 }

@@ -65,7 +65,7 @@ char **count_args(t_cmd *cmd, int *count)
     i = 0;
     if (cmd->input)
     {
-        split = ft_split(cmd->input, ' ');
+        split = ft_split(cmd->input, " ");
         while (split[i])
             i++;
         *count += i;
@@ -107,11 +107,7 @@ int exec_binary(t_info *info, int index_cmd)
     int count;
     char **argv;
     char **split;
-    char **env; // env needs to contain all env variables
-    // so we'll need to convert our linked lists to a char **
-    // shouldn't be too hard
-    // we could also get it at the source while creating the linked lists
-    // shouldn't have removed your functions sorry teo
+    char **env;
     cmd = ft_list_at(info->cmd_head, index_cmd)->data;
     // this is where the complex split depending on quotes and backslashes will happen
     // for now it's only split by spaces for simplicity
@@ -124,10 +120,10 @@ int exec_binary(t_info *info, int index_cmd)
     int j = 1;
     if (cmd->option)
     {
-        argv[1] = ft_strdup(cmd->option);
+        argv[j] = ft_strdup(cmd->option);
         j++;
     }
-    if (split)
+    if (split && split[0])
     {
         while (split[i])
         {
@@ -136,7 +132,20 @@ int exec_binary(t_info *info, int index_cmd)
             j++;
         }
     }
+    else if (cmd->input)
+    {
+        argv[j] = ft_strdup(cmd->input);
+        j++;
+    }
+    //ft_printf("argv[%d] : '%s'\n", j, argv[j]);
     argv[j] = NULL;
+    //ft_printf("argv[0] : '%s'\n", argv[0]);
+    //j = 0;
+    //while (argv[j])
+    //{
+    //    ft_printf("argv[%d] : '%s'\n", j, argv[j]);
+    //    j++;
+    //}
     if (execve(cmd->path, argv, env) == -1)
         return (FAILURE);
     free_tab(split);

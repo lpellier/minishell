@@ -63,7 +63,7 @@ char				*ft_strrchr(const char *s, int c);
 char				*ft_strtrim(const char *s1, const char *set);
 char				*ft_itoa(int n);
 char				*ft_strmapi(const char *s, char (*f)(unsigned int, char));
-char				**ft_split(const char *s, char c);
+char	            **ft_split(char *str, char *charset);
 int					ft_intlen(long n);
 int					ft_uintlen(unsigned long n);
 int					ft_isalpha(int c);

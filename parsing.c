@@ -88,7 +88,7 @@ int get_cmd(char *line, t_cmd *cmd)
 {
 	char **words;
 
-	words = ft_split(line, ' ');
+	words = ft_split(line, " ");
     if (!(*words))
         cmd->cmd = without_spaces(line);
     else if (words[0] && words[1] && words[1][0] == '-')
@@ -139,30 +139,26 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
 	index += get_input(&line[index], cmd);
     index += spaces(&line[index]);
 	compare_cmd(info, cmd);
-	if (cmd->output && !cmd->input)
-    {
-	    cmd->input = ft_strdup(cmd->output);
-        free(cmd->output);
-        cmd->output = NULL;
-    }
     test(cmd);
     if (cmd->cmd && cmd->bui == 9)
-        cmd->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd), ": command not found\n");
+        info->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd), ": command not found\n");
+    else if (cmd->bui == 8 && !pipe_or_colon(line[index]))
+        pipe_for_exec(info, index_cmd, line, index, 1);
     else if (cmd->bui == 8)
-        pipe_for_exec(info, index_cmd); // this should only apply to non-built-ins. so bui = 8
+        pipe_for_exec(info, index_cmd, line, index, 0);
     else if (!cmd->cmd)
-        cmd->output = ft_strdup("");
+        info->output = ft_strdup(""); // might cause an issue later
     else
         (*built_in[cmd->bui]) (info, index_cmd);
-
-    index += spaces(&line[index]);
-	if (!pipe_or_colon(line[index]))
+	/*if (!pipe_or_colon(line[index]))
 	{
         ft_list_push_back(&info->cmd_head, create_cmd_struct());
         read_cmd(line, info, index + 1, index_cmd + 1);
     }
-	if (cmd->output)
-	    ft_printf("%s", cmd->output);
+	if (info->output)
+	    ft_printf("%s", info->output);*/
+	// might want to print output outside of this function to take into account recursive calls of this function
+    // there's only going to be one output print unless there's a semi-colon
 }
 
 // reads line using gnl and feeds t_cmd linked lists
@@ -175,6 +171,12 @@ void read_line(t_info *info)
 	if (line)
 	    free(line);
 	line = NULL;
+	if (info->output)
+    {
+	    ft_printf("%s", info->output);
+        free(info->output);
+    }
+	info->output = NULL;
 }
 
 // This function will be used to check for executables in directories addressed in $PATH
@@ -201,7 +203,7 @@ char *get_cur_dir(t_info *info)
 
     i = 0;
     getcwd(info->cur_path, sizeof(info->cur_path));
-    split = ft_split(info->cur_path, '/');
+    split = ft_split(info->cur_path, "/");
     while (split[i])
         i++;
     if (i == 0)

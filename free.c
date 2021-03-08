@@ -27,9 +27,6 @@ void	free_cmd_struct(void *data)
     if (ptr->option)
         free(ptr->option);
     ptr->option = NULL;
-    if (ptr->output)
-        free(ptr->output);
-    ptr->output = NULL;
     if (ptr->path)
         free(ptr->path);
     ptr->path = NULL;

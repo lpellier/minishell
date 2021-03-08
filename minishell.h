@@ -64,9 +64,6 @@ typedef struct s_cmd
 	char *cmd;
 	// the input part of the command -- i.e. "allo" or ".."
 	char *input;
-    // this will eventually be useful for stocking what a command
-    // should output so that we feed it to another cmd
-	char *output;
 	// number assigned to one of the built in function
 	// bui stands for built-in-index
 	int bui;
@@ -84,6 +81,7 @@ typedef struct s_info
 	t_list	*cmd_head;
     // head of env linked list
 	t_list  *env_head;
+    char *output;
 	char **envp;
 	char **dir_paths;
 }               t_info;
@@ -95,6 +93,7 @@ int    shell_loop(char **envp);
 // parsing
 
 void read_line(t_info *info);
+void read_cmd(char *line, t_info *info, int index, int index_cmd);
 char *get_cur_dir(t_info *info);
 int    directories(char *path, char *cmd);
 
@@ -136,7 +135,7 @@ int     cmp_env(void *data, void *data_ref);
 
 // linked lists
 
-int pipe_for_exec(t_info *info, int index_cmd);
+int pipe_for_exec(t_info *info, int index_cmd, char *line, int index, int piped);
 int     init_env(t_info *info, char **envp);
 
 t_cmd   *create_cmd_struct();
