@@ -31,6 +31,13 @@ int get_input(char *line, t_cmd *cmd)
 	return (ft_strlen(cmd->input));
 }
 
+int is_whitespace(char c)
+{
+    if (c == 32 || (c >= 9 && c <= 13))
+        return (SUCCESS);
+    return (FAILURE);
+}
+
 int option_only_n(char *option)
 {
 	option += 1;
@@ -43,28 +50,57 @@ int option_only_n(char *option)
 	return (SUCCESS);
 }
 
+char *without_spaces(char *line)
+{
+    char *ret;
+    int i;
+    int j;
+    int count;
+
+    count = 0;
+    i = 0;
+    if (!line)
+        return (NULL);
+    while (line[i])
+    {
+        if (is_whitespace(line[i]))
+            count++;
+        i++;
+    }
+    if (!(ret = malloc(sizeof(char) * (count + 1))))
+        return (NULL);
+    i = 0;
+    j = 0;
+    while (line[i])
+    {
+        if (is_whitespace(line[i]))
+        {
+            ret[j] = line[i];
+            j++;
+        }
+        i++;
+    }
+    ret[j] = '\0';
+    return (ret);
+}
+
 int get_cmd(char *line, t_cmd *cmd)
 {
 	char **words;
 
 	words = ft_split(line, ' ');
-	if (words[0] && words[1] && words[1][0] == '-')
+    if (!(*words))
+        cmd->cmd = without_spaces(line);
+    else if (words[0] && words[1] && words[1][0] == '-')
 	{
 		cmd->option = ft_strdup(words[1]);
 		if (!compare_size(words[0], "echo") && !option_only_n(cmd->option))
 			cmd->cmd = ft_strdup(words[0]);
 	}
-	else if (words[0])
+    else if (words[0])
 		cmd->cmd = ft_strdup(words[0]);
 	free_tab(words);
 	return (ft_strlen(cmd->cmd));
-}
-
-int is_whitespace(char c)
-{
-    if (c == 32 || (c >= 9 && c <= 13))
-        return (SUCCESS);
-    return (FAILURE);
 }
 
 int spaces(char *s)

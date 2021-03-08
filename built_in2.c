@@ -34,7 +34,7 @@ int ft_cd (t_info *info, int index_cmd)
     user = ft_strjoin("/Users/", ((t_env *)ft_list_find(info->env_head, create_env_struct("USER", NULL), cmp_env)->data)->value);
     if (!cmd->input)
     {
-        if (chdir("/Users/lucaspellier")) // need to find user in env var and feed it there
+        if (chdir(user))
             ft_printf("Couldn't access folder, check directory listing\n");
         free(user);
     }
