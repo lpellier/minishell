@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_functions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucaspellier <lucaspellier@student.42.f    +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:36:54 by lpellier          #+#    #+#             */
-/*   Updated: 2020/03/25 19:56:14 by lucaspellie      ###   ########.fr       */
+/*   Updated: 2021/03/08 22:58:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
