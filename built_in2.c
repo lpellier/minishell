@@ -58,14 +58,19 @@ char **count_args(t_cmd *cmd, int *count)
     char **split;
     int i;
 
-    split = ft_split(cmd->input, ' ');
     *count = 0;
     i = 0;
+    if (cmd->input)
+    {
+        split = ft_split(cmd->input, ' ');
+        while (split[i])
+            i++;
+        *count += i;
+    }
+    else
+        split = NULL;
     if (cmd->cmd)
         *count += 1;
-    while (split[i])
-        i++;
-    *count += i;
     if (cmd->option)
         *count += 1;
     return (split);
@@ -80,7 +85,7 @@ char **list_to_tab(t_list *begin_list)
 
     i = 0;
     next = begin_list->next;
-    if (!(ret = (char **)malloc(sizeof(char *) * ft_list_size(next) + 1)))
+    if (!(ret = (char **)malloc(sizeof(char *) * (ft_list_size(next) + 1))))
         return (NULL);
     while (next)
     {
@@ -114,20 +119,16 @@ int exec_binary(t_info *info, int index_cmd)
     argv[0] = ft_strdup(cmd->cmd);
     int i = 0;
     int j = 1;
-    while (split[i])
+    if (split)
     {
-        argv[j] = ft_strdup(split[i]);
-        i++;
-        j++;
+        while (split[i])
+        {
+            argv[j] = ft_strdup(split[i]);
+            i++;
+            j++;
+        }
     }
     argv[j] = NULL;
-    //i = 0;
-    //while (argv[i])
-    //{
-    //    ft_printf("%d = %s\n", i, argv[i]);
-    //    i++;
-    //}
-    //ft_printf("first word : %s and count : %d\n", split[0], count);
     if (execve(cmd->path, argv, env) == -1)
         return (FAILURE);
     free_tab(split);
