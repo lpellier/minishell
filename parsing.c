@@ -92,12 +92,9 @@ int get_cmd(char *line, t_cmd *cmd)
     if (!(*words))
         cmd->cmd = without_spaces(line);
     else if (words[0] && words[1] && words[1][0] == '-')
-	{
 		cmd->option = ft_strdup(words[1]);
-		if (!compare_size(words[0], "echo") && !option_only_n(cmd->option))
-			cmd->cmd = ft_strdup(words[0]);
-	}
-    else if (words[0])
+    // removed check for only n in option for echo, will have to add that some other place
+    if (words[0])
 		cmd->cmd = ft_strdup(words[0]);
 	free_tab(words);
 	return (ft_strlen(cmd->cmd));
@@ -117,11 +114,11 @@ int spaces(char *s)
 
 void test(t_cmd *cmd)
 {
-    ft_printf(CYAN"%s"RESET, cmd->cmd);
+    ft_printf(CYAN"'%s'"RESET, cmd->cmd);
     ft_printf(RED" | "RESET);
-    ft_printf(CYAN"%s"RESET, cmd->option);
+    ft_printf(CYAN"'%s'"RESET, cmd->option);
     ft_printf(RED" | "RESET);
-    ft_printf(CYAN"%s"RESET, cmd->input);
+    ft_printf(CYAN"'%s'"RESET, cmd->input);
     ft_printf(RED" | bui -> "RESET);
     ft_printf(CYAN"%d\n"RESET, cmd->bui);
 }

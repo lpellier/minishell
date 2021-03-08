@@ -122,6 +122,11 @@ int exec_binary(t_info *info, int index_cmd)
     argv[0] = ft_strdup(cmd->cmd);
     int i = 0;
     int j = 1;
+    if (cmd->option)
+    {
+        argv[1] = ft_strdup(cmd->option);
+        j++;
+    }
     if (split)
     {
         while (split[i])
