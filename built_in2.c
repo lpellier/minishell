@@ -137,15 +137,7 @@ int exec_binary(t_info *info, int index_cmd)
         argv[j] = ft_strdup(cmd->input);
         j++;
     }
-    //ft_printf("argv[%d] : '%s'\n", j, argv[j]);
     argv[j] = NULL;
-    //ft_printf("argv[0] : '%s'\n", argv[0]);
-    //j = 0;
-    //while (argv[j])
-    //{
-    //    ft_printf("argv[%d] : '%s'\n", j, argv[j]);
-    //    j++;
-    //}
     if (execve(cmd->path, argv, env) == -1)
         return (FAILURE);
     free_tab(split);

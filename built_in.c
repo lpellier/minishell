@@ -67,10 +67,7 @@ int pipe_for_exec(t_info *info, int index_cmd, char *line, int index, int piped)
     {
         waitpid(cpid, &status, 0); // waits for child process and returns status
         close(pipefd[1]); // closing useless reading extremity of pipe
-        dup2(pipefd[0], STDIN_FILENO); // reading what cmd wrote
-        // need for pipe functions to read from std input
-        // shouldn't be too hard, almost there
-        // fuck
+        dup2(pipefd[0], STDIN_FILENO);
         if (piped)
         {
             ft_list_push_back(&info->cmd_head, create_cmd_struct());

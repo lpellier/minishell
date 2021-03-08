@@ -89,9 +89,7 @@ int get_cmd(char *line, t_cmd *cmd)
 	char **words;
 
 	words = ft_split(line, " ");
-    if (!(*words))
-        cmd->cmd = without_spaces(line);
-    else if (words[0] && words[1] && words[1][0] == '-')
+    if (words[0] && words[1] && words[1][0] == '-')
 		cmd->option = ft_strdup(words[1]);
     // removed check for only n in option for echo, will have to add that some other place
     if (words[0])
@@ -107,8 +105,11 @@ int spaces(char *s)
 
     i = 0;
     count = 0;
-    while (!is_whitespace(s[i++]))
+    while (!is_whitespace(s[i]))
+    {
         count++;
+        i++;
+    }
     return (count);
 }
 
@@ -150,13 +151,6 @@ void read_cmd(char *line, t_info *info, int index, int index_cmd)
         info->output = ft_strdup(""); // might cause an issue later
     else
         (*built_in[cmd->bui]) (info, index_cmd);
-	/*if (!pipe_or_colon(line[index]))
-	{
-        ft_list_push_back(&info->cmd_head, create_cmd_struct());
-        read_cmd(line, info, index + 1, index_cmd + 1);
-    }
-	if (info->output)
-	    ft_printf("%s", info->output);*/
 	// might want to print output outside of this function to take into account recursive calls of this function
     // there's only going to be one output print unless there's a semi-colon
 }
