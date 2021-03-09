@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/09 00:05:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/09 14:33:22 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,20 @@ void		init(t_info *info, char **envp)
 	init_env(info, envp);
 	info->dir_paths = ft_split(((t_env *)ft_list_find(info->env_head,
 		create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
+	info->nb_colon = 0;
+	info->nb_l_redir = 0;
+	info->nb_pipe = 0;
+	info->nb_r_redir = 0;
+	info->nb_rd_redir = 0;
+}
+
+void reset_info(t_info *info)
+{
+	info->nb_colon = 0;
+	info->nb_l_redir = 0;
+	info->nb_pipe = 0;
+	info->nb_r_redir = 0;
+	info->nb_rd_redir = 0;
 }
 
 /*
@@ -43,6 +57,7 @@ int			shell_loop(char **envp)
 		ft_printf(BLUE "~ %s > " RESET, cur_dir);
 		info.cmd_head = ft_create_elem(create_cmd_struct());
 		read_line(&info);
+		reset_info(&info);
 		ft_list_clear(info.cmd_head, free_cmd_struct);
 		ft_bzero(info.cur_path, 4096);
 		free(cur_dir);
