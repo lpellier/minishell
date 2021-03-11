@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/09 00:05:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 10:31:10 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void		init(t_info *info, char **envp)
 	init_built_in();
 	info->crashed = FALSE;
 	info->output = NULL;
+	info->cmd_status = 0;
 	info->env_head = ft_create_elem(create_env_struct(NULL, NULL));
 	init_env(info, envp);
 	info->dir_paths = ft_split(((t_env *)ft_list_find(info->env_head,

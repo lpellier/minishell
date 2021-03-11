@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/09 15:47:43 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 10:37:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int			get_input(char *line, t_cmd *cmd)
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))
 		index++;
-	if (!(cmd->input = malloc(sizeof(char) * (index + 1))))
+	if (!(cmd->input = malloc(sizeof(char) * (index))))
 		return (FAILURE);
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))
@@ -118,14 +118,15 @@ void		read_cmd(char *line, t_info *info, int index, int index_cmd)
 		info->output = ft_strdup(""); /* might cause an issue later */
 	else if (!pipe_or_colon(line[index]))
 		pipe_for_exec(info, index_cmd, line, index, 1);
-	else if (pipe_or_colon(line[index]))
+	else if (pipe_or_colon(line[index]) && cmd->bui == 8)
 		pipe_for_exec(info, index_cmd, line, index, 0);
 	else
-		(*built_in[cmd->bui])(info, index_cmd);
+		info->cmd_status = (*built_in[cmd->bui])(info, index_cmd);
 }
 
 /*
 ** replaces every $ with its env variable counterpart
+** need to replace lib functions with libft ones
 */
 
 #include <string.h>

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:36:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 10:28:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int			pipe_for_exec(t_info *info, int index_cmd, char *line, int index, int pipe
 	else
 	{
 		waitpid(cpid, &status, 0);
+		info->cmd_status = status;
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		if (piped)
