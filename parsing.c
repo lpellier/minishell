@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 13:16:04 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/03/11 13:23:36 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,35 @@ void check_sep(t_info *info, char *line)
 ** is there another cmd determined by whether there is a pipe |
 ** or a semi-colon for now;
 */
+
+void check_sep(t_info *info, char *line)
+{
+	int i;
+
+	i = 0;
+	if (!line[i])
+		return (FAILURE);
+	while (line[i])
+	{
+		if (line[i] == '<')
+			info->nb_l_redir++;
+		else if (line[i] == '>')
+		{
+			if (line[i + 1] && line[i + 1] == '>')
+			{
+				info->nb_rd_redir++;
+				i++;
+			}
+			else
+				info->nb_r_redir++;
+		}
+		else if (line[i] == '|')
+			info->nb_pipe++;
+		else if (line[i] == ';')
+			info->nb_colon++;
+		i++;
+	}
+}
 
 void		read_cmd(char *line, t_info *info, int index, int index_cmd)
 {

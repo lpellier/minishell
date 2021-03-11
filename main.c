@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 13:14:06 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/03/11 13:24:33 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void		init(t_info *info, char **envp)
  	info->nb_r_redir = 0;
  	info->nb_rd_redir = 0;
  }
+
 
 /*
 ** signal(SIGQUIT, ft_sigquit); ctrl + \
