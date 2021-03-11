@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:45:57 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:45:58 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 11:24:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,19 @@ t_list		*ft_create_elem(void *data)
 	res->data = data;
 	res->next = NULL;
 	return (res);
+}
+
+void	ft_list_push_front(t_list **begin_list, void *data)
+{
+	t_list	*list;
+if (*begin_list)
+	{
+		list = ft_create_elem(data);
+		list->next = *begin_list;
+		*begin_list = list;
+	}
+else
+		*begin_list = ft_create_elem(data);
 }
 
 int			ft_list_size(t_list *list)

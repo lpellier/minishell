@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 15:15:06 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 22:54:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 10:59:14 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_tolower(int c);
 char				*ft_int_hexmin(long n, char *tab);
 char				*ft_int_hexmax(long n, char *tab);
+char				*ft_itoa(int n);
 size_t				digit_count(long value, int base);
 
 const char			*checkwidth(const char *format, t_printf *info, va_list ap);

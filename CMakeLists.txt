@@ -6,8 +6,9 @@ set(CMAKE_C_COMPILER /usr/bin/clang)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -Wextra")
 SET(LIBFT_SRC
-./libft/ft_isalpha.c  
-./libft/ft_isalnum.c  
+./libft/ft_isalpha.c
+./libft/ft_itoa.c
+./libft/ft_isalnum.c
 ./libft/ft_isascii.c  
 ./libft/ft_isdigit.c  
 ./libft/ft_isprint.c

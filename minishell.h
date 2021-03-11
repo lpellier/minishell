@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 10:27:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 11:24:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ t_cmd			*create_cmd_struct();
 t_env			*create_env_struct(char *key, char *value);
 t_list			*ft_create_elem(void *data);
 int				ft_list_size(t_list *list);
+void			ft_list_push_front(t_list **begin_list, void *data);
 void			ft_list_push_back(t_list **begin_list, void *data);
 void			ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 t_list			*ft_list_at(t_list *begin_list, unsigned int nbr);

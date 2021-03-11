@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 10:37:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 11:04:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int			get_input(char *line, t_cmd *cmd)
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))
 		index++;
-	if (!(cmd->input = malloc(sizeof(char) * (index))))
+	if (!(cmd->input = malloc(sizeof(char) * (index + 1))))
 		return (FAILURE);
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))

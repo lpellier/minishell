@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:36:59 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 11:22:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ int			ft_unset(t_info *info, int index_cmd)
 	t_cmd	*cmd;
 
 	cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-	ft_list_remove_if(&info->env_head,
+	if (!info->env_head || !info->env_head->next || !info->env_head->next->next)
+		return (FAILURE);
+	ft_list_remove_if(&info->env_head->next->next,
 		create_env_struct(cmd->input, NULL), cmp_env, free_env_struct);
 	return (SUCCESS);
 }
@@ -33,9 +35,9 @@ int			ft_unset(t_info *info, int index_cmd)
 int			ft_env(t_info *info, int index_cmd)
 {
 	(void)index_cmd;
-	if (!info->env_head || !info->env_head->next)
+	if (!info->env_head || !info->env_head->next || !info->env_head->next->next)
 		return (FAILURE);
-	ft_list_foreach(info->env_head->next, print_env_struct);
+	ft_list_foreach(info->env_head->next->next, print_env_struct);
 	return (SUCCESS);
 }
 
