@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/09 00:04:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 13:16:04 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ int			spaces(char *s)
 
 	i = 0;
 	count = 0;
+	if (!s[i])
+ 		return (FAILURE);
 	while (!is_whitespace(s[i]))
 	{
 		count++;
@@ -88,6 +90,35 @@ void		test(t_cmd *cmd)
 	ft_printf(RED " | bui -> " RESET);
 	ft_printf(CYAN "%d\n" RESET, cmd->bui);
 }
+
+void check_sep(t_info *info, char *line)
+ {
+ 	int i;
+
+ 	i = 0;
+ 	if (!line[i])
+ 		return (FAILURE);
+ 	while (line[i])
+ 	{
+ 		if (line[i] == '<')
+ 			info->nb_l_redir++;
+ 		else if (line[i] == '>')
+ 		{
+ 			if (line[i + 1] && line[i + 1] == '>')
+ 			{
+ 				info->nb_rd_redir++;
+ 				i++;
+ 			}
+ 			else
+ 				info->nb_r_redir++;
+ 		}
+ 		else if (line[i] == '|')
+ 			info->nb_pipe++;
+ 		else if (line[i] == ';')
+ 			info->nb_colon++;
+ 		i++;
+ 	}
+ }
 
 /*
 ** recursive function that allows creating as many
@@ -111,6 +142,7 @@ void		read_cmd(char *line, t_info *info, int index, int index_cmd)
 	index += spaces(&line[index]);
 	compare_cmd(info, cmd);
 	test(cmd);
+	check_sep(info, line);
 	if (cmd->cmd && cmd->bui == 9)
 		info->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/09 00:01:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 13:14:06 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,11 @@ typedef struct	s_info
 {
 	char	cur_path[PATH_MAX];
 	int		crashed;
+	int		nb_pipe;
+ 	int		nb_l_redir;
+ 	int		nb_r_redir;
+ 	int		nb_rd_redir;
+ 	int		nb_colon;
 	t_list	*cmd_head;
 	t_list	*env_head;
 	char	*output;
