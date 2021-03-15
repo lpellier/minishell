@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 10:28:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/15 13:25:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,5 +173,6 @@ int			ft_export(t_info *info, int index_cmd)
 	ft_list_push_back(&info->env_head,
 		create_env_struct(key_value[0], key_value[1]));
 	free(key_value);
+	key_value = NULL;
 	return (SUCCESS);
 }

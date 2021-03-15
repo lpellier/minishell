@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:42:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/15 13:27:21 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ int			init_env(t_info *info, char **envp)
 	char	**key_value;
 
 	i = 0;
+	if (!envp[i])
+		return (FAILURE);
+	key_value = ft_split(envp[i], "=");
+	info->env_head = ft_create_elem(create_env_struct(key_value[0], key_value[1]));
+	free(key_value);
+	i++;
 	while (envp[i])
 	{
 		key_value = ft_split(envp[i], "=");

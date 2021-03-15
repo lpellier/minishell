@@ -65,6 +65,7 @@ add_executable(
 target_link_libraries(
         minishell
         LIBFT
+        termcap
 )
 include_directories(
         ./libft/

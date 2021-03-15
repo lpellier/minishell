@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 11:04:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/15 13:28:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,12 +215,16 @@ char *replace_dollars_env(t_info *info, char *line)
 
 /* reads line using gnl and feeds t_cmd linked lists */
 
-void		read_line(t_info *info)
+void		read_line(t_info *info, int first)
 {
 	char	*line;
 	char	*true_line;
 
 	get_next_line(0, &line);
+	if (first)
+		info->history_head = ft_create_elem(create_history_struct(ft_strdup(line)));
+	else
+    	ft_list_push_front(&info->history_head, create_history_struct(ft_strdup(line)));
 	true_line = replace_dollars_env(info, line);
 	read_cmd(true_line, info, 0, 0);
 	if (line)
@@ -270,6 +274,6 @@ char		*get_cur_dir(t_info *info)
 		res = NULL;
 	else
 		res = ft_strdup(split[i - 1]);
-	free(split);
+	free_tab(split);
 	return (res);
 }

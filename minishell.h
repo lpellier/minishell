@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 11:24:53 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/15 13:10:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <dirent.h>
 # include <signal.h>
+# include <termcap.h>
 # define PATH_MAX 4096
 # define TRUE 1
 # define FALSE 0
@@ -73,6 +74,11 @@ typedef struct	s_env
 	char	*value;
 }				t_env;
 
+typedef struct	s_history
+{
+    char	*line;
+}				t_history;
+
 /*
 ** the cmd part of the command -- i.e. 'echo' or 'pwd' etc
 ** the input part of the command -- i.e. "allo" or ".."
@@ -91,11 +97,6 @@ typedef struct	s_cmd
 	char	*path;
 }				t_cmd;
 
-/*
-** head of cmd linked list
-** head of env linked list
-*/
-
 typedef struct	s_info
 {
 	char	cur_path[PATH_MAX];
@@ -103,6 +104,7 @@ typedef struct	s_info
 	int		cmd_status;
 	t_list	*cmd_head;
 	t_list	*env_head;
+	t_list	*history_head;
 	char	*output;
 	char	**envp;
 	char	**dir_paths;
@@ -111,12 +113,11 @@ typedef struct	s_info
 int				(*built_in[9])(t_info *info, int index_cmd);
 
 int				shell_loop(char **envp);
-
 /*
 ** parsing
 */
 
-void			read_line(t_info *info);
+void			read_line(t_info *info, int first);
 void			read_cmd(char *line, t_info *info, int index, int index_cmd);
 char			*get_cur_dir(t_info *info);
 int				directories(char *path, char *cmd);
@@ -160,6 +161,7 @@ int				compare_size(char *s1, char *s2);
 
 void			free_tab(char **tab);
 
+void		free_history_struct(void *data);
 void			free_cmd_struct(void *data);
 void			free_env_struct(void *data);
 
@@ -173,8 +175,9 @@ int				cmp_env(void *data, void *data_ref);
 int				pipe_for_exec(t_info *info, int index_cmd,
 					char *line, int index, int piped);
 int				init_env(t_info *info, char **envp);
-
+void		print_history(void *data);
 t_cmd			*create_cmd_struct();
+t_history *create_history_struct(char *str);
 t_env			*create_env_struct(char *key, char *value);
 t_list			*ft_create_elem(void *data);
 int				ft_list_size(t_list *list);

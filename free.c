@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:39:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/15 13:26:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void		free_tab(char **tab)
 		free(tab[i]);
 		tab[i] = NULL;
 	}
+	free(tab);
+	tab = NULL;
 }
 
 void		free_cmd_struct(void *data)
@@ -55,6 +57,16 @@ void		free_env_struct(void *data)
 	if (ptr->key)
 		free(ptr->key);
 	ptr->key = NULL;
+}
+
+void		free_history_struct(void *data)
+{
+    t_history	*ptr;
+
+    ptr = (t_history *)data;
+    if (ptr->line)
+        free(ptr->line);
+    ptr->line = NULL;
 }
 
 void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *))

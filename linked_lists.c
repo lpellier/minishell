@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:45:57 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 11:24:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/15 13:27:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,14 @@ void		print_env_struct(void *data)
 	ft_printf("%s=%s\n", ptr->key, ptr->value);
 }
 
+void		print_history(void *data)
+{
+	t_history *ptr;
+
+	ptr = (t_history *)data;
+	ft_printf("%s\n", ptr->line);
+}
+
 void		ft_list_foreach(t_list *begin_list, void (*f)(void *))
 {
 	t_list	*el;
@@ -148,6 +156,7 @@ void		ft_list_remove_if(t_list **begin_list, void *data_ref,
 		*begin_list = (*begin_list)->next;
 		free_fct(tmp->data);
 		free(tmp);
+		tmp = NULL;
 	}
 	el = *begin_list;
 	while (el && el->next)
@@ -158,6 +167,7 @@ void		ft_list_remove_if(t_list **begin_list, void *data_ref,
 			el->next = tmp->next;
 			free_fct(tmp->data);
 			free(tmp);
+			tmp = NULL;
 		}
 		el = el->next;
 	}

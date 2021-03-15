@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/03/08 23:37:36 by lpellier         ###   ########.fr        #
+#    Updated: 2021/03/11 12:37:19 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	make -C libft
 	cp libft/libft.a ./$(NAME)
-	$(CC) $(CFLAGS) $(SRCS) -o minishell $(LIBFT)
+	$(CC) $(CFLAGS) -ltermcap $(SRCS) -o minishell $(LIBFT)
 
 clean :
 	rm -rf $(OBJS)
