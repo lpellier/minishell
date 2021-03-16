@@ -114,7 +114,8 @@ typedef struct	s_info
 
 int				(*built_in[9])(t_info *info, int index_cmd);
 
-int				shell_loop(char **envp);
+//int				shell_loop(char **envp);
+int				shell_loop(t_info *info);
 
 /*
 ** parsing
@@ -152,11 +153,9 @@ int				compare_size(char *s1, char *s2);
 ** signal
 */
 
-/*
-** void	ft_sigquit(int sig);
-** void	ft_sigint(int sig);
-** void	ft_sigterm(int sig, t_info *info);
-*/
+void	ft_sigint(int sig);
+void	ft_sigquit(int sig);
+void	ft_sigterm(int sig);
 
 /*
 ** free

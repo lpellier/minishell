@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 13:24:33 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/03/11 15:02:46 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,34 +37,30 @@ void		init(t_info *info, char **envp)
  	info->nb_rd_redir = 0;
  }
 
-
-/*
-** signal(SIGQUIT, ft_sigquit); ctrl + \
-** signal(SIGINT, ft_sigint); ctrl + c
-** signal(SIGTERM, (void (*)(int))ft_sigterm); ctrl + d
-*/
-
-int			shell_loop(char **envp)
+int			shell_loop(t_info *info)
 {
-	t_info	info;
+//	t_info	info;
 	char	*cur_dir;
 
-	init(&info, envp);
+//	init(&info, envp);
+    signal(SIGQUIT, ft_sigquit);
+    signal(SIGTERM, ft_sigterm);
+    signal(SIGINT, ft_sigint);
 	ft_printf(RED "Welcome to Minisheh\n" RESET);
-	while (!info.crashed)
-	{
-		if (!(cur_dir = get_cur_dir(&info)))
+	while (!info->crashed)
+    {
+		if (!(cur_dir = get_cur_dir(info)))
 			cur_dir = ft_strdup("/");
 		ft_printf(BLUE "~ %s > " RESET, cur_dir);
-		info.cmd_head = ft_create_elem(create_cmd_struct());
-		read_line(&info);
-		reset_info(&info);
-		ft_list_clear(info.cmd_head, free_cmd_struct);
-		ft_bzero(info.cur_path, 4096);
+		info->cmd_head = ft_create_elem(create_cmd_struct());
+		read_line(info);
+		reset_info(info);
+		ft_list_clear(info->cmd_head, free_cmd_struct);
+		ft_bzero(info->cur_path, 4096);
 		free(cur_dir);
 	}
-	free_tab(info.dir_paths);
-	ft_list_clear(info.env_head, free_env_struct);
+	free_tab(info->dir_paths);
+	ft_list_clear(info->env_head, free_env_struct);
 	return (SUCCESS);
 }
 
@@ -72,6 +68,8 @@ int			main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-	system("clear");
-	exit(shell_loop(envp));
+    t_info	info;
+    system("clear");
+    init(&info, envp);
+    exit(shell_loop(&info));
 }

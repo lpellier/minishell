@@ -91,7 +91,7 @@ void		test(t_cmd *cmd)
 	ft_printf(CYAN "%d\n" RESET, cmd->bui);
 }
 
-void check_sep(t_info *info, char *line)
+int check_sep(t_info *info, char *line)
  {
  	int i;
 
@@ -118,6 +118,7 @@ void check_sep(t_info *info, char *line)
  			info->nb_colon++;
  		i++;
  	}
+ 	return (0);
  }
 
 /*
@@ -126,35 +127,6 @@ void check_sep(t_info *info, char *line)
 ** is there another cmd determined by whether there is a pipe |
 ** or a semi-colon for now;
 */
-
-void check_sep(t_info *info, char *line)
-{
-	int i;
-
-	i = 0;
-	if (!line[i])
-		return (FAILURE);
-	while (line[i])
-	{
-		if (line[i] == '<')
-			info->nb_l_redir++;
-		else if (line[i] == '>')
-		{
-			if (line[i + 1] && line[i + 1] == '>')
-			{
-				info->nb_rd_redir++;
-				i++;
-			}
-			else
-				info->nb_r_redir++;
-		}
-		else if (line[i] == '|')
-			info->nb_pipe++;
-		else if (line[i] == ';')
-			info->nb_colon++;
-		i++;
-	}
-}
 
 void		read_cmd(char *line, t_info *info, int index, int index_cmd)
 {

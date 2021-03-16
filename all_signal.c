@@ -3,22 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   all_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:03:40 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:05:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/11 15:01:39 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-** void		ft_sigquit(int sig);
-** void	ft_sigint(int sig);
-*/
+t_info info;
 
-void		ft_sigterm(int sig, t_info *info)
+void	ft_sigint(int sig)
+{
+    (void)sig;
+    write(0, "\n", 1);
+//    ft_list_clear(info.cmd_head, free_cmd_struct);
+//    ft_bzero(info.cur_path, 4096);
+//    free_tab(info.dir_paths);
+//    ft_list_clear(info.env_head, free_env_struct);
+    if (wait(&info.crashed) < 0 && !WIFSIGNALED(info.crashed))
+        shell_loop(&info);
+
+    else
+        info.crashed = 0;
+}
+
+void		ft_sigquit(int sig)
+{
+    (void)sig;
+    write(2, "\b\b  ", 4);
+    write(2, "\b\b", 2);
+}
+void		ft_sigterm(int sig)
 {
 	(void)sig;
-	info->crashed = TRUE;
+//    ft_list_clear(info.cmd_head, free_cmd_struct);
+//    ft_bzero(info.cur_path, 4096);
+//    free_tab(info.dir_paths);
+//    ft_list_clear(info.env_head, free_env_struct);
+//    exit(1);
+    ft_printf("exit\n");
+    exit (1);
 }
