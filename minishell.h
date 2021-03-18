@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/15 13:10:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/18 12:11:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,11 @@ typedef struct	s_info
 	char	cur_path[PATH_MAX];
 	int		crashed;
 	int		cmd_status;
+	int		nb_pipe;
+ 	int		nb_l_redir;
+ 	int		nb_r_redir;
+ 	int		nb_rd_redir;
+ 	int		nb_colon;
 	t_list	*cmd_head;
 	t_list	*env_head;
 	t_list	*history_head;
@@ -112,7 +117,8 @@ typedef struct	s_info
 
 int				(*built_in[9])(t_info *info, int index_cmd);
 
-int				shell_loop(char **envp);
+int				shell_loop(t_info *info);
+
 /*
 ** parsing
 */
@@ -149,11 +155,9 @@ int				compare_size(char *s1, char *s2);
 ** signal
 */
 
-/*
-** void	ft_sigquit(int sig);
-** void	ft_sigint(int sig);
-** void	ft_sigterm(int sig, t_info *info);
-*/
+void	ft_sigint(int sig);
+void	ft_sigquit(int sig);
+void	ft_sigterm(int sig);
 
 /*
 ** free

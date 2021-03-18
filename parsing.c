@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/15 13:28:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/18 12:13:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ int			spaces(char *s)
 
 	i = 0;
 	count = 0;
-	while (s[i] && !is_whitespace(s[i]))
+	if (!s[i])
+ 		return (FAILURE);
+	while (!is_whitespace(s[i]))
 	{
 		count++;
 		i++;
@@ -88,6 +90,36 @@ void		test(t_cmd *cmd)
 	ft_printf(RED " | bui -> " RESET);
 	ft_printf(CYAN "%d\n" RESET, cmd->bui);
 }
+
+int check_sep(t_info *info, char *line)
+ {
+ 	int i;
+
+ 	i = 0;
+ 	if (!line[i])
+ 		return (FAILURE);
+ 	while (line[i])
+ 	{
+ 		if (line[i] == '<')
+ 			info->nb_l_redir++;
+ 		else if (line[i] == '>')
+ 		{
+ 			if (line[i + 1] && line[i + 1] == '>')
+ 			{
+ 				info->nb_rd_redir++;
+ 				i++;
+ 			}
+ 			else
+ 				info->nb_r_redir++;
+ 		}
+ 		else if (line[i] == '|')
+ 			info->nb_pipe++;
+ 		else if (line[i] == ';')
+ 			info->nb_colon++;
+ 		i++;
+ 	}
+ 	return (0);
+ }
 
 /*
 ** recursive function that allows creating as many
@@ -111,6 +143,7 @@ void		read_cmd(char *line, t_info *info, int index, int index_cmd)
 	index += spaces(&line[index]);
 	compare_cmd(info, cmd);
 	test(cmd);
+	check_sep(info, line);
 	if (cmd->cmd && cmd->bui == 9)
 		info->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");

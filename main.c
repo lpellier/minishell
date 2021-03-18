@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/18 12:02:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/18 12:20:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@ t_history *create_history_struct(char *str)
     return (history);
 }
 
+void		update_cmd_status(t_info *info)
+{
+	t_env *data;
+
+	data = ((t_env *)ft_list_find(info->env_head, create_env_struct("?", NULL), 
+		cmp_env)->data);
+	if (data->value)
+		free(data->value);
+	data->value = ft_itoa(info->cmd_status);
+}
+
 void		init(t_info *info, char **envp)
 {
 	init_built_in();
@@ -33,13 +44,23 @@ void		init(t_info *info, char **envp)
 		ft_itoa(info->cmd_status)));
 	info->dir_paths = ft_split(((t_env *)ft_list_find(info->env_head,
 		create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
-}
+	info->nb_colon = 0;
+ 	info->nb_l_redir = 0;
+ 	info->nb_pipe = 0;
+ 	info->nb_r_redir = 0;
+ 	info->nb_rd_redir = 0;
+ }
 
-/*
-** signal(SIGQUIT, ft_sigquit); ctrl + \
-** signal(SIGINT, ft_sigint); ctrl + c
-** signal(SIGTERM, (void (*)(int))ft_sigterm); ctrl + d
-*/
+ void reset_info(t_info *info)
+ {
+ 	info->nb_colon = 0;
+ 	info->nb_l_redir = 0;
+ 	info->nb_pipe = 0;
+ 	info->nb_r_redir = 0;
+ 	info->nb_rd_redir = 0;
+ }
+
+/* Functions for testing termcaps
 
 void		update_cmd_status(t_info *info)
 {
@@ -76,36 +97,43 @@ void		testing(t_info *info)
 	//tgoto(str, col, row)
 }
 
-int			shell_loop(char **envp)
+*/
+
+/*
+** sole reason of first is to create head of history linked list in read_line
+*/
+
+int			shell_loop(t_info *info)
 {
-	t_info	info;
 	int		first;
 	char	*cur_dir;
 
-	init(&info, envp);
 	first = 1;
+    signal(SIGQUIT, ft_sigquit);
+    signal(SIGTERM, ft_sigterm);
+    signal(SIGINT, ft_sigint);
 	ft_printf(RED "Welcome to Minisheh\n" RESET);
-	while (!info.crashed)
-	{
-		if (!(cur_dir = get_cur_dir(&info)))
+	while (!info->crashed)
+    {
+		if (!(cur_dir = get_cur_dir(info)))
 			cur_dir = ft_strdup("/");
 		ft_printf(BLUE "~ %s > " RESET, cur_dir);
-		info.cmd_head = ft_create_elem(create_cmd_struct());
-		read_line(&info, first);
+		info->cmd_head = ft_create_elem(create_cmd_struct());
+		read_line(info, first);
 		first = 0;
-		// testing(&info);
-		ft_list_clear(info.cmd_head, free_cmd_struct);
-		ft_bzero(info.cur_path, 4096);
+		reset_info(info);
+		ft_list_clear(info->cmd_head, free_cmd_struct);
+		ft_bzero(info->cur_path, 4096);
 		free(cur_dir);
 		cur_dir = NULL;
-		update_cmd_status(&info);
+		update_cmd_status(info);
 	}
-	free_tab(info.dir_paths);
-	if (info.output)
-		free(info.output);
+	free_tab(info->dir_paths);
+	if (info->output)
+		free(info->output);
 	// ft_list_foreach(info.history_head, print_history);
-	ft_list_clear(info.env_head, free_env_struct);
-	ft_list_clear(info.history_head, free_history_struct);
+	ft_list_clear(info->env_head, free_env_struct);
+	ft_list_clear(info->history_head, free_history_struct);
 	return (SUCCESS);
 }
 
@@ -113,6 +141,8 @@ int			main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-	system("clear");
-	exit(shell_loop(envp));
+    t_info	info;
+    system("clear");
+    init(&info, envp);
+    exit(shell_loop(&info));
 }
