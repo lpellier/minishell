@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/15 13:28:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/18 12:02:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	ft_putchar(int c)
 	return (SUCCESS);
 }
 
+char *tparm(char *str, ...);
+
 void		testing(t_info *info)
 {
 	char *term;
@@ -67,9 +69,10 @@ void		testing(t_info *info)
 	term = ((t_env *)ft_list_find(info->env_head, 
 		create_env_struct("TERM", NULL), cmp_env)->data)->value;
 	tgetent(NULL, term); // only needs to be called once
-	str = tgetstr("cl", NULL); 
-	tputs(str, tgetnum("li"), ft_putchar);
-	//tparm(str, ...)
+	str = tgetstr("cm", NULL); 
+	tputs(tgoto(str, 18, 1), 1, ft_putchar);
+	tputs("allo\n", 1, ft_putchar);
+	// tparm(str, NULL, 5, 1);
 	//tgoto(str, col, row)
 }
 
@@ -100,7 +103,7 @@ int			shell_loop(char **envp)
 	free_tab(info.dir_paths);
 	if (info.output)
 		free(info.output);
-	ft_list_foreach(info.history_head, print_history);
+	// ft_list_foreach(info.history_head, print_history);
 	ft_list_clear(info.env_head, free_env_struct);
 	ft_list_clear(info.history_head, free_history_struct);
 	return (SUCCESS);
