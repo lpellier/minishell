@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/15 13:27:21 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/23 11:07:24 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@
 
 void		init_built_in(void)
 {
-	built_in[0] = ft_echo;
-	built_in[1] = ft_echo_n;
-	built_in[2] = ft_exit;
-	built_in[3] = ft_pwd;
-	built_in[4] = ft_export;
-	built_in[5] = ft_unset;
-	built_in[6] = ft_env;
-	built_in[7] = ft_cd;
-	built_in[8] = exec_binary;
+	info.built_in[0] = ft_echo;
+	info.built_in[1] = ft_echo_n;
+	info.built_in[2] = ft_exit;
+	info.built_in[3] = ft_pwd;
+	info.built_in[4] = ft_export;
+	info.built_in[5] = ft_unset;
+	info.built_in[6] = ft_env;
+	info.built_in[7] = ft_cd;
+	info.built_in[8] = exec_binary;
 }
 
-int			init_env(t_info *info, char **envp)
+int			init_env(char **envp)
 {
 	int		i;
 	char	**key_value;
@@ -38,13 +38,13 @@ int			init_env(t_info *info, char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], "=");
-	info->env_head = ft_create_elem(create_env_struct(key_value[0], key_value[1]));
+	info.env_head = ft_create_elem(create_env_struct(key_value[0], key_value[1]));
 	free(key_value);
 	i++;
 	while (envp[i])
 	{
 		key_value = ft_split(envp[i], "=");
-		ft_list_push_back(&info->env_head,
+		ft_list_push_back(&info.env_head,
 			create_env_struct(key_value[0], key_value[1]));
 		free(key_value);
 		i++;

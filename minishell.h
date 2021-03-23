@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/18 12:11:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/23 11:05:08 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ typedef struct	s_cmd
 
 typedef struct	s_info
 {
+	int		(*built_in[9])(int index_cmd);
 	char	cur_path[PATH_MAX];
 	int		crashed;
 	int		cmd_status;
@@ -115,17 +116,17 @@ typedef struct	s_info
 	char	**dir_paths;
 }				t_info;
 
-int				(*built_in[9])(t_info *info, int index_cmd);
+t_info			info;
 
-int				shell_loop(t_info *info);
+int				shell_loop();
 
 /*
 ** parsing
 */
 
-void			read_line(t_info *info, int first);
-void			read_cmd(char *line, t_info *info, int index, int index_cmd);
-char			*get_cur_dir(t_info *info);
+void			read_line(int first);
+void			read_cmd(char *line, int index, int index_cmd);
+char			*get_cur_dir();
 int				directories(char *path, char *cmd);
 
 /*
@@ -138,17 +139,17 @@ void			init_built_in();
 ** built-in
 */
 
-int				ft_echo(t_info *info, int index_cmd);
-int				ft_exit(t_info *info, int index_cmd);
-int				ft_echo_n(t_info *info, int index_cmd);
-int				ft_pwd(t_info *info, int index_cmd);
-int				ft_export(t_info *info, int index_cmd);
-int				ft_unset(t_info *info, int index_cmd);
-int				ft_env(t_info *info, int index_cmd);
-int				ft_cd(t_info *info, int index_cmd);
-int				exec_binary(t_info *info, int index_cmd);
-int				find_binary(t_info *info, t_cmd *cmd);
-void			compare_cmd(t_info *info, t_cmd *cmd);
+int				ft_echo(int index_cmd);
+int				ft_exit(int index_cmd);
+int				ft_echo_n(int index_cmd);
+int				ft_pwd(int index_cmd);
+int				ft_export(int index_cmd);
+int				ft_unset(int index_cmd);
+int				ft_env(int index_cmd);
+int				ft_cd(int index_cmd);
+int				exec_binary(int index_cmd);
+int				find_binary(t_cmd *cmd);
+void			compare_cmd(t_cmd *cmd);
 int				compare_size(char *s1, char *s2);
 
 /*
@@ -176,9 +177,9 @@ int				cmp_env(void *data, void *data_ref);
 ** linked lists
 */
 
-int				pipe_for_exec(t_info *info, int index_cmd,
+int				pipe_for_exec(int index_cmd,
 					char *line, int index, int piped);
-int				init_env(t_info *info, char **envp);
+int				init_env(char **envp);
 void		print_history(void *data);
 t_cmd			*create_cmd_struct();
 t_history *create_history_struct(char *str);

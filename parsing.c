@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/18 12:13:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/23 11:06:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void		test(t_cmd *cmd)
 	ft_printf(CYAN "%d\n" RESET, cmd->bui);
 }
 
-int check_sep(t_info *info, char *line)
+int check_sep(char *line)
  {
  	int i;
 
@@ -101,21 +101,21 @@ int check_sep(t_info *info, char *line)
  	while (line[i])
  	{
  		if (line[i] == '<')
- 			info->nb_l_redir++;
+ 			info.nb_l_redir++;
  		else if (line[i] == '>')
  		{
  			if (line[i + 1] && line[i + 1] == '>')
  			{
- 				info->nb_rd_redir++;
+ 				info.nb_rd_redir++;
  				i++;
  			}
  			else
- 				info->nb_r_redir++;
+ 				info.nb_r_redir++;
  		}
  		else if (line[i] == '|')
- 			info->nb_pipe++;
+ 			info.nb_pipe++;
  		else if (line[i] == ';')
- 			info->nb_colon++;
+ 			info.nb_colon++;
  		i++;
  	}
  	return (0);
@@ -128,11 +128,11 @@ int check_sep(t_info *info, char *line)
 ** or a semi-colon for now;
 */
 
-void		read_cmd(char *line, t_info *info, int index, int index_cmd)
+void		read_cmd(char *line, int index, int index_cmd)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
 	index += spaces(&line[index]);
 	index += get_cmd(&line[index], cmd);
 	index += spaces(&line[index]);
@@ -141,20 +141,20 @@ void		read_cmd(char *line, t_info *info, int index, int index_cmd)
 	index += spaces(&line[index]);
 	index += get_input(&line[index], cmd);
 	index += spaces(&line[index]);
-	compare_cmd(info, cmd);
+	compare_cmd(cmd);
 	test(cmd);
-	check_sep(info, line);
+	check_sep(line);
 	if (cmd->cmd && cmd->bui == 9)
-		info->output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
+		info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");
 	else if (cmd->bui == 9)
-		info->output = ft_strdup(""); /* might cause an issue later */
+		info.output = ft_strdup(""); /* might cause an issue later */
 	else if (!pipe_or_colon(line[index]))
-		pipe_for_exec(info, index_cmd, line, index, 1);
+		pipe_for_exec(index_cmd, line, index, 1);
 	else if (pipe_or_colon(line[index]) && cmd->bui == 8)
-		pipe_for_exec(info, index_cmd, line, index, 0);
+		pipe_for_exec(index_cmd, line, index, 0);
 	else
-		info->cmd_status = (*built_in[cmd->bui])(info, index_cmd);
+		info.cmd_status = info.built_in[cmd->bui](index_cmd);
 }
 
 /*
@@ -212,7 +212,7 @@ char *str_replace(char *orig, char *rep, char *with) {
 }
 
 
-char *replace_dollars_env(t_info *info, char *line)
+char *replace_dollars_env(char *line)
 {
 	char *test;
 	char *dst;
@@ -232,7 +232,7 @@ char *replace_dollars_env(t_info *info, char *line)
 				return (NULL);
 			strncpy(dst, test, i);
 			dst[i] = '\0';
-			value = (ft_list_find(info->env_head,
+			value = (ft_list_find(info.env_head,
 				create_env_struct(dst + 1, "NULL"), cmp_env));
 			if (value && (cmp = ft_strdup(((t_env *)value->data)->value)))
 			{
@@ -248,27 +248,27 @@ char *replace_dollars_env(t_info *info, char *line)
 
 /* reads line using gnl and feeds t_cmd linked lists */
 
-void		read_line(t_info *info, int first)
+void		read_line(int first)
 {
 	char	*line;
 	char	*true_line;
 
 	get_next_line(0, &line);
 	if (first)
-		info->history_head = ft_create_elem(create_history_struct(ft_strdup(line)));
+		info.history_head = ft_create_elem(create_history_struct(ft_strdup(line)));
 	else
-    	ft_list_push_front(&info->history_head, create_history_struct(ft_strdup(line)));
-	true_line = replace_dollars_env(info, line);
-	read_cmd(true_line, info, 0, 0);
+    	ft_list_push_front(&info.history_head, create_history_struct(ft_strdup(line)));
+	true_line = replace_dollars_env(line);
+	read_cmd(true_line, 0, 0);
 	if (line)
 		free(line);
 	line = NULL;
-	if (info->output)
+	if (info.output)
 	{
-		ft_printf("%s", info->output);
-		free(info->output);
+		ft_printf("%s", info.output);
+		free(info.output);
 	}
-	info->output = NULL;
+	info.output = NULL;
 }
 
 /*
@@ -292,15 +292,15 @@ int			directories(char *path, char *cmd)
 	return (FAILURE);
 }
 
-char		*get_cur_dir(t_info *info)
+char		*get_cur_dir()
 {
 	int		i;
 	char	**split;
 	char	*res;
 
 	i = 0;
-	getcwd(info->cur_path, sizeof(info->cur_path));
-	split = ft_split(info->cur_path, "/");
+	getcwd(info.cur_path, sizeof(info.cur_path));
+	split = ft_split(info.cur_path, "/");
 	while (split[i])
 		i++;
 	if (i == 0)

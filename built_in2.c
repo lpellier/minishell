@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/15 13:26:01 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/23 11:03:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 **destroys a environment variable from memory
 */
 
-int			ft_unset(t_info *info, int index_cmd)
+int			ft_unset(int index_cmd)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-	if (!info->env_head || !info->env_head->next)
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	if (!info.env_head || !info.env_head->next)
 		return (FAILURE);
-	ft_list_remove_if(&info->env_head->next,
+	ft_list_remove_if(&info.env_head->next,
 		create_env_struct(cmd->input, NULL), cmp_env, free_env_struct);
 	return (SUCCESS);
 }
@@ -32,12 +32,12 @@ int			ft_unset(t_info *info, int index_cmd)
 ** outputs all environment variables
 */
 
-int			ft_env(t_info *info, int index_cmd)
+int			ft_env(int index_cmd)
 {
 	(void)index_cmd;
-	if (!info->env_head || !info->env_head->next)
+	if (!info.env_head || !info.env_head->next)
 		return (FAILURE);
-	ft_list_foreach(info->env_head->next, print_env_struct);
+	ft_list_foreach(info.env_head->next, print_env_struct);
 	return (SUCCESS);
 }
 
@@ -46,14 +46,14 @@ int			ft_env(t_info *info, int index_cmd)
 ** to check for right bui and right input
 */
 
-int			ft_cd(t_info *info, int index_cmd)
+int			ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
 	char	cwd[PATH_MAX];
 	char	*user;
 
-	cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-	user = ft_strjoin("/Users/", ((t_env *)ft_list_find(info->env_head,
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	user = ft_strjoin("/Users/", ((t_env *)ft_list_find(info.env_head,
 		create_env_struct("USER", NULL), cmp_env)->data)->value);
 	if (!cmd->input)
 	{
@@ -135,7 +135,7 @@ char		**list_to_tab(t_list *begin_list)
 ** for now it's only split by spaces for simplicity
 */
 
-int			exec_binary(t_info *info, int index_cmd)
+int			exec_binary(int index_cmd)
 {
 	t_cmd	*cmd;
 	int		count;
@@ -145,8 +145,8 @@ int			exec_binary(t_info *info, int index_cmd)
 	char	**split;
 	char	**env;
 
-	cmd = ft_list_at(info->cmd_head, index_cmd)->data;
-	env = list_to_tab(info->env_head);
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	env = list_to_tab(info.env_head);
 	split = count_args(cmd, &count);
 	if (!(argv = (char **)malloc(sizeof(char *) * count + 1)))
 		return (FAILURE);
@@ -194,16 +194,16 @@ int			compare_size(char *s1, char *s2)
 		return (FAILURE);
 }
 
-int			find_binary(t_info *info, t_cmd *cmd)
+int			find_binary(t_cmd *cmd)
 {
 	int		i;
 
 	i = 0;
-	while (info->dir_paths[i])
+	while (info.dir_paths[i])
 	{
-		if (!directories(info->dir_paths[i], cmd->cmd))
+		if (!directories(info.dir_paths[i], cmd->cmd))
 		{
-			cmd->path = ft_strjoin(ft_strjoin(info->dir_paths[i], "/"),
+			cmd->path = ft_strjoin(ft_strjoin(info.dir_paths[i], "/"),
 				cmd->cmd);
 			return (SUCCESS);
 		}
@@ -212,7 +212,7 @@ int			find_binary(t_info *info, t_cmd *cmd)
 	return (FAILURE);
 }
 
-void		compare_cmd(t_info *info, t_cmd *cmd)
+void		compare_cmd(t_cmd *cmd)
 {
 	if (!cmd->cmd)
 		cmd->bui = NONEXISTENT;
@@ -233,11 +233,11 @@ void		compare_cmd(t_info *info, t_cmd *cmd)
 		cmd->bui = ENV;
 	else if (!compare_size(cmd->cmd, "cd"))
 		cmd->bui = CD;
-	else if (!find_binary(info, cmd))
+	else if (!find_binary(cmd))
 		cmd->bui = BINARY;
 	else
 	{
 		cmd->bui = NONEXISTENT;
-		info->cmd_status = 127;
+		info.cmd_status = 127;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/18 12:20:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/23 11:03:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,56 +22,56 @@ t_history *create_history_struct(char *str)
     return (history);
 }
 
-void		update_cmd_status(t_info *info)
+void		update_cmd_status()
 {
 	t_env *data;
 
-	data = ((t_env *)ft_list_find(info->env_head, create_env_struct("?", NULL), 
+	data = ((t_env *)ft_list_find(info.env_head, create_env_struct("?", NULL), 
 		cmp_env)->data);
 	if (data->value)
 		free(data->value);
-	data->value = ft_itoa(info->cmd_status);
+	data->value = ft_itoa(info.cmd_status);
 }
 
-void		init(t_info *info, char **envp)
+void		init(char **envp)
 {
 	init_built_in();
-	info->crashed = FALSE;
-	info->output = NULL;
-	info->cmd_status = 0;
-	init_env(info, envp);
-	ft_list_push_front(&info->env_head, create_env_struct(ft_strdup("?"),
-		ft_itoa(info->cmd_status)));
-	info->dir_paths = ft_split(((t_env *)ft_list_find(info->env_head,
+	info.crashed = FALSE;
+	info.output = NULL;
+	info.cmd_status = 0;
+	init_env(envp);
+	ft_list_push_front(&info.env_head, create_env_struct(ft_strdup("?"),
+		ft_itoa(info.cmd_status)));
+	info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head,
 		create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
-	info->nb_colon = 0;
- 	info->nb_l_redir = 0;
- 	info->nb_pipe = 0;
- 	info->nb_r_redir = 0;
- 	info->nb_rd_redir = 0;
+	info.nb_colon = 0;
+ 	info.nb_l_redir = 0;
+ 	info.nb_pipe = 0;
+ 	info.nb_r_redir = 0;
+ 	info.nb_rd_redir = 0;
  }
 
- void reset_info(t_info *info)
+ void reset_info()
  {
- 	info->nb_colon = 0;
- 	info->nb_l_redir = 0;
- 	info->nb_pipe = 0;
- 	info->nb_r_redir = 0;
- 	info->nb_rd_redir = 0;
+ 	info.nb_colon = 0;
+ 	info.nb_l_redir = 0;
+ 	info.nb_pipe = 0;
+ 	info.nb_r_redir = 0;
+ 	info.nb_rd_redir = 0;
  }
 
 /* Functions for testing termcaps
 
-void		update_cmd_status(t_info *info)
+void		update_cmd_status()
 {
 	t_env *data;
 
-	data = ((t_env *)ft_list_find(info->env_head, create_env_struct("?", NULL), 
+	data = ((t_env *)ft_list_find(info.env_head, create_env_struct("?", NULL), 
 		cmp_env)->data);
 	if (data->value)
 		free(data->value);
 	data->value = NULL;
-	data->value = ft_itoa(info->cmd_status);
+	data->value = ft_itoa(info.cmd_status);
 }
 
 int	ft_putchar(int c)
@@ -82,12 +82,12 @@ int	ft_putchar(int c)
 
 char *tparm(char *str, ...);
 
-void		testing(t_info *info)
+void		testing()
 {
 	char *term;
 	char *str;
 
-	term = ((t_env *)ft_list_find(info->env_head, 
+	term = ((t_env *)ft_list_find(info.env_head, 
 		create_env_struct("TERM", NULL), cmp_env)->data)->value;
 	tgetent(NULL, term); // only needs to be called once
 	str = tgetstr("cm", NULL); 
@@ -99,41 +99,51 @@ void		testing(t_info *info)
 
 */
 
+void		init_termcap()
+{
+	char *term;
+
+	term = ((t_env *)ft_list_find(info.env_head, 
+		create_env_struct("TERM", NULL), cmp_env)->data)->value;
+	tgetent(NULL, term);
+}
+
 /*
-** sole reason of first is to create head of history linked list in read_line
+** sole reason of first var is to create head of history linked list in read_line
 */
 
-int			shell_loop(t_info *info)
+int			shell_loop()
 {
 	int		first;
 	char	*cur_dir;
 
 	first = 1;
-    signal(SIGQUIT, ft_sigquit);
-    signal(SIGTERM, ft_sigterm);
-    signal(SIGINT, ft_sigint);
+	init_termcap();
+    // signal(SIGQUIT, ft_sigquit);
+    // signal(SIGTERM, ft_sigterm);
+    // signal(SIGINT, ft_sigint);
 	ft_printf(RED "Welcome to Minisheh\n" RESET);
-	while (!info->crashed)
+	while (!info.crashed)
     {
-		if (!(cur_dir = get_cur_dir(info)))
+		if (!(cur_dir = get_cur_dir()))
 			cur_dir = ft_strdup("/");
 		ft_printf(BLUE "~ %s > " RESET, cur_dir);
-		info->cmd_head = ft_create_elem(create_cmd_struct());
-		read_line(info, first);
+		info.cmd_head = ft_create_elem(create_cmd_struct());
+		read_line(first);
 		first = 0;
-		reset_info(info);
-		ft_list_clear(info->cmd_head, free_cmd_struct);
-		ft_bzero(info->cur_path, 4096);
+		reset_info();
+		ft_list_clear(info.cmd_head, free_cmd_struct);
+		ft_bzero(info.cur_path, 4096);
 		free(cur_dir);
 		cur_dir = NULL;
-		update_cmd_status(info);
+		update_cmd_status();
 	}
-	free_tab(info->dir_paths);
-	if (info->output)
-		free(info->output);
+	free_tab(info.dir_paths);
+	if (info.output)
+		free(info.output);
 	// ft_list_foreach(info.history_head, print_history);
-	ft_list_clear(info->env_head, free_env_struct);
-	ft_list_clear(info->history_head, free_history_struct);
+	ft_list_clear(info.env_head, free_env_struct);
+	ft_list_clear(info.history_head, free_history_struct);
 	return (SUCCESS);
 }
 
@@ -141,8 +151,7 @@ int			main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-    t_info	info;
     system("clear");
-    init(&info, envp);
-    exit(shell_loop(&info));
+    init(envp);
+    exit(shell_loop());
 }
