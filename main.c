@@ -28,6 +28,20 @@ void		init(t_info *info, char **envp)
  	info->nb_rd_redir = 0;
  }
 
+void		init_tt(t_info *info)
+{
+    init_built_in();
+    info->crashed = FALSE;
+    info->output = NULL;
+    info->env_head = ft_create_elem(create_env_struct(NULL, NULL));
+//    info->dir_paths = ft_split(((t_env *)ft_list_find(info->env_head,create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
+    info->nb_colon = 0;
+    info->nb_l_redir = 0;
+    info->nb_pipe = 0;
+    info->nb_r_redir = 0;
+    info->nb_rd_redir = 0;
+}
+
  void reset_info(t_info *info)
  {
  	info->nb_colon = 0;
@@ -42,7 +56,7 @@ int			shell_loop(t_info *info)
 //	t_info	info;
 	char	*cur_dir;
 
-//	init(&info, envp);
+	init_tt(info);
     signal(SIGQUIT, ft_sigquit);
     signal(SIGTERM, ft_sigterm);
     signal(SIGINT, ft_sigint);
