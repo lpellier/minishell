@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 11:42:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 14:57:54 by lpellier         ###   ########.fr       */
+/*   Created: 2021/03/24 11:20:17 by lpellier          #+#    #+#             */
+/*   Updated: 2021/03/24 11:21:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *b, size_t n)
+int	ft_putchar(int c)
 {
-	unsigned char	*ptr;
-	ptr = (unsigned char*)b;
-	while (n-- > 0)
-		*(ptr++) = 0;
+	write(STDOUT_FILENO, &c, 1);
+	return (EXIT_SUCCESS);
 }

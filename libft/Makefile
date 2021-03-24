@@ -10,9 +10,11 @@ SRCS	=		./ft_isalpha.c \
 				./ft_bzero.c \
 				./ft_tolower.c \
 				./ft_strdup.c \
+				./ft_strndup.c \
 				./ft_strncmp.c \
 				./ft_calloc.c \
 				./ft_strchr.c \
+				./ft_putchar.c \
 				./ft_putchar_fd.c \
 				./ft_putnbr_fd.c \
 				./ft_putstr_fd.c \

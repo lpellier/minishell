@@ -6,11 +6,11 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 11:07:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/24 13:58:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 /*
 ** is used to reset all of the info after enter is pressed
@@ -83,4 +83,38 @@ t_env		*create_env_struct(char *key, char *value)
 	env->key = key;
 	env->value = value;
 	return (env);
+}
+
+t_history *create_history_struct(char *str)
+{
+    t_history *history;
+
+    if (!(history = (t_history *)malloc(sizeof(t_history))))
+        return (NULL);
+    history->line = str;
+    return (history);
+}
+
+void		init_info(char **envp)
+{
+	init_built_in();
+	info.crashed = FALSE;
+	info.output = NULL;
+	info.cmd_status = 0;
+	init_env(envp);
+	ft_list_push_front(&info.env_head, create_env_struct(ft_strdup("?"),
+		ft_itoa(info.cmd_status)));
+	info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head,
+		create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
+	reset_info();
+}
+
+void reset_info()
+{
+	info.nb_colon = 0;
+	info.nb_l_redir = 0;
+	info.nb_pipe = 0;
+	info.nb_r_redir = 0;
+	info.nb_rd_redir = 0;
+	info.cur_in_history = 0;
 }

@@ -6,11 +6,11 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 11:03:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/24 16:05:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 /*
 **destroys a environment variable from memory
@@ -220,7 +220,7 @@ void		compare_cmd(t_cmd *cmd)
 	&& !compare_size(cmd->option, "-n"))
 		cmd->bui = ECHO_N;
 	else if (!compare_size(cmd->cmd, "echo"))
-		cmd->bui = ECHO;
+		cmd->bui = ECHOO;
 	else if (!compare_size(cmd->cmd, "exit"))
 		cmd->bui = EXIT;
 	else if (!compare_size(cmd->cmd, "pwd"))

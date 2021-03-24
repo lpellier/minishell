@@ -6,51 +6,51 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 11:52:38 by lpellier          #+#    #+#             */
-/*   Updated: 2021/02/26 10:50:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/23 12:05:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	output_int(t_printf *info, va_list ap)
+void	output_int(t_printf *printf, va_list ap)
 {
 	int		res;
 
 	res = va_arg(ap, int);
-	if (info->orig == 1)
-		info->precision = 0;
-	if (res == 0 && info->precision == 0)
+	if (printf->orig == 1)
+		printf->precision = 0;
+	if (res == 0 && printf->precision == 0)
 	{
-		output_flags(info);
+		output_flags(printf);
 		return ;
 	}
-	info->minus = (res < 0 ? 1 : 0);
-	info->len = ft_intlen(res);
-	info->outputlen += ((info->minus || info->plus) ? \
-	info->len + 1 : info->len);
-	check_padding_case_int(info, res);
+	printf->minus = (res < 0 ? 1 : 0);
+	printf->len = ft_intlen(res);
+	printf->outputlen += ((printf->minus || printf->plus) ? \
+	printf->len + 1 : printf->len);
+	check_padding_case_int(printf, res);
 }
 
-void	output_char(t_printf *info, va_list ap)
+void	output_char(t_printf *printf, va_list ap)
 {
 	char	res;
 
-	if (info->perc == 1)
+	if (printf->perc == 1)
 		res = '%';
-	else if (info->perc == 0)
+	else if (printf->perc == 0)
 		res = va_arg(ap, int);
 	else
 		res = 0;
-	info->outputlen += 1;
-	info->len = 1;
-	if (info->padding == 2)
+	printf->outputlen += 1;
+	printf->len = 1;
+	if (printf->padding == 2)
 	{
 		ft_putchar_fd(res, 1);
-		output_flags(info);
+		output_flags(printf);
 	}
 	else
 	{
-		output_flags(info);
+		output_flags(printf);
 		ft_putchar_fd(res, 1);
 	}
 }
@@ -76,18 +76,18 @@ char	*negative_adress(int len)
 	return (str);
 }
 
-void	output_adress(t_printf *info, va_list ap)
+void	output_adress(t_printf *printf, va_list ap)
 {
 	void				*res;
 	long				a;
 	char				*str;
 
 	a = va_arg(ap, long);
-	if (info->orig == 1)
-		info->precision = 0;
-	if (a == 0 && info->precision == 0)
+	if (printf->orig == 1)
+		printf->precision = 0;
+	if (a == 0 && printf->precision == 0)
 	{
-		check_padding_case_adress(info, "\0", "0x");
+		check_padding_case_adress(printf, "\0", "0x");
 		return ;
 	}
 	res = ft_int_hexmin(a, "0123456789abcdef");
@@ -95,33 +95,33 @@ void	output_adress(t_printf *info, va_list ap)
 		str = negative_adress(ft_strlen(res));
 	else
 		str = "0x";
-	info->len = ft_strlen(res) + ft_strlen(str);
-	info->outputlen += info->len;
-	check_padding_case_adress(info, res, str);
+	printf->len = ft_strlen(res) + ft_strlen(str);
+	printf->outputlen += printf->len;
+	check_padding_case_adress(printf, res, str);
 	free(res);
 	if (a < 0)
 		free(str);
 }
 
-void	ft_output(t_printf *info, va_list ap)
+void	ft_output(t_printf *printf, va_list ap)
 {
-	if (info->precision == 0 && info->number == 1)
+	if (printf->precision == 0 && printf->number == 1)
 	{
-		check_padding_case(info);
+		check_padding_case(printf);
 		return ;
 	}
-	if (info->type == 'd' || info->type == 'i')
-		output_int(info, ap);
-	else if (info->type == 's')
-		output_string(info, ap);
-	else if (info->type == 'u')
-		output_uint(info, ap);
-	else if (info->type == 'c')
-		output_char(info, ap);
-	else if (info->type == 'x')
-		output_hexmin(info, ap);
-	else if (info->type == 'X')
-		output_hexmax(info, ap);
-	else if (info->type == 'p')
-		output_adress(info, ap);
+	if (printf->type == 'd' || printf->type == 'i')
+		output_int(printf, ap);
+	else if (printf->type == 's')
+		output_string(printf, ap);
+	else if (printf->type == 'u')
+		output_uint(printf, ap);
+	else if (printf->type == 'c')
+		output_char(printf, ap);
+	else if (printf->type == 'x')
+		output_hexmin(printf, ap);
+	else if (printf->type == 'X')
+		output_hexmax(printf, ap);
+	else if (printf->type == 'p')
+		output_adress(printf, ap);
 }

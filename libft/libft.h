@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 15:15:06 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/18 13:17:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/24 11:21:05 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 
 # define CONVERTER "ciduxXps%"
 # define BUFFER_SIZE 32
+# define PATH_MAX 4096
 # include <stdarg.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+
 
 typedef struct		s_printf
 {
@@ -38,6 +40,8 @@ typedef struct		s_printf
 	char			type;
 }					t_printf;
 
+
+
 void				ft_bzero(void *s, size_t n);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
@@ -48,9 +52,11 @@ void				ft_putnstr_fd(char *s, int size, int fd);
 void				*ft_calloc(size_t count, size_t size);
 char				*ft_substr(const char *s, unsigned int start, size_t len);
 char				*ft_strdup(const char *s1);
+char    			*ft_strndup(const char *s1, int size);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strjoin(const char *s1, const char *s2);
 char				**ft_split(char *str, char *charset);
+int					ft_putchar(int c);
 int					ft_intlen(long n);
 int					ft_uintlen(unsigned long n);
 int					ft_isalpha(int c);
@@ -66,32 +72,32 @@ char				*ft_int_hexmax(long n, char *tab);
 char				*ft_itoa(int n);
 size_t				digit_count(long value, int base);
 
-const char			*checkwidth(const char *format, t_printf *info, va_list ap);
-const char			*checkprecision(const char *format, t_printf *info, \
+const char			*checkwidth(const char *format, t_printf *printf, va_list ap);
+const char			*checkprecision(const char *format, t_printf *printf, \
 					va_list ap);
-const char			*checktype(const char *format, t_printf *info);
-const char			*ft_fill_struct(const char *format, t_printf *info, \
+const char			*checktype(const char *format, t_printf *printf);
+const char			*ft_fill_struct(const char *format, t_printf *printf, \
 					va_list ap);
 int					count_format(const char *format);
-void				output_flags(t_printf *info);
-int					output_sign(t_printf *info, int res);
-void				put_zeros(t_printf *info);
-void				output_string(t_printf *info, va_list ap);
-void				output_int(t_printf *info, va_list ap);
-void				output_uint(t_printf *info, va_list ap);
-void				output_char(t_printf *info, va_list ap);
-void				output_adress(t_printf *info, va_list ap);
-void				output_hexmin(t_printf *info, va_list ap);
-void				output_hexmax(t_printf *info, va_list ap);
-const char			*print_before(const char *format, t_printf *info);
-const char			*print_aoutsider(const char *format, t_printf *info);
-const char			*init_perc(t_printf *info, const char *format);
-void				check_padding_case_int(t_printf *info, int res);
-void				check_padding_case_adress(t_printf *info, void *res, \
+void				output_flags(t_printf *printf);
+int					output_sign(t_printf *printf, int res);
+void				put_zeros(t_printf *printf);
+void				output_string(t_printf *printf, va_list ap);
+void				output_int(t_printf *printf, va_list ap);
+void				output_uint(t_printf *printf, va_list ap);
+void				output_char(t_printf *printf, va_list ap);
+void				output_adress(t_printf *printf, va_list ap);
+void				output_hexmin(t_printf *printf, va_list ap);
+void				output_hexmax(t_printf *printf, va_list ap);
+const char			*print_before(const char *format, t_printf *printf);
+const char			*print_aoutsider(const char *format, t_printf *printf);
+const char			*init_perc(t_printf *printf, const char *format);
+void				check_padding_case_int(t_printf *printf, int res);
+void				check_padding_case_adress(t_printf *printf, void *res, \
 					char *str);
-void				check_padding_case_hex(t_printf *info, void *ret);
-void				check_padding_case(t_printf *info);
-void				ft_output(t_printf *info, va_list ap);
+void				check_padding_case_hex(t_printf *printf, void *ret);
+void				check_padding_case(t_printf *printf);
+void				ft_output(t_printf *printf, va_list ap);
 
 int					get_next_line(int fd, char **line);
 int					check_n(char *stock);
