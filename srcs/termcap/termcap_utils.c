@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 16:25:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/24 18:01:49 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,17 @@ void		init_termcap()
 
 	info.cursor.col = tgetnum("co");
 	info.cursor.lin = tgetnum("li");
-	// if (info.termios_p.c_lflag & ICANON)
-	// 	ft_printf("Terminal is in canonical mode.n");
 }
 
-int get_pos()
+int get_pos(int *x, int *y)
 {
 	char buf[30]={0};
 	int i;
 	int pow;
 	char ch;
 
-	info.cursor.posx = 0;
-	info.cursor.posy = 0;
+	*x = 0;
+	*y = 0;
 	write(1, "\033[6n", 4);
 	for( i = 0, ch = 0; ch != 'R'; i++ )
 	{
@@ -49,66 +47,72 @@ int get_pos()
 	if (i < 2)
 		return(1);
 	for( i -= 2, pow = 1; buf[i] != ';'; i--, pow *= 10)
-		info.cursor.posx = info.cursor.posx + ( buf[i] - '0' ) * pow;
+		*x = *x + ( buf[i] - '0' ) * pow;
 	for( i-- , pow = 1; buf[i] != '['; i--, pow *= 10)
-		info.cursor.posy = info.cursor.posy + ( buf[i] - '0' ) * pow;
-	info.cursor.posx--;
-	info.cursor.posy--;
+		*y = *y + ( buf[i] - '0' ) * pow;
+	*x -= 1;
+	*y -= 1;
 	return 0;
 }
 
-void		print_last_cmd()
+char		*print_last_cmd()
 {
 	t_list *cur;
 	t_history *hist;
-	// int		size;
 
-	// ft_printf("%d\n", info.cur_in_history);
-	if (!(cur = ft_list_at(info.history_head, info.cur_in_history)))
-		return ;
+	if (!(cur = ft_list_at(info.history_head, info.cur_in_history + 1)))
+		return (((t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
+	info.cur_in_history++;
 	hist = (t_history *)cur->data;
+	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	tputs(hist->line, 1, ft_putchar);
-	info.cur_in_history++;
+	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
+	return (hist->line);
 }
 
-void		print_prev_cmd()
+char		*print_prev_cmd()
 {
 	t_list *cur;
 	t_history *hist;
 
 	if (info.cur_in_history < 0)
 		info.cur_in_history = 0;
-	if (!(cur = ft_list_at(info.history_head, info.cur_in_history)))
-		return ;
+	if (!(cur = ft_list_at(info.history_head, info.cur_in_history - 1)))
+		return (((t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
 	info.cur_in_history--;
 	hist = (t_history *)cur->data;
+	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	tputs(hist->line, 1, ft_putchar);
+	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
+	return (hist->line);
 }
 
-void		check_for_arrows(int index)
+char		*check_for_arrows(int index)
 {
 	char	key;
-	char	*cm;
+	char	*ret;
 
-	cm = tgetstr("cm", NULL);
 	if (read(0, &key, 1) == -1)
-		return ;
+		return (NULL);
 	if (key == 91)
 	{
 		if (read(0, &key, 1) == -1)
-			return ;
+			return (NULL);
 		if (key == 65) //UP KEY
-			print_last_cmd();
+			ret = print_last_cmd();
 		if (key == 66)
-			print_prev_cmd(); // DOWN KEY
+			ret = print_prev_cmd(); // DOWN KEY
 		if (key == 67)
 			info.cursor.posx += info.cursor.posx <= index ? 1 : 0; // RIGHT KEY
 		if (key == 68)
 			info.cursor.posx -= info.cursor.posx < info.prompt_len? 0 : 1; // LEFT KEY
-		tputs(tgoto(cm, info.cursor.posx, info.cursor.posy), 1, ft_putchar);
+		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
+		if (key == 65 || key == 66)
+			return (ft_strdup(ret));
 	}
+	return (NULL);
 }
 
 char	*delete_char(char *str, int index)

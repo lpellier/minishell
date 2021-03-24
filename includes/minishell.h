@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 16:18:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/24 18:05:08 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ typedef struct	s_cursor
 	int				posx;
 	int				posy;
 
+	int				start_posx;
+	int				start_posy;
+
 	int				col;
 	int				lin;
 }				t_cursor;
@@ -136,15 +139,15 @@ enum			status_codes
 
 void		update_cmd_status();
 int			shell_loop(char **envp);
-int			get_pos();
-void		print_last_cmd();
-void		print_prev_cmd();
+int			get_pos(int *x, int *y);
+char		*print_last_cmd();
+char		*print_prev_cmd();
 char	*delete_char(char *str, int index);
 /*
 ** termcap
 */
 
-void		check_for_arrows(int index);
+char		*check_for_arrows(int index);
 
 
 /*

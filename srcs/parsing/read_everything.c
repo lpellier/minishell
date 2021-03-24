@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 16:21:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/24 18:05:01 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,15 @@ char 	*read_everything()
 	ret = ft_strdup("");
 	while (c != '\n')
 	{
-		get_pos();
+		tmp = ft_strdup("");
+		get_pos(&info.cursor.posx, &info.cursor.posy);
 		if (read(0, &c, 1) == -1)
 			return (NULL);
 		if (c == 27)
-			check_for_arrows(index);
+		{
+			if (!(ret = check_for_arrows(index)))
+				ret = ft_strdup("");
+		}
 		else if (c == 127)
 		{
 			ret = delete_char(ret, index);
@@ -57,16 +61,20 @@ char 	*read_everything()
 		else if (c != '\n')
 		{
 			write(STDOUT_FILENO, &c, 1);
+			free(tmp);
 			tmp = ft_strdup(ret);
 			free(ret);
-			ret = NULL;
 			ret = ft_charjoin(tmp, c);
+			if (((t_history *)info.history_head->data)->line)
+				free(((t_history *)info.history_head->data)->line);
+			((t_history *)info.history_head->data)->line = ft_strdup(ret);
 			index++;
 		}
 	}
-	if (tmp)
-		free(tmp);
-	tmp = NULL;
+	if (((t_history *)info.history_head->data)->line)
+		free(((t_history *)info.history_head->data)->line);
+	((t_history *)info.history_head->data)->line = ft_strdup(ret);
+	free(tmp);
 	return (ret);
 }
 
@@ -77,11 +85,11 @@ void		read_line(int first)
 	char *line;
 	char	*true_line;
 
-	line = read_everything();
 	if (first)
-		info.history_head = ft_create_elem(create_history_struct(ft_strdup(line)));
+		info.history_head = ft_create_elem(create_history_struct(NULL));
 	else
-    	ft_list_push_front(&info.history_head, create_history_struct(ft_strdup(line)));
+    	ft_list_push_front(&info.history_head, create_history_struct(NULL));
+	line = read_everything();
 	true_line = replace_dollars_env(ft_strdup(line));
 	read_cmd(true_line, 0, 0);
 	if (line)
