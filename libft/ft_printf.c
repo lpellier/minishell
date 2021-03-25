@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 10:56:23 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:05:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:28:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int		ft_printf(const char *format, ...)
 	t_printf	*printf;
 	int			written;
 
-	if (!(printf = (t_printf *)malloc(sizeof(t_printf))))
+	if (!(printf = (t_printf *)ft_calloc(1, sizeof(t_printf))))
 		return (-1);
 	printf->outputlen = 0;
 	if (count_format(format) == 0)

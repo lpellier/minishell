@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 11:44:59 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 22:59:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:28:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int			*get_words_size(char *str, char *charset)
 
 	i = 0;
 	words_count = get_words_count(str, charset);
-	words_size = malloc(words_count * sizeof(int));
+	words_size = ft_calloc(words_count, sizeof(int));
 	while (i <= words_count)
 	{
 		words_size[i] = 0;
@@ -84,7 +84,7 @@ char		**ft_split(char *str, char *charset)
 	int		index;
 	int		*words_size;
 
-	words = malloc((get_words_count(str, charset) + 1) * sizeof(char*));
+	words = ft_calloc((get_words_count(str, charset) + 1), sizeof(char*));
 	words_size = get_words_size(str, charset);
 	index = 0;
 	j = 0;
@@ -94,7 +94,7 @@ char		**ft_split(char *str, char *charset)
 		if (!is_separator(str[i], charset))
 		{
 			if (i == 0 || is_word(str[i], str[i - 1], charset))
-				words[index] = malloc(words_size[index] * sizeof(char));
+				words[index] = ft_calloc(words_size[index], sizeof(char));
 			words[index][j] = str[i];
 			words[index][++j] = '\0';
 		}

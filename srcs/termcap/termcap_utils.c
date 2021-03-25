@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 18:01:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 15:36:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char		*print_prev_cmd()
 	return (hist->line);
 }
 
-char		*check_for_arrows(int index)
+char		*check_for_arrows(int *index)
 {
 	char	key;
 	char	*ret;
@@ -105,12 +105,15 @@ char		*check_for_arrows(int index)
 		if (key == 66)
 			ret = print_prev_cmd(); // DOWN KEY
 		if (key == 67)
-			info.cursor.posx += info.cursor.posx <= index ? 1 : 0; // RIGHT KEY
+			info.cursor.posx += info.cursor.posx <= *index ? 1 : 0; // RIGHT KEY
 		if (key == 68)
 			info.cursor.posx -= info.cursor.posx < info.prompt_len? 0 : 1; // LEFT KEY
 		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
 		if (key == 65 || key == 66)
+		{
+			*index = info.cursor.posx - 1;
 			return (ft_strdup(ret));
+		}
 	}
 	return (NULL);
 }

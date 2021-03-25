@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/02 15:32:27 by lpellier          #+#    #+#             */
-/*   Updated: 2020/01/23 16:56:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 14:04:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_int_hexmax(long n, char *tab)
 	{
 		i = 0;
 		taille = digit_count(n, 16);
-		if (!(res = (char *)ft_calloc(1, (sizeof(char) * (taille + 1)))))
+		if (!(res = (char *)ft_calloc(taille + 1, (sizeof(char)))))
 			return (NULL);
 		taille--;
 		while (n)

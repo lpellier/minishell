@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 16:58:54 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 12:46:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ void		update_cmd_status()
 {
 	t_env *data;
 
-	data = ((t_env *)ft_list_find(info.env_head, create_env_struct("?", NULL), 
-		cmp_env)->data);
+	data = (t_env *)info.env_head->data;
 	if (data->value)
 		free(data->value);
 	data->value = ft_itoa(info.cmd_status);
@@ -59,8 +58,6 @@ int			shell_loop(char **envp)
 		free(info.output);
 	ft_list_clear(info.env_head, free_env_struct);
 	ft_list_clear(info.history_head, free_history_struct);
-	if (info.crashed == 2)
-		shell_loop(envp);
 	return (SUCCESS);
 }
 

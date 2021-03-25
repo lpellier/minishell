@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:45:57 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 11:44:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:26:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_list		*ft_create_elem(void *data)
 {
 	t_list	*res;
 
-	if (!(res = (t_list *)malloc(sizeof(t_list))))
+	if (!(res = (t_list *)ft_calloc(1, sizeof(t_list))))
 		return (NULL);
 	res->data = data;
 	res->next = NULL;

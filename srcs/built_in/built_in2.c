@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 16:05:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 15:24:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,15 @@ int			ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
 	char	cwd[PATH_MAX];
-	char	*user;
+	char	*home;
 
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
-	user = ft_strjoin("/Users/", ((t_env *)ft_list_find(info.env_head,
-		create_env_struct("USER", NULL), cmp_env)->data)->value);
+	home = ft_strdup(((t_env *)ft_list_find(info.env_head, create_env_struct("HOME", NULL), cmp_env)->data)->value);
 	if (!cmd->input)
 	{
-		if (chdir(user))
+		if (chdir(home))
 			ft_printf("Couldn't access folder, check directory listing\n");
-		free(user);
-		user = NULL;
+		free(home);
 	}
 	else if (cmd->input[0] == '/')
 	{
@@ -116,7 +114,7 @@ char		**list_to_tab(t_list *begin_list)
 
 	i = 0;
 	next = begin_list->next;
-	if (!(ret = (char **)malloc(sizeof(char *) * (ft_list_size(next) + 1))))
+	if (!(ret = (char **)ft_calloc(ft_list_size(next) + 1, sizeof(char *))))
 		return (NULL);
 	while (next)
 	{
@@ -148,7 +146,7 @@ int			exec_binary(int index_cmd)
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
 	env = list_to_tab(info.env_head);
 	split = count_args(cmd, &count);
-	if (!(argv = (char **)malloc(sizeof(char *) * count + 1)))
+	if (!(argv = (char **)ft_calloc(count + 1, sizeof(char *))))
 		return (FAILURE);
 	argv[0] = ft_strdup(cmd->cmd);
 	i = 0;
@@ -199,6 +197,8 @@ int			find_binary(t_cmd *cmd)
 	int		i;
 
 	i = 0;
+	if (!info.dir_paths)
+		return (FAILURE);
 	while (info.dir_paths[i])
 	{
 		if (!directories(info.dir_paths[i], cmd->cmd))

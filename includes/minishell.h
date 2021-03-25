@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 18:05:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 15:35:34 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ char	*delete_char(char *str, int index);
 ** termcap
 */
 
-char		*check_for_arrows(int index);
+char		*check_for_arrows(int *index);
 
 
 /*

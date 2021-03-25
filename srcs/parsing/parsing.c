@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 12:01:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:25:38 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,7 @@ int			get_input(char *line, t_cmd *cmd)
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))
 		index++;
-	if (!(cmd->input = malloc(sizeof(char) * (index + 1))))
-		return (FAILURE);
-	index = 0;
-	while (line[index] && pipe_or_colon(line[index]))
-	{
-		cmd->input[index] = line[index];
-		index++;
-	}
-	cmd->input[index] = '\0';
+	cmd->input = ft_strndup(line, index);
 	if (cmd->input[0] == '\0')
 		cmd->input = NULL;
 	return (ft_strlen(cmd->input));
@@ -68,7 +60,7 @@ void		read_cmd(char *line, int index, int index_cmd)
 	index += spaces(&line[index]);
 	compare_cmd(cmd);
 	print_cmd_info(cmd);
-	check_sep(line);
+	// check_sep(line);
 	if (cmd->cmd && cmd->bui == 9)
 		info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:34:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:05:20 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:28:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*fill_f(char *res, int size)
 
 	i = 0;
 	diff = 8 - ft_strlen(res);
-	if (!(str = malloc(sizeof(char) * (8 - diff))))
+	if (!(str = ft_calloc((8 - diff), sizeof(char))))
 		return (NULL);
 	while (diff--)
 	{

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 11:52:38 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:05:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:28:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*negative_adress(int len)
 
 	i = 2;
 	diff = 16 - len;
-	if (!(str = malloc(sizeof(char) * (19 - len))))
+	if (!(str = ft_calloc((19 - len), sizeof(char))))
 		return (NULL);
 	str[0] = '0';
 	str[1] = 'x';

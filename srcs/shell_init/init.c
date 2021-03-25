@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 16:43:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 16:24:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ int			init_env(char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], "=");
-	info.env_head = ft_create_elem(create_env_struct(key_value[0], key_value[1]));
-	free(key_value);
+	info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+	free_tab(key_value);
 	i++;
 	while (envp[i])
 	{
-		key_value = ft_split(envp[i], "=");
-		ft_list_push_back(&info.env_head,
-			create_env_struct(key_value[0], key_value[1]));
-		free(key_value);
+		if ((key_value = ft_split(envp[i], "=")) && key_value[0] && key_value[1])
+			ft_list_push_back(&info.env_head,
+				create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+		free_tab(key_value);
 		i++;
 	}
 	return (SUCCESS);
@@ -60,7 +60,7 @@ t_cmd		*create_cmd_struct(void)
 {
 	t_cmd	*cmd;
 
-	if (!(cmd = (t_cmd *)malloc(sizeof(t_cmd))))
+	if (!(cmd = (t_cmd *)ft_calloc(1, sizeof(t_cmd))))
 		return (NULL);
 	cmd->bui = 9;
 	cmd->cmd = NULL;
@@ -78,7 +78,7 @@ t_env		*create_env_struct(char *key, char *value)
 {
 	t_env	*env;
 
-	if (!(env = (t_env *)malloc(sizeof(t_env))))
+	if (!(env = (t_env *)ft_calloc(1, sizeof(t_env))))
 		return (NULL);
 	env->key = key;
 	env->value = value;
@@ -89,7 +89,7 @@ t_history *create_history_struct(char *str)
 {
     t_history *history;
 
-    if (!(history = (t_history *)malloc(sizeof(t_history))))
+    if (!(history = (t_history *)ft_calloc(1, sizeof(t_history))))
         return (NULL);
     history->line = str;
     return (history);
@@ -102,10 +102,11 @@ void		init_info(char **envp)
 	info.output = NULL;
 	info.cmd_status = 0;
 	init_env(envp);
+	//info.dir_paths = NULL;
 	ft_list_push_front(&info.env_head, create_env_struct(ft_strdup("?"),
 		ft_itoa(info.cmd_status)));
-	info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head,
-		create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
+	info.dir_paths = ft_split(getenv("PATH"), ":");
+	// info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head, create_env_struct("PATH", NULL), cmp_env)->data)->value, ":");
 	reset_info();
 }
 

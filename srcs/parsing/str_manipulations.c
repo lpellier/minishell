@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:26:46 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 11:44:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:25:08 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char *str_replace(char *orig, char *rep, char *with)
         ins = tmp + len_rep;
     }
 
-    tmp = result = malloc(strlen(orig) + (len_with - len_rep) * count + 1);
+    tmp = result = ft_calloc(strlen(orig) + (len_with - len_rep) * count + 1, sizeof(char));
 
     if (!result)
         return NULL;
@@ -86,12 +86,12 @@ char *replace_dollars_env(char *line)
 			i = 1;
 			while (test[i] && is_whitespace(test[i]) && test[i] != '$')
 				i++;
-			if (!(dst = malloc(sizeof(char) * i)))
+			if (!(dst = ft_calloc(i, sizeof(char))))
 				return (NULL);
 			strncpy(dst, test, i);
 			dst[i] = '\0';
 			value = (ft_list_find(info.env_head,
-				create_env_struct(dst + 1, "NULL"), cmp_env));
+				create_env_struct(dst + 1, NULL), cmp_env));
 			if (value && (cmp = ft_strdup(((t_env *)value->data)->value)))
 			{
 			    line = str_replace(line, dst, cmp);
