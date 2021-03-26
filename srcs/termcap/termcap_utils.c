@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 15:36:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:27:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,17 +116,16 @@ void		check_for_arrows(char **line, int *index)
 	}
 }
 
-void		delete_char(char **line, char *str, int index)
+void		delete_char(char *line, char *str, int index)
 {
-	//char *res;
-	(void)line;
-	(void)str;
-	(void)index;
+	char *res;
 
 	if (info.cursor.posx >= info.prompt_len)
 		info.cursor.posx--;
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("dc", NULL), 1, ft_putchar);
-	//res = ft_strjoin(ft_substr(str, 0, index - 1), ft_substr(str, index + 1, ft_strlen(str) - index));
-	//return (res);
+	res = ft_strjoin(ft_substr(str, 0, index - 1), ft_substr(str, index + 1, ft_strlen(str) - index));
+	custom_strcpy(line, res);
+	if (res)
+		free(res);
 }

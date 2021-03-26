@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 16:39:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:24:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ char 	*read_everything()
 {
 	char	key;
 	char	*line;
+	char 	*tmp;
 	int		index;
 
 	key = 0;
 	index = 0;
 	line = ft_calloc(4096, sizeof(char));
+	tmp = NULL;
 	ft_bzero(line, 4096);
 	while (key != '\n')
 	{
@@ -64,17 +66,17 @@ char 	*read_everything()
 // 			ft_bzero(line, 4096)
 // ;			check_for_arrows(&line, &index);
 // 		}
-// 		else if (key == 127)
-// 		{
-// 			tmp = ft_strdup(line);
-// 			ft_bzero(line, 4096);
-// 			delete_char(&line, tmp, index);
-// 			index--;
-// 		}
+		if (key == 127)
+		{
+			tmp = ft_strdup(line);
+			ft_bzero(line, 4096);
+			delete_char(line, tmp, index);
+			index--;
+		}
 		if (key != '\n')
 		{
 			write(STDOUT_FILENO, &key, 1);
-			//custom_strncat(line, &key, 1);
+			custom_strncat(line, &key, 1);
 			index++;
 		}
 	}
@@ -94,7 +96,7 @@ void		read_line(int first)
 	// else
     // 	ft_list_push_front(&info.history_head, create_history_struct(NULL));
 	line = read_everything();
-	custom_strcpy(line, "exit");
+	// custom_strcpy(line, "exit\0");
 	// true_line = replace_dollars_env(ft_strdup(line));
 	read_cmd(line, 0, 0);
 	if (line)

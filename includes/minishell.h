@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 15:35:34 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:26:41 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,10 @@ enum			status_codes
 	OTHER
 };
 
+
+void		custom_strcpy(char *dest, char *src);
+void		custom_strncat(char *dest, char *src, int nb);
+
 // int main(int ac, char **av, char **envp);
 
 void		update_cmd_status();
@@ -142,7 +146,7 @@ int			shell_loop(char **envp);
 int			get_pos(int *x, int *y);
 void		print_last_cmd(char **line);
 void		print_prev_cmd(char **line);
-void		delete_char(char **line, char *str, int index);
+void		delete_char(char *line, char *str, int index);
 /*
 ** termcap
 */
