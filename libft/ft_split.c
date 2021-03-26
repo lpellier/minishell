@@ -84,7 +84,8 @@ char		**ft_split(char *str, char *charset)
 	int		index;
 	int		*words_size;
 
-	words = ft_calloc((get_words_count(str, charset) + 1), sizeof(char*));
+	if (!(words = ft_calloc((get_words_count(str, charset) + 1), sizeof(char*))))
+		return (NULL);
 	words_size = get_words_size(str, charset);
 	index = 0;
 	j = 0;

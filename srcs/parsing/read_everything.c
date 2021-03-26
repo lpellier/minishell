@@ -12,77 +12,73 @@
 
 #include "../../includes/minishell.h"
 
-char	*ft_charjoin(const char *s, char c)
+void		custom_strncat(char *dest, char *src, int nb)
 {
-	char	*res;
-	int		i;
+	int	i;
+	int	j;
+	
+	i = 0;
+	while (dest[i] != '\0')
+		i++;
+	j = 0;
+	while (src[j] != '\0' && j < nb)
+	{
+		dest[i] = src[j];
+		i++;
+		j++;
+	}
+	dest[i] = '\0';
+}
+
+void		custom_strcpy(char *dest, char *src)
+{
+	int i;
 
 	i = 0;
-	if (s == NULL || c == '\0')
-		return (NULL);
-	if (!(res = ft_calloc(ft_strlen(s) + 2, sizeof(char))))
-		return (NULL);
-	while (s[i])
+	while (src[i] != '\0')
 	{
-		res[i] = s[i];
+		dest[i] = src[i];
 		i++;
 	}
-	res[i] = c;
-	res[i + 1] = '\0';
-	return (res);
+	dest[i] = '\0';
 }
 
 char 	*read_everything()
 {
-	char	c;
-	char	*ret;
-	char	*tmp;
+	char	key;
+	char	*line;
 	int		index;
 
-	c = 0;
+	key = 0;
 	index = 0;
-	ret = ft_strdup("");
-	tmp = NULL;
-	while (c != '\n')
+	line = ft_calloc(4096, sizeof(char));
+	ft_bzero(line, 4096);
+	while (key != '\n')
 	{
-		if (tmp)
-			free(tmp);
 		get_pos(&info.cursor.posx, &info.cursor.posy);
-		if (read(0, &c, 1) == -1)
+		if (read(0, &key, 1) == -1)
 			return (NULL);
-		if (c == 27)
+// 		if (key == 27)
+// 		{
+// 			tmp = ft_strdup(line);
+// 			ft_bzero(line, 4096)
+// ;			check_for_arrows(&line, &index);
+// 		}
+// 		else if (key == 127)
+// 		{
+// 			tmp = ft_strdup(line);
+// 			ft_bzero(line, 4096);
+// 			delete_char(&line, tmp, index);
+// 			index--;
+// 		}
+		if (key != '\n')
 		{
-			tmp = ft_strdup(ret);
-			free(ret);
-			if (!(ret = check_for_arrows(&index)))
-				ret = ft_strdup(tmp);
-		}
-		else if (c == 127)
-		{
-			tmp = ft_strdup(ret);
-			free(ret);
-			ret = delete_char(tmp, index);
-			if (((t_history *)info.history_head->data)->line)
-				free(((t_history *)info.history_head->data)->line);
-			((t_history *)info.history_head->data)->line = ft_strdup(ret);
-			index--;
-		}
-		else if (c != '\n')
-		{
-			write(STDOUT_FILENO, &c, 1);
-			tmp = ft_strdup(ret);
-			free(ret);
-			ret = ft_charjoin(tmp, c);
-			if (((t_history *)info.history_head->data)->line)
-				free(((t_history *)info.history_head->data)->line);
-			((t_history *)info.history_head->data)->line = ft_strdup(ret);
+			write(STDOUT_FILENO, &key, 1);
+			//custom_strncat(line, &key, 1);
 			index++;
 		}
 	}
-	if (((t_history *)info.history_head->data)->line)
-		free(((t_history *)info.history_head->data)->line);
-	((t_history *)info.history_head->data)->line = ft_strdup(ret);
-	return (ret);
+	return (line);
 }
 
 /* reads line using gnl and feeds t_cmd linked lists */
@@ -90,13 +86,15 @@ char 	*read_everything()
 void		read_line(int first)
 {
 	char *line;
+	(void) first;
 	// char	*true_line;
 
-	if (first)
-		info.history_head = ft_create_elem(create_history_struct(NULL));
-	else
-    	ft_list_push_front(&info.history_head, create_history_struct(NULL));
+	// if (first)
+	// 	info.history_head = ft_create_elem(create_history_struct(NULL));
+	// else
+    // 	ft_list_push_front(&info.history_head, create_history_struct(NULL));
 	line = read_everything();
+	custom_strcpy(line, "exit");
 	// true_line = replace_dollars_env(ft_strdup(line));
 	read_cmd(line, 0, 0);
 	if (line)

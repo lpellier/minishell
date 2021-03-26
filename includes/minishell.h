@@ -140,14 +140,14 @@ enum			status_codes
 void		update_cmd_status();
 int			shell_loop(char **envp);
 int			get_pos(int *x, int *y);
-char		*print_last_cmd();
-char		*print_prev_cmd();
-char	*delete_char(char *str, int index);
+void		print_last_cmd(char **line);
+void		print_prev_cmd(char **line);
+void		delete_char(char **line, char *str, int index);
 /*
 ** termcap
 */
 
-char		*check_for_arrows(int *index);
+void		check_for_arrows(char **line, int *index);
 
 
 /*

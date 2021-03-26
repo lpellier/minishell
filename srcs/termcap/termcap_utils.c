@@ -55,78 +55,78 @@ int get_pos(int *x, int *y)
 	return 0;
 }
 
-char		*print_last_cmd()
+void		print_last_cmd(char **line)
 {
 	t_list *cur;
 	t_history *hist;
+	(void)line;
 
 	if (!(cur = ft_list_at(info.history_head, info.cur_in_history + 1)))
-		return (((t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
+		//return (((t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
 	info.cur_in_history++;
 	hist = (t_history *)cur->data;
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	tputs(hist->line, 1, ft_putchar);
 	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
-	return (hist->line);
+	//return (hist->line);
 }
 
-char		*print_prev_cmd()
+void		print_prev_cmd(char **line)
 {
-	t_list *cur;
-	t_history *hist;
+//	t_list *cur;
+//	t_history *hist;
+	(void)line;
 
 	if (info.cur_in_history < 0)
 		info.cur_in_history = 0;
-	if (!(cur = ft_list_at(info.history_head, info.cur_in_history - 1)))
-		return (((t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
+//	if (!(cur = ft_list_at(info.history_head, info.cur_in_history - 1)))
+//		(t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
 	info.cur_in_history--;
-	hist = (t_history *)cur->data;
+//	hist = (t_history *)cur->data;
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
-	tputs(hist->line, 1, ft_putchar);
-	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
-	return (hist->line);
+//	tputs(hist->line, 1, ft_putchar);
+//	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
+	//return (hist->line);
 }
 
-char		*check_for_arrows(int *index)
+void		check_for_arrows(char **line, int *index)
 {
 	char	key;
-	char	*ret;
+	(void)line;
 
 	if (read(0, &key, 1) == -1)
-		return (NULL);
+//		return (NULL);
 	if (key == 91)
 	{
 		if (read(0, &key, 1) == -1)
-			return (NULL);
+//			return (NULL);
 		if (key == 65) //UP KEY
-			ret = print_last_cmd();
+			print_last_cmd(line);
 		if (key == 66)
-			ret = print_prev_cmd(); // DOWN KEY
+			print_prev_cmd(line); // DOWN KEY
 		if (key == 67)
 			info.cursor.posx += info.cursor.posx <= *index ? 1 : 0; // RIGHT KEY
 		if (key == 68)
 			info.cursor.posx -= info.cursor.posx < info.prompt_len? 0 : 1; // LEFT KEY
 		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
 		if (key == 65 || key == 66)
-		{
 			*index = info.cursor.posx - 1;
-			return (ft_strdup(ret));
-		}
 	}
-	return (NULL);
 }
 
-char	*delete_char(char *str, int index)
+void		delete_char(char **line, char *str, int index)
 {
-	char *res;
+	//char *res;
+	(void)line;
+	(void)str;
+	(void)index;
 
 	if (info.cursor.posx >= info.prompt_len)
 		info.cursor.posx--;
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("dc", NULL), 1, ft_putchar);
-	
-	res = ft_strjoin(ft_substr(str, 0, index - 1), ft_substr(str, index + 1, ft_strlen(str) - index));
-	return (res);
+	//res = ft_strjoin(ft_substr(str, 0, index - 1), ft_substr(str, index + 1, ft_strlen(str) - index));
+	//return (res);
 }

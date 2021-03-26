@@ -57,7 +57,7 @@ int			shell_loop(char **envp)
 	if (info.output)
 		free(info.output);
 	ft_list_clear(info.env_head, free_env_struct);
-	ft_list_clear(info.history_head, free_history_struct);
+	// ft_list_clear(info.history_head, free_history_struct);
 	return (SUCCESS);
 }
 

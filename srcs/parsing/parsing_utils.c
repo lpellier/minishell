@@ -36,7 +36,7 @@ int			spaces(char *s)
 
 	i = 0;
 	count = 0;
-	if (!s[i])
+	if (!s && !s[i])
  		return (FAILURE);
 	while (!is_whitespace(s[i]))
 	{
