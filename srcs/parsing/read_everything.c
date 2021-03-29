@@ -40,9 +40,9 @@ void		delete_key(char *dest)
 
 	i = 0;
 	cursor = info.cursor.posx - info.prompt_len + 1;
-	while(dest[i] != '\0' && i < cursor)
+	while(dest[i] && i < cursor)
 		i++;
-	if (dest[i - 1] !=  '\0')
+	if (dest && dest[i - 1])
 		i--;
 	while (dest[i])
 	{

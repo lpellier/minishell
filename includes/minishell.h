@@ -219,7 +219,7 @@ void	ft_sigterm(int sig);
 ** free
 */
 
-void			free_tab(char **tab);
+void			free_tab(char ***tab);
 
 void		free_history_struct(void *data);
 void			free_cmd_struct(void *data);

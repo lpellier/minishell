@@ -53,7 +53,7 @@ int			shell_loop(char **envp)
 		cur_dir = NULL;
 		update_cmd_status();
 	}
-	free_tab(info.dir_paths);
+	free_tab(&info.dir_paths);
 	if (info.output)
 		free(info.output);
 	ft_list_clear(info.env_head, free_env_struct);

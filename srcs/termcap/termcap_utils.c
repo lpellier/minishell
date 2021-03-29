@@ -26,7 +26,7 @@ void		init_termcap()
 
 	info.cursor.col = tgetnum("co");
 	info.cursor.lin = tgetnum("li");
-	tputs(tgetstr("cl", NULL), 1, ft_putchar);
+	// tputs(tgetstr("cl", NULL), 1, ft_putchar);
 }
 
 int get_pos(int *x, int *y)

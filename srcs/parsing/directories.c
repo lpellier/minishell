@@ -41,13 +41,13 @@ char		*get_cur_dir()
 
 	i = 0;
 	getcwd(info.cur_path, sizeof(info.cur_path));
-	split = ft_split(info.cur_path, "/");
+	split = ft_split(info.cur_path, '/');
 	while (split[i])
 		i++;
 	if (i == 0)
 		res = NULL;
 	else
 		res = ft_strdup(split[i - 1]);
-	free_tab(split);
+	free_tab(&split);
 	return (res);
 }

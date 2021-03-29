@@ -91,7 +91,7 @@ char		**count_args(t_cmd *cmd, int *count)
 	i = 0;
 	if (cmd->input)
 	{
-		split = ft_split(cmd->input, " ");
+		split = ft_split(cmd->input, ' ');
 		while (split[i])
 			i++;
 		*count += i;
@@ -173,9 +173,9 @@ int			exec_binary(int index_cmd)
 	argv[j] = NULL;
 	if (execve(cmd->path, argv, env) == -1)
 		return (FAILURE);
-	free_tab(split);
-	free_tab(argv);
-	free_tab(env);
+	free_tab(&split);
+	free_tab(&argv);
+	free_tab(&env);
 	return (SUCCESS);
 }
 

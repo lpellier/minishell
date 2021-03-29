@@ -57,7 +57,7 @@ char				*ft_strdup(const char *s1);
 char    			*ft_strndup(const char *s1, int size);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strjoin(const char *s1, const char *s2);
-char				**ft_split(char *str, char *charset);
+char				**ft_split(const char *s, char c);
 int					ft_putchar(int c);
 int					ft_intlen(long n);
 int					ft_uintlen(unsigned long n);

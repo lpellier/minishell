@@ -12,23 +12,23 @@
 
 #include "../../includes/minishell.h"
 
-void		free_tab(char **tab)
+void		free_tab(char ***tab)
 {
 	int		i;
+	char	**cpy;
 
 	i = 0;
-	if (tab)
+	cpy = *tab;
+	if (!cpy)
+		return ;
+	while (cpy[i])
 	{
-		while (tab[i])
-		{
-			if (tab[i])
-				free(tab[i]);
-			tab[i] = NULL;
-			i++;
-		}
-		free(tab);
+		free(cpy[i]);
+		cpy[i] = NULL;
+		i++;
 	}
-	tab = NULL;
+	free(*tab);
+	*tab = NULL;
 }
 
 void		free_cmd_struct(void *data)

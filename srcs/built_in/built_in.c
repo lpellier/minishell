@@ -166,12 +166,12 @@ int			ft_export(int index_cmd)
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
 	if (!cmd->input || !ft_strchr(cmd->input, '='))
 		return (FAILURE);
-	key_value = ft_split(cmd->input, "=");
+	key_value = ft_split(cmd->input, '=');
 	if (!key_value[1])
 		return (FAILURE);
 	ft_list_push_back(&info.env_head,
 		create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
-	free_tab(key_value);
+	free_tab(&key_value);
 	key_value = NULL;
 	return (SUCCESS);
 }

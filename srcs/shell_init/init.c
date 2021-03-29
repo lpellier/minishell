@@ -37,16 +37,16 @@ int			init_env(char **envp)
 	i = 0;
 	if (!envp[i])
 		return (FAILURE);
-	key_value = ft_split(envp[i], "=");
+	key_value = ft_split(envp[i], '=');
 	info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
-	free_tab(key_value);
+	free_tab(&key_value);
 	i++;
 	while (envp[i])
 	{
-		if ((key_value = ft_split(envp[i], "=")) && key_value[0] && key_value[1])
+		if ((key_value = ft_split(envp[i], '=')) && key_value[0] && key_value[1])
 			ft_list_push_back(&info.env_head,
 				create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
-		free_tab(key_value);
+		free_tab(&key_value);
 		i++;
 	}
 	return (SUCCESS);
@@ -90,7 +90,7 @@ t_history *create_history_struct()
     t_history *history;
 
     if (!(history = (t_history *)ft_calloc(1, sizeof(t_history))))
-        return (NULL);
+		return (NULL);
 	history->line = ft_calloc(LINE_MAX, sizeof(char));
     return (history);
 }
@@ -105,7 +105,7 @@ void		init_info(char **envp)
 	//info.dir_paths = NULL;
 	ft_list_push_front(&info.env_head, create_env_struct(ft_strdup("?"),
 		ft_itoa(info.cmd_status)));
-	info.dir_paths = ft_split(getenv("PATH"), ":");
+	info.dir_paths = ft_split(getenv("PATH"), ':');
 	// info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head, create_env_struct("PATH", NULL), cmp_env)->data)->value, ":");
 	reset_info();
 }

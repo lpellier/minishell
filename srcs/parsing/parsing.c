@@ -29,12 +29,12 @@ int			get_cmd(char *line, t_cmd *cmd)
 {
 	char	**words;
 
-	words = ft_split(line, " ");
+	words = ft_split(line, ' ');
 	if (words && words[0] && words[1] && words[1][0] == '-')
 		cmd->option = ft_strdup(words[1]);
 	if (words && words[0])
 		cmd->cmd = ft_strdup(words[0]);
-	free_tab(words);
+	free_tab(&words);
 	return (ft_strlen(cmd->cmd));
 }
 
