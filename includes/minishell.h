@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/26 15:26:41 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 13:04:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <termios.h>
 # define TRUE 1
 # define FALSE 0
+# define LINE_MAX 4096
 # define RED "\033[31m"
 # define BLUE "\033[34m"
 # define CYAN "\x1b[36m"
@@ -135,23 +136,19 @@ enum			status_codes
 	OTHER
 };
 
-
-void		custom_strcpy(char *dest, char *src);
-void		custom_strncat(char *dest, char *src, int nb);
-
 // int main(int ac, char **av, char **envp);
 
 void		update_cmd_status();
 int			shell_loop(char **envp);
 int			get_pos(int *x, int *y);
-void		print_last_cmd(char **line);
-void		print_prev_cmd(char **line);
+void		print_last_cmd(char *line);
+void		print_prev_cmd(char *line);
 void		delete_char(char *line, char *str, int index);
 /*
 ** termcap
 */
 
-void		check_for_arrows(char **line, int *index);
+void		check_for_arrows(char *line);
 
 
 /*
@@ -242,7 +239,7 @@ int				pipe_for_exec(int index_cmd,
 int				init_env(char **envp);
 void		print_history(void *data);
 t_cmd			*create_cmd_struct();
-t_history *create_history_struct(char *str);
+t_history 		*create_history_struct();
 t_env			*create_env_struct(char *key, char *value);
 t_list			*ft_create_elem(void *data);
 int				ft_list_size(t_list *list);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 12:46:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 14:34:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int			shell_loop(char **envp)
 		first = 0;
 		reset_info();
 		ft_list_clear(info.cmd_head, free_cmd_struct);
-		ft_bzero(info.cur_path, 4096);
+		ft_bzero(info.cur_path, ft_strlen(info.cur_path));
 		free(cur_dir);
 		cur_dir = NULL;
 		update_cmd_status();
@@ -57,7 +57,7 @@ int			shell_loop(char **envp)
 	if (info.output)
 		free(info.output);
 	ft_list_clear(info.env_head, free_env_struct);
-	// ft_list_clear(info.history_head, free_history_struct);
+	ft_list_clear(info.history_head, free_history_struct);
 	return (SUCCESS);
 }
 
@@ -65,6 +65,5 @@ int			main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-    system("clear");
     exit(shell_loop(envp));
 }

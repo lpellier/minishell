@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 16:24:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 13:04:34 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,13 @@ t_env		*create_env_struct(char *key, char *value)
 	return (env);
 }
 
-t_history *create_history_struct(char *str)
+t_history *create_history_struct()
 {
     t_history *history;
 
     if (!(history = (t_history *)ft_calloc(1, sizeof(t_history))))
         return (NULL);
-    history->line = str;
+	history->line = ft_calloc(LINE_MAX, sizeof(char));
     return (history);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 15:15:06 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 11:21:05 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 12:23:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void				ft_putnbr_fd(int n, int fd);
 void				ft_putunbr_fd(unsigned int n, int fd);
 void				ft_putnnbr_fd(int n, int size, int fd);
 void				ft_putnstr_fd(char *s, int size, int fd);
+void				ft_strncat(char *dest, char *src, int nb);
+void				ft_strcpy(char *dest, char *src);
 void				*ft_calloc(size_t count, size_t size);
 char				*ft_substr(const char *s, unsigned int start, size_t len);
 char				*ft_strdup(const char *s1);

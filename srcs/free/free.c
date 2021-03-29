@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 16:09:48 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 13:09:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,10 @@ void		free_history_struct(void *data)
     t_history	*ptr;
 
     ptr = (t_history *)data;
-    if (ptr->line)
-        free(ptr->line);
-    ptr->line = NULL;
+    ft_bzero(ptr->line, ft_strlen(ptr->line));
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }
 
 void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *))

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/26 15:27:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 14:33:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void		init_termcap()
 
 	info.cursor.col = tgetnum("co");
 	info.cursor.lin = tgetnum("li");
+	tputs(tgetstr("cl", NULL), 1, ft_putchar);
 }
 
 int get_pos(int *x, int *y)
@@ -55,77 +56,64 @@ int get_pos(int *x, int *y)
 	return 0;
 }
 
-void		print_last_cmd(char **line)
+void		print_last_cmd(char *line)
 {
 	t_list *cur;
 	t_history *hist;
-	(void)line;
+	int		list_len;
 
+	list_len = ft_list_size(info.history_head);
 	if (!(cur = ft_list_at(info.history_head, info.cur_in_history + 1)))
-		//return (((t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
-	info.cur_in_history++;
+		return ;
+	if (info.cur_in_history < list_len)
+		info.cur_in_history++;
 	hist = (t_history *)cur->data;
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	tputs(hist->line, 1, ft_putchar);
 	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
-	//return (hist->line);
+	ft_bzero(line, ft_strlen(line));
+	ft_strcpy(line, hist->line);
 }
 
-void		print_prev_cmd(char **line)
+void		print_prev_cmd(char *line)
 {
-//	t_list *cur;
-//	t_history *hist;
-	(void)line;
+	t_list *cur;
+	t_history *hist;
 
-	if (info.cur_in_history < 0)
-		info.cur_in_history = 0;
-//	if (!(cur = ft_list_at(info.history_head, info.cur_in_history - 1)))
-//		(t_history *)ft_list_at(info.history_head, info.cur_in_history)->data)->line);
-	info.cur_in_history--;
-//	hist = (t_history *)cur->data;
+	if (!(cur = ft_list_at(info.history_head, info.cur_in_history - 1)))
+		return ;
+	if (info.cur_in_history > 0)
+		info.cur_in_history--;
+	hist = (t_history *)cur->data;
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
-//	tputs(hist->line, 1, ft_putchar);
-//	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
-	//return (hist->line);
+	tputs(hist->line, 1, ft_putchar);
+	info.cursor.posx = info.cursor.start_posx + ft_strlen(hist->line);
+	ft_bzero(line, ft_strlen(line));
+	ft_strcpy(line, hist->line);
 }
 
-void		check_for_arrows(char **line, int *index)
+void		check_for_arrows(char *line)
 {
 	char	key;
-	(void)line;
+	int		cursor;
 
+	cursor = info.cursor.posx - info.prompt_len + 1;
 	if (read(0, &key, 1) == -1)
-//		return (NULL);
+		return ;
 	if (key == 91)
 	{
 		if (read(0, &key, 1) == -1)
-//			return (NULL);
+			return ;
 		if (key == 65) //UP KEY
 			print_last_cmd(line);
 		if (key == 66)
 			print_prev_cmd(line); // DOWN KEY
 		if (key == 67)
-			info.cursor.posx += info.cursor.posx <= *index ? 1 : 0; // RIGHT KEY
+			info.cursor.posx += cursor < ft_strlen(line) ? 1 : 0; // RIGHT KEY
 		if (key == 68)
-			info.cursor.posx -= info.cursor.posx < info.prompt_len? 0 : 1; // LEFT KEY
+			info.cursor.posx -= cursor > 0 ? 1 : 0; // LEFT KEY
 		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
-		if (key == 65 || key == 66)
-			*index = info.cursor.posx - 1;
 	}
-}
-
-void		delete_char(char *line, char *str, int index)
-{
-	char *res;
-
-	if (info.cursor.posx >= info.prompt_len)
-		info.cursor.posx--;
-	tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
-	tputs(tgetstr("dc", NULL), 1, ft_putchar);
-	res = ft_strjoin(ft_substr(str, 0, index - 1), ft_substr(str, index + 1, ft_strlen(str) - index));
-	custom_strcpy(line, res);
-	if (res)
-		free(res);
 }
