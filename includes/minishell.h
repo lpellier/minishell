@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 17:39:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 19:46:34 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # include <termios.h>
 # define TRUE 1
 # define FALSE 0
+# define BSLASH 92
+# define QUOTE 39
+# define DQUOTE 34
 # define LINE_MAX 4096
 # define RED "\033[31m"
 # define BLUE "\033[34m"

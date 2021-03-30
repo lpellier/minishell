@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 17:48:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 21:13:28 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,75 @@ char 	*read_everything()
 	return (line);
 }
 
+void		remove_char(char *line, int index)
+{
+	while (line[index])
+	{
+		line[index] = line[index + 1];
+		index++;
+	}
+}
+
+// bslashes within a dquote only work if the following character is a dollar, a dquote,(a backquote) or another bslash
+// not sure whether backquotes should be supported or not 
+
+// other warning : when used solo, a backslash lets you finish a command in line under current one. 
+// should i implement this ?
+
+int			backslash(char *line, int *index, int dquote)
+{
+	if (!dquote)
+	{
+		remove_char(line, *index);
+		*index += 1;
+	}
+	else if (dquote)
+	{
+		if (line[*index + 1] && (line[*index + 1] == BSLASH || line[*index + 1] == '$' ||
+			line[*index + 1] == DQUOTE))
+		{
+			remove_char(line, *index);
+			if (!line[*index + 1])
+				return (1);
+		}
+	}
+	return (0);
+}
+
+void		transform_line(char *line, int index)
+{
+	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && line[index] != DQUOTE)
+		index++;
+	if (line[index] == BSLASH)
+		backslash(line, &index, 0);
+	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && line[index] != DQUOTE)
+		index++;
+	if (line[index] == QUOTE)
+	{
+		remove_char(line, index);
+		while (line[index] != QUOTE)
+			index++;
+		remove_char(line, index);
+	}
+	if (line[index] == DQUOTE)
+	{
+		remove_char(line, index);
+		while (line[index] != DQUOTE)
+		{
+			if (line[index] == BSLASH)
+				if (backslash(line, &index, 1))
+					return ;
+			index++;
+		}
+		remove_char(line, index);
+	}
+	if (line[index])
+		transform_line(line, index);
+}
+
+// this function will return a false error when there will be a dquote precedeed by a bslash
+// be wary of this
+
 int			count_exceptions(char *line)
 {
 	int		i;
@@ -100,11 +169,11 @@ int			count_exceptions(char *line)
 	dquote = 0;
 	while (line[i])
 	{
-		if (line[i] == 34)
+		if (line[i] == QUOTE)
 			dquote++;
-		else if (line[i] == 39)
+		else if (line[i] == DQUOTE)
 			quote++;
-		else if (line[i] == 92)
+		else if (line[i] == BSLASH)
 			bslash++;
 		i++;
 	}
@@ -130,6 +199,7 @@ void		read_line(int first)
 	else
     	ft_list_push_front(&info.history_head, create_history_struct());
 	line = read_everything();
+	transform_line(line, 0);
 	if (count_exceptions(line))
 	{
 		free(line);
