@@ -14,10 +14,7 @@
 
 void		init_termcap()
 {
-	char *term;
-
-	term = getenv("TERM");
-	tgetent(NULL, term);
+	tgetent(NULL, getenv("TERM"));
 	tcgetattr(STDOUT_FILENO, &info.termios_p);
 	info.termios_p.c_lflag &= ~(ICANON | ECHO);
     info.termios_p.c_cc[VTIME] = 0;

@@ -49,6 +49,9 @@ void		free_cmd_struct(void *data)
 	if (ptr->path)
 		free(ptr->path);
 	ptr->path = NULL;
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }
 
 void		free_env_struct(void *data)
@@ -62,6 +65,9 @@ void		free_env_struct(void *data)
 	if (ptr->key)
 		free(ptr->key);
 	ptr->key = NULL;
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }
 
 void		free_history_struct(void *data)

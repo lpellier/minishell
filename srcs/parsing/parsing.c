@@ -19,8 +19,9 @@ int			get_input(char *line, t_cmd *cmd)
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))
 		index++;
-	cmd->input = ft_strndup(line, index);
-	if (cmd->input[0] == '\0')
+	if (line[index])
+		cmd->input = ft_strndup(line, index);
+	else
 		cmd->input = NULL;
 	return (ft_strlen(cmd->input));
 }
