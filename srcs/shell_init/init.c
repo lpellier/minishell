@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/29 13:04:34 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:40:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,5 @@ void		init_info(char **envp)
 
 void reset_info()
 {
-	info.nb_colon = 0;
-	info.nb_l_redir = 0;
-	info.nb_pipe = 0;
-	info.nb_r_redir = 0;
-	info.nb_rd_redir = 0;
 	info.cur_in_history = 0;
 }

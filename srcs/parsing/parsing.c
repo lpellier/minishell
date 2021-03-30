@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 16:10:31 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:40:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int			get_input(char *line, t_cmd *cmd)
 	int		index;
 
 	index = 0;
-	while (line[index] && pipe_or_colon(line[index]))
+	while (line[index] && is_pipe(line[index]))
 		index++;
 	if (index >= 1)
 		cmd->input = ft_strndup(line, index);
@@ -66,7 +66,7 @@ void		read_cmd(char *line, int index, int index_cmd)
 			": command not found\n");
 	else if (cmd->bui == 9)
 		info.output = ft_strdup(""); /* might cause an issue later */
-	else if (!pipe_or_colon(line[index]))
+	else if (!is_pipe(line[index]))
 		pipe_for_exec(index_cmd, line, index, 1);
 	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, 0);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/29 13:04:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:39:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,6 @@ typedef struct	s_info
 	char	cur_path[PATH_MAX];
 	int		crashed;
 	int		cmd_status;
-	int		nb_pipe;
- 	int		nb_l_redir;
- 	int		nb_r_redir;
- 	int		nb_rd_redir;
- 	int		nb_colon;
 	int		cur_in_history;
 	int		prompt_len;
 	t_cursor cursor;
@@ -155,7 +150,9 @@ void		check_for_arrows(char *line);
 ** utils
 */
 
-int			pipe_or_colon(char c);
+int			is_pipe(char c);
+int			is_colon(char c);
+int			is_redir(char c);
 int			is_whitespace(char c);
 int			spaces(char *s);
 int			check_sep(char *line);

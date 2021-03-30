@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 17:08:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:48:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char 	*read_everything()
 			check_for_arrows(line);
 		else if (key == 127)
 			delete_key(line);
+		else if (key == 4)
+			add_key(line, 'd'); // ctrl D
 		else if (key != '\n')
 			add_key(line, key);
 		if (info.cur_in_history == 0 || key == '\n')
@@ -85,6 +87,31 @@ char 	*read_everything()
 		}
 	}
 	return (line);
+}
+
+int			count_exceptions(char *line)
+{
+	int		i;
+	int		bslash, quote, dquote;
+
+	i = 0;
+	bslash = 0;
+	quote = 0;
+	dquote = 0;
+	while (line[i])
+	{
+		if (line[i] == 34)
+			dquote++;
+		else if (line[i] == 39)
+			quote++;
+		else if (line[i] == 92)
+			bslash++;
+		i++;
+	}
+	if (quote % 2 != 0 || dquote % 2 != 0)
+		return (1);
+	else
+		return (0);
 }
 
 /* 
@@ -103,7 +130,12 @@ void		read_line(int first)
 	else
     	ft_list_push_front(&info.history_head, create_history_struct());
 	line = read_everything();
-	check_sep(line);
+	if (count_exceptions(line))
+	{
+		free(line);
+		ft_printf("\nminisheh: parsing error: number of quotes should be even\n");
+		return ;
+	}
 	read_cmd(line, 0, 0);
 	if (line)
 		free(line);
