@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 13:25:38 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 14:39:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int			get_input(char *line, t_cmd *cmd)
 	index = 0;
 	while (line[index] && pipe_or_colon(line[index]))
 		index++;
-	if (line[index])
+	if (index >= 1)
 		cmd->input = ft_strndup(line, index);
 	else
 		cmd->input = NULL;
@@ -69,7 +69,7 @@ void		read_cmd(char *line, int index, int index_cmd)
 		info.output = ft_strdup(""); /* might cause an issue later */
 	else if (!pipe_or_colon(line[index]))
 		pipe_for_exec(index_cmd, line, index, 1);
-	else if (pipe_or_colon(line[index]) && cmd->bui == 8)
+	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, 0);
 	else
 		info.cmd_status = info.built_in[cmd->bui](index_cmd);
