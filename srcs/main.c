@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/29 14:34:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:12:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ int			shell_loop(char **envp)
 		if (!(cur_dir = get_cur_dir()))
 			cur_dir = ft_strdup("/");
 		ft_printf(BLUE "~ %s > " RESET, cur_dir);
-		if (first)
-			get_pos(&info.cursor.start_posx, &info.cursor.start_posy);
+		get_pos(&info.cursor.start_posx, &info.cursor.start_posy);
 		info.prompt_len = ft_strlen(cur_dir) + 6;
 		info.cmd_head = ft_create_elem(create_cmd_struct());
 		read_line(first);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/29 15:06:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:08:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,12 @@ char 	*read_everything()
 	return (line);
 }
 
-/* reads line using gnl and feeds t_cmd linked lists */
+/* 
+** reads line using gnl and feeds t_cmd linked lists 
+** i might modify our line in this function, as in removing any unnecessary backslashes,
+** quotes, double quotes etc..
+** the point is to process our line so that it is readable by our read_cmd function
+*/
 
 void		read_line(int first)
 {
@@ -98,6 +103,7 @@ void		read_line(int first)
 	else
     	ft_list_push_front(&info.history_head, create_history_struct());
 	line = read_everything();
+	check_sep(line);
 	read_cmd(line, 0, 0);
 	if (line)
 		free(line);

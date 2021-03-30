@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 14:39:13 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 16:10:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void		read_cmd(char *line, int index, int index_cmd)
 	index += spaces(&line[index]);
 	compare_cmd(cmd);
 	print_cmd_info(cmd);
-	// check_sep(line);
 	if (cmd->cmd && cmd->bui == 9)
 		info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");

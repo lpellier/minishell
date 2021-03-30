@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 15:24:31 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:04:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int			ft_cd(int index_cmd)
 ** this is used to count different arguments for binaries
 ** this WILL be tricky as we'll need to account for ""  and ''
 ** as a single argument
-** and there might be backspaces canceling quotes -> it's going to be tough
+** and there might be backslashes canceling quotes -> it's going to be tough
 */
 
 char		**count_args(t_cmd *cmd, int *count)

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/29 14:33:48 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:05:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void		init_termcap()
 
 	info.cursor.col = tgetnum("co");
 	info.cursor.lin = tgetnum("li");
-	// tputs(tgetstr("cl", NULL), 1, ft_putchar);
+	tputs(tgetstr("cl", NULL), 1, ft_putchar);
 }
 
 int get_pos(int *x, int *y)
