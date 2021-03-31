@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 11:57:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/31 15:04:24 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # define BSLASH 92
 # define QUOTE 39
 # define DQUOTE 34
+# define DOLLAR 36
 # define LINE_MAX 4096
 # define RED "\033[31m"
 # define BLUE "\033[34m"
@@ -125,9 +126,15 @@ typedef struct	s_info
 
 t_info			info;
 
-/*
-** #define SEPARATOR "|'<;>\""
-*/
+enum			separator
+{
+	NOTHING,
+	PIPE,
+	COLON,
+	R_LEFT,
+	R_RIGHT,
+	R_RIGHTD
+};
 
 enum			built_in_index
 {
@@ -171,7 +178,8 @@ void		check_for_arrows(char *line);
 
 int			is_pipe(char c);
 int			is_colon(char c);
-int			is_redir(char c);
+int			is_redir_l(char c);
+int			is_redir_r(char c);
 int			is_whitespace(char c);
 int			spaces(char *s);
 int			check_sep(char *line, t_cmd *cmd);

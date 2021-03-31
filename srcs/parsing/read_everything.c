@@ -6,27 +6,43 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 21:13:28 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/31 16:46:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void		add_key(char *dest, char key)
+void		add_char(char *dest, char key, int index)
 {
 	char	*tmp_one;
 	char	*tmp_two;
-	int		cursor;
 
-	cursor = info.cursor.posx - info.prompt_len + 1;
-	tmp_one = ft_substr(dest, 0, cursor);
-	tmp_two = ft_substr(dest, cursor, ft_strlen(dest));
-	ft_bzero(dest, LINE_MAX);
+	tmp_one = ft_substr(dest, 0, index);
+	tmp_two = ft_substr(dest, index, ft_strlen(dest));
+	ft_bzero(dest, ft_strlen(dest));
 	ft_strcpy(dest, tmp_one);
 	ft_strncat(dest, &key, 1);
 	ft_strncat(dest, tmp_two, ft_strlen(tmp_two));
 	free(tmp_one);
 	free(tmp_two);
+}
+
+void		remove_char(char *line, int index)
+{
+	while (line[index])
+	{
+		line[index] = line[index + 1];
+		index++;
+	}
+}
+
+void		add_key(char *dest, char key)
+{
+
+	int		cursor;
+
+	cursor = info.cursor.posx - info.prompt_len + 1;
+	add_char(dest, key, cursor);
 	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	ft_putstr_fd(dest, 1);
@@ -89,20 +105,44 @@ char 	*read_everything()
 	return (line);
 }
 
-void		remove_char(char *line, int index)
-{
-	while (line[index])
-	{
-		line[index] = line[index + 1];
-		index++;
-	}
-}
 
 // bslashes within a dquote only work if the following character is a dollar, a dquote,(a backquote) or another bslash
 // not sure whether backquotes should be supported or not 
 
 // other warning : when used solo, a backslash lets you finish a command in line under current one. 
 // should i implement this ?
+
+int			dollar(char *line, int *index, int dquote)
+{
+	char	*var;
+	t_list	*var_list;
+	t_env	*var_key;
+	int		i;
+
+	i = 0;
+	var = ft_calloc(256, sizeof(char));
+	while (line[*index] && is_whitespace(line[*index]) && line[*index] != 34)
+	{
+		if (i > 0)
+			var[i - 1] = line[*index];
+		remove_char(line, *index);
+		i++;
+	}
+	if ((var_list = ft_list_find(info.env_head, create_env_struct(var, NULL), cmp_env)))
+	{
+		var_key = (t_env *)var_list->data;
+		i = 0;
+		while (var_key->value[i])
+		{
+			add_char(line, var_key->value[i], *index);
+			*index += 1;
+			i++;
+		}
+	}
+	if (dquote)
+		*index -= 1;
+	return (0);
+}
 
 int			backslash(char *line, int *index, int dquote)
 {
@@ -126,12 +166,13 @@ int			backslash(char *line, int *index, int dquote)
 
 void		transform_line(char *line, int index)
 {
-	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && line[index] != DQUOTE)
+	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && \
+		line[index] != DQUOTE && line[index] != DOLLAR)
 		index++;
 	if (line[index] == BSLASH)
 		backslash(line, &index, 0);
-	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && line[index] != DQUOTE)
-		index++;
+	if (line[index] == DOLLAR)
+		dollar(line, &index, 0);
 	if (line[index] == QUOTE)
 	{
 		remove_char(line, index);
@@ -147,6 +188,8 @@ void		transform_line(char *line, int index)
 			if (line[index] == BSLASH)
 				if (backslash(line, &index, 1))
 					return ;
+			if (line[index] == DOLLAR)
+				dollar(line, &index, 1);
 			index++;
 		}
 		remove_char(line, index);
@@ -206,6 +249,7 @@ void		read_line(int first)
 		ft_printf("\nminisheh: parsing error: number of quotes should be even\n");
 		return ;
 	}
+	ft_printf("\n");
 	read_cmd(line, 0, 0);
 	if (line)
 		free(line);

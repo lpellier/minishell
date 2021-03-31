@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 15:13:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/31 14:30:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int piped)
 		info.cmd_status = status;
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		if (piped)
+		if (piped == PIPE)
 		{
 			ft_list_push_back(&info.cmd_head, create_cmd_struct());
 			read_cmd(line, index + 1, index_cmd + 1);

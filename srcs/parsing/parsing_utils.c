@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:24:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 11:48:57 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/31 14:46:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,19 @@ int			is_colon(char c)
 		return (FAILURE);
 }
 
-int			is_redir(char c)
+int			is_redir_l(char c)
 {
-	if (c == '<' || c == '>')
+	if (c == '<')
+		return (SUCCESS);
+	else if (c == '\0')
+		return (OTHER);
+	else
+		return (FAILURE);
+}
+
+int			is_redir_r(char c)
+{
+	if (c == '>')
 		return (SUCCESS);
 	else if (c == '\0')
 		return (OTHER);
