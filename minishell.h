@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 11:05:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:09:07 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 # define CYAN "\x1b[36m"
 # define RESET "\x1b[0m"
 
-/*
-** #define SEPARATOR "|'<;>\""
-*/
+
+#define SEPARATOR "|<;>"
+
 
 enum			built_in_index
 {
@@ -97,6 +97,13 @@ typedef struct	s_cmd
 	char	*path;
 }				t_cmd;
 
+// typedef	struct s_redir
+// {
+// 	char *str;
+
+// }				t_redir;
+
+
 typedef struct	s_info
 {
 	int		(*built_in[9])(int index_cmd);
@@ -114,11 +121,14 @@ typedef struct	s_info
 	char	*output;
 	char	**envp;
 	char	**dir_paths;
+	int		file_fd;
 }				t_info;
 
 t_info			info;
 
 int				shell_loop();
+void			reset_info();
+void			init(char **envp);
 
 /*
 ** parsing
@@ -172,6 +182,19 @@ void			free_env_struct(void *data);
 
 void			print_env_struct(void *data);
 int				cmp_env(void *data, void *data_ref);
+
+/*
+** redirection
+*/
+
+void	*ft_calloc(size_t count, size_t size);
+char	*ft_strncpy(char *dest, char *src, unsigned int n);
+int		ft_isseparator(int c);
+int		ft_isspace(int c);
+int		ft_cinset(const char c, const char *set);
+char	*get_file(char *s);
+void	redir_stdout(t_cmd *cmd);
+void	ft_symbol(t_cmd *cmd);
 
 /*
 ** linked lists

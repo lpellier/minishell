@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
+#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/03/15 16:09:56 by lpellier         ###   ########.fr        #
+#    Updated: 2021/03/26 13:54:01 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCS = parsing.c \
 		init.c \
 		linked_lists.c \
 		all_signal.c \
+		redir_std.c \
 		main.c 
 
 OBJS = $(SRCS:.c=.o)

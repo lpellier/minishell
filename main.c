@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 11:03:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:10:15 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,22 @@ void		init(char **envp)
 	info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head,
 		create_env_struct("PATH", "NULL"), cmp_env)->data)->value, ":");
 	info.nb_colon = 0;
- 	info.nb_l_redir = 0;
- 	info.nb_pipe = 0;
- 	info.nb_r_redir = 0;
- 	info.nb_rd_redir = 0;
- }
+	info.nb_l_redir = 0;
+	info.nb_pipe = 0;
+	info.nb_r_redir = 0;
+	info.nb_rd_redir = 0;
+	info.file_fd = -1;
+}
 
- void reset_info()
- {
- 	info.nb_colon = 0;
- 	info.nb_l_redir = 0;
- 	info.nb_pipe = 0;
- 	info.nb_r_redir = 0;
- 	info.nb_rd_redir = 0;
- }
+void reset_info()
+{	
+	info.nb_colon = 0;
+	info.nb_l_redir = 0;
+	info.nb_pipe = 0;
+	info.nb_r_redir = 0;
+	info.nb_rd_redir = 0;
+	info.file_fd = -1;
+}
 
 /* Functions for testing termcaps
 
@@ -103,8 +105,7 @@ void		init_termcap()
 {
 	char *term;
 
-	term = ((t_env *)ft_list_find(info.env_head, 
-		create_env_struct("TERM", NULL), cmp_env)->data)->value;
+	term = getenv("TERM");
 	tgetent(NULL, term);
 }
 

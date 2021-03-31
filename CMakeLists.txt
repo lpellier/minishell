@@ -53,6 +53,7 @@ set(MINISHELL_SRC
         ./parsing.c
         ./minishell.h
         ./all_signal.c
+        ./redir_std.c
 
         )
 add_library(LIBFT

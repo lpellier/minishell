@@ -20,6 +20,7 @@ SRCS	=		./ft_isalpha.c \
 				./ft_substr.c \
 				./ft_split.c \
 				./ft_intlen.c \
+				./ft_strtrim.c \
 				./ft_putunbr_fd.c \
 				./ft_uintlen.c \
 				./ft_int_hexmin.c \

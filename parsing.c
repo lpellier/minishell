@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 11:06:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/26 16:09:44 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void		test(t_cmd *cmd)
 	ft_printf(CYAN "%d\n" RESET, cmd->bui);
 }
 
-int check_sep(char *line)
+int check_sep(char *line, t_cmd *cmd)
  {
  	int i;
 
@@ -117,7 +117,9 @@ int check_sep(char *line)
  		else if (line[i] == ';')
  			info.nb_colon++;
  		i++;
- 	}
+	}
+	if (info.nb_l_redir > 0 || info.nb_rd_redir > 0 || info.nb_r_redir > 0 || info.nb_pipe > 0 || info.nb_colon > 0)
+		ft_symbol(cmd);
  	return (0);
  }
 
@@ -143,7 +145,7 @@ void		read_cmd(char *line, int index, int index_cmd)
 	index += spaces(&line[index]);
 	compare_cmd(cmd);
 	test(cmd);
-	check_sep(line);
+	check_sep(line, cmd);
 	if (cmd->cmd && cmd->bui == 9)
 		info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");
