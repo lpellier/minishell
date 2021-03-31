@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 12:44:43 by lpellier          #+#    #+#             */
-/*   Updated: 2019/11/25 14:24:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 14:06:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strdup(const char *s1)
 	i = 0;
 	if (s1 != NULL)
 	{
-		if (!(res = malloc(sizeof(const char) * ft_strlen(s1) + 1)))
+		if (!(res = ft_calloc((ft_strlen(s1) + 1), sizeof(const char))))
 			return (NULL);
 		while (s1[i])
 		{

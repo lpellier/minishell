@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/07 12:31:05 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 14:08:11 by lpellier         ###   ########.fr       */
+/*   Created: 2021/03/29 12:21:50 by lpellier          #+#    #+#             */
+/*   Updated: 2021/03/29 12:22:02 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-void	*ft_calloc(size_t count, size_t size)
+void		ft_strcpy(char *dest, char *src)
 {
-	void	*mem;
+	int i;
 
-	if (count != 0 && size != 0)
+	i = 0;
+	while (src[i] != '\0')
 	{
-		if (!(mem = malloc(count * size)))
-			return (NULL);
-		ft_bzero(mem, count * size);
-		return (mem);
+		dest[i] = src[i];
+		i++;
 	}
-	return (malloc(1));
+	dest[i] = '\0';
 }

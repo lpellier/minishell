@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 12:50:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:01:28 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:27:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_checkend(s1, set);
 	i = 0;
 	start = 0;
-	if (!(res = malloc(sizeof(char) * ft_len(s1, set))))
+	if (!(res = ft_calloc(ft_len(s1, set), sizeof(char))))
 		return (NULL);
 	while (ft_checkset(s1[start], set))
 		start++;

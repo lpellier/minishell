@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 11:42:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 23:01:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:27:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	if (s1 == NULL || s2 == NULL)
 		return (NULL);
-	if (!(res = malloc(sizeof(char) * ft_strlen2(s1, s2) + 1)))
+	if (!(res = ft_calloc(ft_strlen2(s1, s2) + 1, sizeof(char))))
 		return (NULL);
 	while (s1[i])
 	{

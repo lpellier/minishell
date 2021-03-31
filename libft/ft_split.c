@@ -6,101 +6,74 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 11:44:59 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 22:59:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:28:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int			is_separator(char c, char *charset)
+static	size_t	ft_len(char **str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+static	void	ft_strstr_copy(char **dest, char **src1, char *src2)
 {
 	int		i;
 
 	i = 0;
-	while (charset[i])
+	while (src1[i])
 	{
-		if (c == charset[i])
-			return (1);
-		++i;
-	}
-	return (0);
-}
-
-int			is_word(char c, char cbefore, char *charset)
-{
-	return (!is_separator(c, charset) && is_separator(cbefore, charset));
-}
-
-int			get_words_count(char *str, char *charset)
-{
-	int		words_count;
-	int		i;
-
-	i = 0;
-	words_count = 0;
-	while (str[i] != '\0')
-	{
-		if (is_word(str[i], str[i - 1], charset) ||
-			(!is_separator(str[i], charset) && i == 0))
-			words_count++;
+		dest[i] = src1[i];
 		i++;
 	}
-	return (words_count);
+	dest[i] = src2;
+	dest[i + 1] = NULL;
 }
 
-int			*get_words_size(char *str, char *charset)
+static	char	**ft_strstr_push(char **old, char *new)
 {
-	int		index;
+	char	**ret;
 	int		i;
-	int		words_count;
-	int		*words_size;
 
 	i = 0;
-	words_count = get_words_count(str, charset);
-	words_size = malloc(words_count * sizeof(int));
-	while (i <= words_count)
+	if (old)
 	{
-		words_size[i] = 0;
-		i++;
+		ret = (char **)ft_calloc(ft_len(old) + 2, sizeof(char *));
+		ft_strstr_copy(ret, old, new);
+		free(old);
+		return (ret);
 	}
-	i = 0;
-	index = 0;
-	while (str[i] != '\0')
-	{
-		if (!is_separator(str[i], charset))
-			words_size[index]++;
-		else if (i > 0 && !is_separator(str[i - 1], charset))
-			index++;
-		i++;
-	}
-	return (words_size);
+	ret = (char **)ft_calloc(2, sizeof(char *));
+	ret[0] = new;
+	ret[1] = NULL;
+	return (ret);
 }
 
-char		**ft_split(char *str, char *charset)
+char			**ft_split(const char *s, char c)
 {
-	char	**words;
-	int		i;
-	int		j;
-	int		index;
-	int		*words_size;
+	static char	**buffer;
+	char		**ret;
+	char		*tmp;
+	int			i;
 
-	words = malloc((get_words_count(str, charset) + 1) * sizeof(char*));
-	words_size = get_words_size(str, charset);
-	index = 0;
-	j = 0;
-	i = -1;
-	while (str[++i] != '\0')
+	i = 0;
+	if (s && *s == c)
+		return (ft_split(++s, c));
+	if (s && *s)
 	{
-		if (!is_separator(str[i], charset))
-		{
-			if (i == 0 || is_word(str[i], str[i - 1], charset))
-				words[index] = malloc(words_size[index] * sizeof(char));
-			words[index][j] = str[i];
-			words[index][++j] = '\0';
-		}
-		else if (i > 0 && !is_separator(str[i - 1], charset) && ++index)
-			j = 0;
+		while (s[i] && s[i] != c)
+			i++;
+		tmp = ft_substr(s, 0, i);
+		buffer = ft_strstr_push(buffer, tmp);
+		return (ft_split(&s[i], c));
 	}
-	words[get_words_count(str, charset)] = 0;
-	return (words);
+	ret = buffer;
+	buffer = NULL;
+	return (ret);
 }

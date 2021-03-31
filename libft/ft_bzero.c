@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 11:42:47 by lpellier          #+#    #+#             */
-/*   Updated: 2019/11/25 14:21:21 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 14:08:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,17 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	char		*res;
-	size_t		i;
+	unsigned char	*buffer;
+	size_t			i;
 
 	if (s != NULL)
 	{
 		i = 0;
-		res = s;
-		while (n)
+		buffer = (unsigned char*)s;
+		while (i < n)
 		{
-			res[i] = 0;
+			buffer[i] = 0;
 			i++;
-			n--;
 		}
 	}
 }

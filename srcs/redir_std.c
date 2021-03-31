@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redir_std.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/03/30 20:50:51 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:57:28 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 // ATTENTION, STRCHR CONTIENT UN TERNAIRE
 

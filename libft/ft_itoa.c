@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 10:48:12 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/11 10:48:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:29:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char *ft_itoa(int nb)
 	int i;
 	n = nb;
 	i = len(n);
-	if (!(str = (char *)malloc(sizeof(char) * (i + 1))))
+	if (!(str = (char *)ft_calloc((i + 1), sizeof(char))))
 		return (NULL);
 	str[i--] = '\0';
 	if (n == 0)

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 10:56:23 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 22:53:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:28:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,57 +91,57 @@ int		count_format(const char *format)
 	return (count);
 }
 
-void	ft_init_info(t_printf *info)
+void	ft_init_printf(t_printf *printf)
 {
-	info->padding = 0;
-	info->width = 0;
-	info->number = 0;
-	info->precision = -1;
-	info->plus = 0;
-	info->minus = 0;
-	info->perc = 0;
-	info->space = 0;
-	info->len = 0;
-	info->orig = 0;
-	info->type = 48;
+	printf->padding = 0;
+	printf->width = 0;
+	printf->number = 0;
+	printf->precision = -1;
+	printf->plus = 0;
+	printf->minus = 0;
+	printf->perc = 0;
+	printf->space = 0;
+	printf->len = 0;
+	printf->orig = 0;
+	printf->type = 48;
 }
 
-void	ft_parse_and_print(const char *format, t_printf *info, va_list ap)
+void	ft_parse_and_print(const char *format, t_printf *printf, va_list ap)
 {
-	while (info->count--)
+	while (printf->count--)
 	{
-		ft_init_info(info);
-		format = ft_fill_struct(format, info, ap);
-		ft_output(info, ap);
-		if (info->count != 0)
-			format = print_aoutsider(format, info);
+		ft_init_printf(printf);
+		format = ft_fill_struct(format, printf, ap);
+		ft_output(printf, ap);
+		if (printf->count != 0)
+			format = print_aoutsider(format, printf);
 		else
-			print_aoutsider(format, info);
+			print_aoutsider(format, printf);
 	}
 }
 
 int		ft_printf(const char *format, ...)
 {
 	va_list		ap;
-	t_printf	*info;
+	t_printf	*printf;
 	int			written;
 
-	if (!(info = (t_printf *)malloc(sizeof(t_printf))))
+	if (!(printf = (t_printf *)ft_calloc(1, sizeof(t_printf))))
 		return (-1);
-	info->outputlen = 0;
+	printf->outputlen = 0;
 	if (count_format(format) == 0)
 	{
-		print_before(format, info);
-		written = info->outputlen;
-		free(info);
+		print_before(format, printf);
+		written = printf->outputlen;
+		free(printf);
 		return (written);
 	}
 	va_start(ap, format);
-	info->count = (count_format(format) == 1 ? 1 : count_format(format) + 1);
-	format = (*format == '%' ? format + 1 : print_before(format, info));
-	ft_parse_and_print(format, info, ap);
+	printf->count = (count_format(format) == 1 ? 1 : count_format(format) + 1);
+	format = (*format == '%' ? format + 1 : print_before(format, printf));
+	ft_parse_and_print(format, printf, ap);
 	va_end(ap);
-	written = info->outputlen;
-	free(info);
+	written = printf->outputlen;
+	free(printf);
 	return (written);
 }

@@ -6,11 +6,11 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 11:03:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/30 17:04:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 /*
 **destroys a environment variable from memory
@@ -50,17 +50,15 @@ int			ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
 	char	cwd[PATH_MAX];
-	char	*user;
+	char	*home;
 
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
-	user = ft_strjoin("/Users/", ((t_env *)ft_list_find(info.env_head,
-		create_env_struct("USER", NULL), cmp_env)->data)->value);
+	home = ft_strdup(((t_env *)ft_list_find(info.env_head, create_env_struct("HOME", NULL), cmp_env)->data)->value);
 	if (!cmd->input)
 	{
-		if (chdir(user))
+		if (chdir(home))
 			ft_printf("Couldn't access folder, check directory listing\n");
-		free(user);
-		user = NULL;
+		free(home);
 	}
 	else if (cmd->input[0] == '/')
 	{
@@ -81,7 +79,7 @@ int			ft_cd(int index_cmd)
 ** this is used to count different arguments for binaries
 ** this WILL be tricky as we'll need to account for ""  and ''
 ** as a single argument
-** and there might be backspaces canceling quotes -> it's going to be tough
+** and there might be backslashes canceling quotes -> it's going to be tough
 */
 
 char		**count_args(t_cmd *cmd, int *count)
@@ -93,7 +91,7 @@ char		**count_args(t_cmd *cmd, int *count)
 	i = 0;
 	if (cmd->input)
 	{
-		split = ft_split(cmd->input, " ");
+		split = ft_split(cmd->input, ' ');
 		while (split[i])
 			i++;
 		*count += i;
@@ -116,7 +114,7 @@ char		**list_to_tab(t_list *begin_list)
 
 	i = 0;
 	next = begin_list->next;
-	if (!(ret = (char **)malloc(sizeof(char *) * (ft_list_size(next) + 1))))
+	if (!(ret = (char **)ft_calloc(ft_list_size(next) + 1, sizeof(char *))))
 		return (NULL);
 	while (next)
 	{
@@ -148,7 +146,7 @@ int			exec_binary(int index_cmd)
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
 	env = list_to_tab(info.env_head);
 	split = count_args(cmd, &count);
-	if (!(argv = (char **)malloc(sizeof(char *) * count + 1)))
+	if (!(argv = (char **)ft_calloc(count + 1, sizeof(char *))))
 		return (FAILURE);
 	argv[0] = ft_strdup(cmd->cmd);
 	i = 0;
@@ -175,9 +173,9 @@ int			exec_binary(int index_cmd)
 	argv[j] = NULL;
 	if (execve(cmd->path, argv, env) == -1)
 		return (FAILURE);
-	free_tab(split);
-	free_tab(argv);
-	free_tab(env);
+	free_tab(&split);
+	free_tab(&argv);
+	free_tab(&env);
 	return (SUCCESS);
 }
 
@@ -199,6 +197,8 @@ int			find_binary(t_cmd *cmd)
 	int		i;
 
 	i = 0;
+	if (!info.dir_paths)
+		return (FAILURE);
 	while (info.dir_paths[i])
 	{
 		if (!directories(info.dir_paths[i], cmd->cmd))
@@ -220,7 +220,7 @@ void		compare_cmd(t_cmd *cmd)
 	&& !compare_size(cmd->option, "-n"))
 		cmd->bui = ECHO_N;
 	else if (!compare_size(cmd->cmd, "echo"))
-		cmd->bui = ECHO;
+		cmd->bui = ECHOO;
 	else if (!compare_size(cmd->cmd, "exit"))
 		cmd->bui = EXIT;
 	else if (!compare_size(cmd->cmd, "pwd"))

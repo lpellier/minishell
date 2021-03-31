@@ -6,24 +6,29 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/15 13:26:31 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/03/29 16:21:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
-void		free_tab(char **tab)
+void		free_tab(char ***tab)
 {
 	int		i;
+	char	**cpy;
 
 	i = 0;
-	while (tab[i])
+	cpy = *tab;
+	if (!cpy)
+		return ;
+	while (cpy[i])
 	{
-		free(tab[i]);
-		tab[i] = NULL;
+		free(cpy[i]);
+		cpy[i] = NULL;
+		i++;
 	}
-	free(tab);
-	tab = NULL;
+	free(*tab);
+	*tab = NULL;
 }
 
 void		free_cmd_struct(void *data)
@@ -44,6 +49,9 @@ void		free_cmd_struct(void *data)
 	if (ptr->path)
 		free(ptr->path);
 	ptr->path = NULL;
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }
 
 void		free_env_struct(void *data)
@@ -57,6 +65,9 @@ void		free_env_struct(void *data)
 	if (ptr->key)
 		free(ptr->key);
 	ptr->key = NULL;
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }
 
 void		free_history_struct(void *data)
@@ -64,9 +75,12 @@ void		free_history_struct(void *data)
     t_history	*ptr;
 
     ptr = (t_history *)data;
-    if (ptr->line)
-        free(ptr->line);
-    ptr->line = NULL;
+    ft_bzero(ptr->line, ft_strlen(ptr->line));
+	if (ptr->line)
+		free(ptr->line);
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }
 
 void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *))

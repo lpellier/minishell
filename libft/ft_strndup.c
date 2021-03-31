@@ -1,39 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_int_hexmin.c                                    :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/02 14:17:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 14:05:07 by lpellier         ###   ########.fr       */
+/*   Created: 2021/03/24 11:18:40 by lpellier          #+#    #+#             */
+/*   Updated: 2021/03/25 13:25:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_int_hexmin(long n, char *tab)
+char    *ft_strndup(const char *s1, int size)
 {
-	char			*res;
-	int				taille;
-	int				i;
+	char	*res;
+	int		i;
+	int		len;
 
-	if (n < 0)
-		return (ft_int_hexmin((-n - 1), "fedcba9876543210"));
-	else if (n > 0)
+	i = 0;
+	len = ft_strlen(s1) < size ? ft_strlen(s1) : size;
+	if (s1 != NULL)
 	{
-		i = 0;
-		taille = digit_count(n, 16);
-		if (!(res = (char *)ft_calloc(taille + 1, (sizeof(char)))))
+		if (!(res = ft_calloc(len + 1, sizeof(const char))))
 			return (NULL);
-		taille--;
-		while (n)
+		while (s1[i] && i < len)
 		{
-			res[taille - i++] = tab[n % 16];
-			n /= 16;
+			res[i] = s1[i];
+			i++;
 		}
-		res[taille + 1] = '\0';
+		res[i] = '\0';
 		return (res);
 	}
-	return (ft_strdup("0"));
+	return (NULL);
 }
