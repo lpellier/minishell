@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 15:04:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/01 14:16:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,6 @@ typedef struct	s_info
 	char	*output;
 	char	**envp;
 	char	**dir_paths;
-	int		file_fd;
-	int		nb_l_redir;
-	int		nb_rd_redir;
-	int		nb_r_redir;
-	int		nb_pipe;
-	int		nb_colon;
 }				t_info;
 
 t_info			info;
@@ -208,16 +202,16 @@ int				directories(char *path, char *cmd);
 ** init
 */
 
-void reset_info();
-void		init_info(char **envp);
-void		init_termcap();
+void			reset_info();
+void			init_info(char **envp);
+void			init_termcap();
 void			init_built_in();
 
 /*
 ** built-in
 */
 
-void		store_output(int index_cmd);
+void			store_output(int index_cmd);
 int				ft_echo(int index_cmd);
 int				ft_exit(int index_cmd);
 int				ft_echo_n(int index_cmd);
@@ -256,25 +250,25 @@ int				cmp_env(void *data, void *data_ref);
 ** redirection
 */
 
-void	*ft_calloc(size_t count, size_t size);
 char	*ft_strncpy(char *dest, char *src, unsigned int n);
 int		ft_isseparator(int c);
 int		ft_isspace(int c);
 int		ft_cinset(const char c, const char *set);
 char	*get_file(char *s);
-void	redir_stdout(t_cmd *cmd);
+int			open_file(int separator, char *line, int *index);
 void	ft_symbol(t_cmd *cmd);
 
 /*
 ** linked lists
 */
 
-char		**count_args(t_cmd *cmd, int *count);
-char		**list_to_tab(t_list *begin_list);
+char			**count_args(t_cmd *cmd, int *count);
+char			**list_to_tab(t_list *begin_list);
 int				pipe_for_exec(int index_cmd,
 					char *line, int index, int piped);
+int				redir(int index_cmd, char *line, int index, int separator);
 int				init_env(char **envp);
-void		print_history(void *data);
+void			print_history(void *data);
 t_cmd			*create_cmd_struct();
 t_history 		*create_history_struct();
 t_env			*create_env_struct(char *key, char *value);

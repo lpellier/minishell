@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:24:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 14:46:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/01 13:58:14 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,34 +76,34 @@ int			spaces(char *s)
 	return (count);
 }
 
-int check_sep(char *line, t_cmd *cmd)
- {
- 	int i;
+// int check_sep(char *line, t_cmd *cmd)
+//  {
+//  	int i;
 
- 	i = 0;
- 	if (!line[i])
- 		return (FAILURE);
- 	while (line[i])
- 	{
- 		if (line[i] == '<')
- 			info.nb_l_redir++;
- 		else if (line[i] == '>')
- 		{
- 			if (line[i + 1] && line[i + 1] == '>')
- 			{
- 				info.nb_rd_redir++;
- 				i++;
- 			}
- 			else
- 				info.nb_r_redir++;
- 		}
- 		else if (line[i] == '|')
- 			info.nb_pipe++;
- 		else if (line[i] == ';')
- 			info.nb_colon++;
- 		i++;
-	}
-	if (info.nb_l_redir > 0 || info.nb_rd_redir > 0 || info.nb_r_redir > 0 || info.nb_pipe > 0 || info.nb_colon > 0)
-		ft_symbol(cmd);
- 	return (0);
- }
+//  	i = 0;
+//  	if (!line[i])
+//  		return (FAILURE);
+//  	while (line[i])
+//  	{
+//  		if (line[i] == '<')
+//  			info.nb_l_redir++;
+//  		else if (line[i] == '>')
+//  		{
+//  			if (line[i + 1] && line[i + 1] == '>')
+//  			{
+//  				info.nb_rd_redir++;
+//  				i++;
+//  			}
+//  			else
+//  				info.nb_r_redir++;
+//  		}
+//  		else if (line[i] == '|')
+//  			info.nb_pipe++;
+//  		else if (line[i] == ';')
+//  			info.nb_colon++;
+//  		i++;
+// 	}
+// 	if (info.nb_l_redir > 0 || info.nb_rd_redir > 0 || info.nb_r_redir > 0 || info.nb_pipe > 0 || info.nb_colon > 0)
+// 		ft_symbol(cmd);
+//  	return (0);
+//  }

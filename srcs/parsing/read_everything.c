@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:46:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/01 15:28:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int			dollar(char *line, int *index, int dquote)
 
 	i = 0;
 	var = ft_calloc(256, sizeof(char));
-	while (line[*index] && is_whitespace(line[*index]) && line[*index] != 34)
+	while (line[*index] && (ft_isalpha(line[*index]) || line[*index] == DOLLAR))
 	{
 		if (i > 0)
 			var[i - 1] = line[*index];
@@ -138,9 +138,9 @@ int			dollar(char *line, int *index, int dquote)
 			*index += 1;
 			i++;
 		}
+		if (dquote)
+			*index -= 1;
 	}
-	if (dquote)
-		*index -= 1;
 	return (0);
 }
 
@@ -254,10 +254,4 @@ void		read_line(int first)
 	if (line)
 		free(line);
 	line = NULL;
-	if (info.output)
-	{
-		ft_printf("%s", info.output);
-		free(info.output);
-	}
-	info.output = NULL;
 }

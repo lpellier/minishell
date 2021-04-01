@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 14:30:53 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:45:05 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,54 @@ void		store_output(int index_cmd)
 	str = NULL;
 }
 
+int			redir(int index_cmd, char *line, int index, int separator)
+{
+	int		file_fd;
+	pid_t	saved_stdin;
+	pid_t	saved_stdout;
+	t_cmd	*cmd;
+
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	file_fd = open_file(separator, line, &index);
+	index += spaces(&line[index]);
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (separator == R_LEFT)
+		dup2(file_fd, STDIN_FILENO);
+	else if (separator == R_RIGHT || separator == R_RIGHTD)
+		dup2(file_fd, STDOUT_FILENO);
+	
+	if (cmd->cmd && cmd->bui == 9)
+		info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
+			": command not found\n");
+	else if (!is_pipe(line[index]))
+		pipe_for_exec(index_cmd, line, index, PIPE);
+	else if (!is_colon(line[index]))
+	{
+		if (cmd->bui == 8)
+			pipe_for_exec(index_cmd, line, index, NOTHING);
+		else
+			info.cmd_status = info.built_in[cmd->bui](index_cmd);
+		ft_list_push_back(&info.cmd_head, create_cmd_struct());
+		read_cmd(line, index + 1, index_cmd + 1);
+	}
+	else if (!is_redir_l(line[index]))
+		redir(index_cmd, line, index, R_LEFT);
+	else if (!is_redir_r(line[index]) && line[index + 1] && !is_redir_r(line[index + 1]))
+		redir(index_cmd, line, index, R_RIGHTD);
+	else if (!is_redir_r(line[index]))
+		redir(index_cmd, line, index, R_RIGHT);
+	else if (cmd->bui == 8)
+		pipe_for_exec(index_cmd, line, index, NOTHING);
+	else
+		info.built_in[cmd->bui](index_cmd);
+	
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(file_fd);
+	return (SUCCESS);
+}
+
 /*
 ** stores fd extremes from pipe : pipefd[0] is reading and pipefd[1] is writing
 ** cpid is child process id returned by fork
@@ -68,7 +116,7 @@ void		store_output(int index_cmd)
 ** restoring stdout and stdin to original fds
 */
 
-int			pipe_for_exec(int index_cmd, char *line, int index, int piped)
+int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 {
 	int		pipefd[2];
 	pid_t	cpid;
@@ -97,13 +145,23 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int piped)
 		info.cmd_status = status;
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		if (piped == PIPE)
+		if (separator == PIPE || separator == R_RIGHT || separator == R_LEFT)
 		{
+			while (!ft_cinset(line[index], SEPARATOR))
+				index++;
 			ft_list_push_back(&info.cmd_head, create_cmd_struct());
-			read_cmd(line, index + 1, index_cmd + 1);
+			read_cmd(line, index, index_cmd + 1);
 		}
-		else
+		else if (separator == NOTHING)
+		{
 			store_output(index_cmd);
+			if (info.output)
+			{
+				ft_printf("%s", info.output);
+				free(info.output);
+			}
+			info.output = NULL;
+		}
 		if (cmd->bui == 2)
 			info.crashed = TRUE;
 		close(pipefd[0]);
