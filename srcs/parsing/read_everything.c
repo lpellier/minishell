@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/01 15:28:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/01 19:06:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,4 +254,5 @@ void		read_line(int first)
 	if (line)
 		free(line);
 	line = NULL;
+	
 }

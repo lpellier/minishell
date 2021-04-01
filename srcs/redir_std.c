@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/01 15:49:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/01 18:44:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ int			open_file(int separator, char *line, int *index)
 		*index += 1;
 	*index += spaces(&line[*index]);
 	i = *index;
-	while (line[i] && ft_isalpha(line[i]))
+	while (line[i] && ft_isprint(line[i]) && line[i] != 32)
 		i++;
 	i -= *index;
 	file_name = ft_substr(line, *index, i);
@@ -242,8 +242,11 @@ int			open_file(int separator, char *line, int *index)
 	else if (separator == R_RIGHTD)
 		file_fd = open(file_path, O_WRONLY | O_APPEND | O_CREAT, 00644);
 	else if (separator == R_LEFT)
-		if (!(file_fd = open(file_path, O_RDONLY, 00644)))
+		if ((file_fd = open(file_path, O_RDONLY, 00644)) == -1)
 			ft_printf("minisheh: %s: No such file or directory\n", file_name);
+	if (file_name)
+		free(file_name);
+	free(file_path);
 	return (file_fd);
 }
 
