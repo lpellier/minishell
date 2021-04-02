@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_std.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/03/31 11:57:28 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/02 15:20:15 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,11 +165,8 @@ char *create_empty_file(char *str)
 			j++;
 		}
 		tmp[j] = '\0';
-		// ft_printf("tmp = %s\n", tmp);
 		create_empty_file(tmp);
 	}
-	// ft_printf("%d && %d\n", info.nb_r_redir, info.nb_rd_redir);
-	// ft_printf("str = %s\n", str);
 	return (tmp);
 }
 
@@ -188,12 +185,41 @@ char *get_file(char *s)
 	while (ft_isspace(s[i]))
 		i++;
 	k = i;
-	while (s[i] != '\0')
+	while (s[i] != '\0' && !ft_isspace(s[i]))
 	{
 		i++;
 		j++;
 	}
 	return(ft_substr(s, k, j));
+}
+
+char *what_to_take(char *str, char *file)
+{
+	int i;
+	int j;
+	char *tmp;
+
+	i = 0;
+	j = 0;
+	if (!(tmp = (char *)ft_calloc(ft_strlen(str), sizeof(char))))
+		return (NULL);
+	while (str[i] != '\0' && !ft_isseparator(str[i]))
+	{
+		tmp[j] = str[i];
+		i++;
+		j++;
+	}
+	while (str[i] != '\0' && (ft_isseparator(str[i]) || ft_isspace(str[i])))
+		i++;
+	i = i + ft_strlen(file) + 1;
+	while (str[i] != '\0')
+	{
+		tmp[j] = str[i];
+		i++;
+		j++;
+	}
+	tmp[j] = '\0';
+	return (tmp);
 }
 
 void redir_stdout(t_cmd *cmd)
@@ -217,11 +243,9 @@ void redir_stdout(t_cmd *cmd)
 	if (!(s = (char *)ft_calloc(i, sizeof(char))))
 		return ;
 	file = ft_strdup(get_file(ft_strncpy(s, str, i)));
-	// ft_printf("%s\n", file);
 	if (!(s = (char *)ft_calloc(j, sizeof(char))))
 		return ;
-	s = ft_strncpy(s, str, j);
-	s = ft_strtrim(s, " ");
+	s = ft_strdup(what_to_take(str, file));
 	if (info.nb_r_redir == 1)
 		info.file_fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	else if (info.nb_rd_redir == 1)
@@ -230,10 +254,34 @@ void redir_stdout(t_cmd *cmd)
 	close(info.file_fd);
 }
 
+void redir_stdin(t_cmd *cmd)
+{
+	char *str;
+	char *s;
+	char *file;
+	int i;
+	int j;
+
+	str = ft_strdup(cmd->input);
+	i = 0;
+	if (info.nb_l_redir < 1)
+		take_last_ldir(str);
+	else if (info.nb_r_redir > 0 || info.nb_rd_redir > 0)
+	while (str[i] && !ft_isseparator(str[i]))
+		i++;
+	j = i;
+	i = 0;
+	while (str[i])
+		i++;
+	if (!(s = (char *)ft_calloc(i, sizeof(char))))
+		return ;
+	file = ft_strdup(get_file(ft_strncpy(s, str, i)));
+}
+
 void ft_symbol(t_cmd *cmd)
 { 
-	// if (info.nb_l_redir == 1)
-	// 	redir_stdin();
+	if (info.nb_l_redir == 1)
+		redir_stdin();
 	if (info.nb_r_redir > 0 || info.nb_rd_redir > 0)
 		redir_stdout(cmd);
 }
