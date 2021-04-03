@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/01 13:20:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/03 18:15:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,61 +52,17 @@ int			init_env(char **envp)
 	return (SUCCESS);
 }
 
-/*
-** mallocs and creates cmd struct, returns pointer on struct
-*/
-
-t_cmd		*create_cmd_struct(void)
-{
-	t_cmd	*cmd;
-
-	if (!(cmd = (t_cmd *)ft_calloc(1, sizeof(t_cmd))))
-		return (NULL);
-	cmd->bui = 9;
-	cmd->cmd = NULL;
-	cmd->input = NULL;
-	cmd->option = NULL;
-	cmd->path = NULL;
-	return (cmd);
-}
-
-/*
-** same as above for env struct
-*/
-
-t_env		*create_env_struct(char *key, char *value)
-{
-	t_env	*env;
-
-	if (!(env = (t_env *)ft_calloc(1, sizeof(t_env))))
-		return (NULL);
-	env->key = key;
-	env->value = value;
-	return (env);
-}
-
-t_history *create_history_struct()
-{
-    t_history *history;
-
-    if (!(history = (t_history *)ft_calloc(1, sizeof(t_history))))
-		return (NULL);
-	history->line = ft_calloc(LINE_MAX, sizeof(char));
-    return (history);
-}
-
 void		init_info(char **envp)
 {
 	init_built_in();
 	info.crashed = FALSE;
 	info.output = NULL;
+	info.echo_padding = 0;
 	info.cmd_status = 0;
 	init_env(envp);
-	//info.dir_paths = NULL;
 	ft_list_push_front(&info.env_head, create_env_struct(ft_strdup("?"),
 		ft_itoa(info.cmd_status)));
-	info.dir_paths = ft_split(getenv("PATH"), ':');
-	// info.dir_paths = ft_split(((t_env *)ft_list_find(info.env_head, create_env_struct("PATH", NULL), cmp_env)->data)->value, ":");
+	info.dir_paths = ft_split(get_env_custom("PATH")->value, ':');
 	reset_info();
 }
 

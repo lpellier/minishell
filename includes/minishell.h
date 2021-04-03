@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/01 14:16:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/03 18:13:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct	s_info
 	int		cmd_status;
 	int		cur_in_history;
 	int		prompt_len;
+	int		echo_padding;
 	t_cursor cursor;
 	t_list	*cmd_head;
 	t_list	*env_head;
@@ -158,6 +159,8 @@ int			shell_loop(char **envp);
 int			get_pos(int *x, int *y);
 void		print_last_cmd(char *line);
 void		print_prev_cmd(char *line);
+int		modify_env(char *key, char *new_value);
+t_env	*get_env_custom(char *key);
 void		delete_char(char *line, char *str, int index);
 /*
 ** termcap

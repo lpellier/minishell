@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/01 14:22:44 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/03 15:23:43 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ SRCS = srcs/main.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
 		srcs/free/free.c \
-		srcs/linked_lists/linked_lists.c \
+		srcs/skeleton/linked_lists.c \
+		srcs/skeleton/structs.c \
 		srcs/parsing/directories.c \
 		srcs/parsing/parsing_utils.c \
 		srcs/parsing/parsing.c \

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/31 14:31:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/03 16:36:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ int			ft_unset(int index_cmd)
 	t_cmd	*cmd;
 
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	if (cmd->option)
+	{
+		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+		return (FAILURE);
+	}
 	if (!info.env_head || !info.env_head->next)
 		return (FAILURE);
 	ft_list_remove_if(&info.env_head->next,
@@ -34,7 +39,14 @@ int			ft_unset(int index_cmd)
 
 int			ft_env(int index_cmd)
 {
-	(void)index_cmd;
+	t_cmd	*cmd;
+
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	if (cmd->option)
+	{
+		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+		return (FAILURE);
+	}
 	if (!info.env_head || !info.env_head->next)
 		return (FAILURE);
 	ft_list_foreach(info.env_head->next, print_env_struct);
@@ -50,28 +62,29 @@ int			ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
 	char	cwd[PATH_MAX];
-	char	*home;
+	char	*path;
 
+	path = NULL;
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
-	home = ft_strdup(((t_env *)ft_list_find(info.env_head, create_env_struct("HOME", NULL), cmp_env)->data)->value);
+	if (cmd->option)
+	{
+		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+		return (FAILURE);
+	}
 	if (!cmd->input)
-	{
-		if (chdir(home))
-			ft_printf("Couldn't access folder, check directory listing\n");
-		free(home);
-	}
-	else if (cmd->input[0] == '/')
-	{
-		if (chdir(cmd->input))
-			ft_printf("Couldn't access folder, check directory listing\n");
-	}
+		path = ft_strdup(get_env_custom("HOME")->value);
+	else if (cmd->input[0] == '/' && compare_size(cmd->input, "/"))
+		path = ft_strdup(cmd->input);
 	else if (getcwd(cwd, sizeof(cwd)))
-	{
-		if (chdir(ft_strjoin(ft_strjoin(cwd, "/"), cmd->input)))
-			ft_printf("Couldn't access folder, check directory listing\n");
-	}
+		path = ft_strjoin(ft_strjoin(cwd, "/"), cmd->input);
 	else
 		ft_printf("Error\n");
+	if (chdir(path))
+		ft_printf("Couldn't access folder, check directory listing\n");
+	modify_env("OLDPWD", get_env_custom("PWD")->value);
+	modify_env("PWD", getcwd(cwd, sizeof(cwd)));
+	if (path)
+		free(path);
 	return (SUCCESS);
 }
 
@@ -84,6 +97,7 @@ int			ft_cd(int index_cmd)
 
 char		**count_args(t_cmd *cmd, int *count)
 {
+
 	char	**split;
 	int		i;
 
@@ -216,9 +230,6 @@ void		compare_cmd(t_cmd *cmd)
 {
 	if (!cmd->cmd)
 		cmd->bui = NONEXISTENT;
-	else if (!compare_size(cmd->cmd, "echo") && cmd->option \
-	&& !compare_size(cmd->option, "-n"))
-		cmd->bui = ECHO_N;
 	else if (!compare_size(cmd->cmd, "echo"))
 		cmd->bui = ECHOO;
 	else if (!compare_size(cmd->cmd, "exit"))

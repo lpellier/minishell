@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/01 19:06:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/03 19:47:38 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,18 @@ void		delete_key(char *dest)
 
 	i = 0;
 	cursor = info.cursor.posx - info.prompt_len + 1;
-	while(dest[i] && i < cursor)
-		i++;
-	if (dest && dest[i - 1])
-		i--;
-	while (dest[i])
+	if (info.cursor.posx >=	 info.prompt_len)
 	{
-		dest[i] = dest[i + 1];
-		i++;
+		while(dest[i] && i < cursor)
+			i++;
+		if (dest && dest[i - 1])
+			i--;
+		remove_char(dest, i);
+		if (info.cursor.posx >= info.prompt_len)
+			info.cursor.posx--;
+		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
+		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
-	if (info.cursor.posx >= info.prompt_len)
-		info.cursor.posx--;
-	tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
-	tputs(tgetstr("dc", NULL), 1, ft_putchar);
 }
 
 // info.cursor.posx - info.prompt_len + 1 : this formula lets me checkout where cursor is on string
@@ -83,6 +82,7 @@ char 	*read_everything()
 	key = 0;
 	line = ft_calloc(LINE_MAX, sizeof(char));
 	cur = (t_history *)info.history_head->data;
+	info.prompt_len += info.echo_padding;
 	while (key != '\n')
 	{
 		get_pos(&info.cursor.posx, &info.cursor.posy);
@@ -102,6 +102,8 @@ char 	*read_everything()
 			ft_strcpy(cur->line, line);
 		}
 	}
+	if (info.echo_padding > 0)
+		info.echo_padding = 0;
 	return (line);
 }
 
@@ -118,10 +120,16 @@ int			dollar(char *line, int *index, int dquote)
 	t_list	*var_list;
 	t_env	*var_key;
 	int		i;
+	(void)dquote;
 
 	i = 0;
+	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && !ft_isalpha(line[*index + 1])))
+	{
+		*index += 1;
+		return (FAILURE);
+	}
 	var = ft_calloc(256, sizeof(char));
-	while (line[*index] && (ft_isalpha(line[*index]) || line[*index] == DOLLAR))
+	while (line[*index] && (ft_isalpha(line[*index]) || (line[*index] == DOLLAR && i == 0)))
 	{
 		if (i > 0)
 			var[i - 1] = line[*index];
@@ -138,10 +146,8 @@ int			dollar(char *line, int *index, int dquote)
 			*index += 1;
 			i++;
 		}
-		if (dquote)
-			*index -= 1;
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 int			backslash(char *line, int *index, int dquote)
@@ -158,10 +164,11 @@ int			backslash(char *line, int *index, int dquote)
 		{
 			remove_char(line, *index);
 			if (!line[*index + 1])
-				return (1);
+				return (FAILURE);
 		}
+		*index += 1;
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 void		transform_line(char *line, int index)
@@ -186,11 +193,14 @@ void		transform_line(char *line, int index)
 		while (line[index] != DQUOTE)
 		{
 			if (line[index] == BSLASH)
+			{
 				if (backslash(line, &index, 1))
 					return ;
-			if (line[index] == DOLLAR)
+			}
+			else if (line[index] == DOLLAR)
 				dollar(line, &index, 1);
-			index++;
+			else
+				index++;
 		}
 		remove_char(line, index);
 	}

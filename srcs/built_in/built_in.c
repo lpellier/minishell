@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/01 19:06:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/03 18:14:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,37 @@
 ** outputs input
 */
 
+int			only_n(char *str)
+{
+	int		i;
+	
+	i= 1;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
+}
+
 int			ft_echo(int index_cmd)
 {
 	t_cmd	*cmd;
+	char	*tmp;
 
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	if (cmd->option && !only_n(cmd->option))
+		return (ft_echo_n(index_cmd));
+	else if (cmd->option)
+	{
+		if (cmd->input)
+		{
+			tmp = ft_strdup(cmd->input);
+			free(cmd->input);
+			cmd->input = ft_strjoin(ft_strjoin(cmd->option, " "), tmp);
+		}
+	}
 	if (!cmd->input)
 		ft_printf("\n");
 	else
@@ -65,20 +91,26 @@ int			redir(int index_cmd, char *line, int index, int separator)
 	index += spaces(&line[index]);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-
 	if (separator == R_LEFT)
 		dup2(file_fd, STDIN_FILENO);
 	else if (separator == R_RIGHT || separator == R_RIGHTD)
 		dup2(file_fd, STDOUT_FILENO);
 
-	if (!is_redir_l(line[index]))
+	if (line[index] && !is_redir_l(line[index]))
 		redir(index_cmd, line, index, R_LEFT);
-	else if (!is_redir_r(line[index]) && line[index + 1] && !is_redir_r(line[index + 1]))
+	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] && !is_redir_r(line[index + 1]))
 		redir(index_cmd, line, index, R_RIGHTD);
-	else if (!is_redir_r(line[index]))
+	else if (line[index] && !is_redir_r(line[index]))
 		redir(index_cmd, line, index, R_RIGHT);
 	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, NOTHING);
+	else if (cmd->bui == 9)
+	{
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(file_fd);
+		return (SUCCESS);
+	}
 	else
 		info.built_in[cmd->bui](index_cmd);
 	dup2(saved_stdin, STDIN_FILENO);
@@ -169,6 +201,7 @@ int			ft_echo_n(int index_cmd)
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
 	if (cmd->input)
 		ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
+	info.echo_padding = ft_strlen(cmd->input) + 1;
 	return (SUCCESS);
 }
 
@@ -191,8 +224,14 @@ int			ft_exit(int index_cmd)
 int			ft_pwd(int index_cmd)
 {
 	char	cwd[PATH_MAX];
+	t_cmd	*cmd;
 
-	(void)index_cmd;
+	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	if (cmd->option)
+	{
+		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+		return (FAILURE);
+	}
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		ft_printf("%s\n", cwd);
 	return (SUCCESS);
@@ -209,6 +248,11 @@ int			ft_export(int index_cmd)
 	char	**key_value;
 
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	if (cmd->option)
+	{
+		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+		return (FAILURE);
+	}
 	if (!cmd->input || !ft_strchr(cmd->input, '='))
 		return (FAILURE);
 	key_value = ft_split(cmd->input, '=');
