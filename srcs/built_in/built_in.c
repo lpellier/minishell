@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/04 16:23:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 15:18:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ int			redir(int index_cmd, char *line, int index, int separator)
 		dup2(file_fd, STDIN_FILENO);
 	else if (separator == R_RIGHT || separator == R_RIGHTD)
 		dup2(file_fd, STDOUT_FILENO);
-
 	if (line[index] && !is_redir_l(line[index]))
 		redir(index_cmd, line, index, R_LEFT);
 	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] && !is_redir_r(line[index + 1]))
@@ -161,7 +160,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	else
 	{
 		waitpid(cpid, &status, 0);
-		info.cmd_status = status;
+		info.cmd_status = status - 255;
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		if (separator == PIPE)
@@ -237,18 +236,33 @@ int			ft_pwd(int index_cmd)
 	return (SUCCESS);
 }
 
-int			str_isalpha(char *str)
+int			str_isalpha_withplus(char *str)
 {
 	int		i;
 
 	i = 0;
 	while (str[i])
 	{
-		if (!ft_isalpha(str[i]))
+		if (!ft_isalpha(str[i]) && str[i] != '+')
 			return (FAILURE);
 		i++;
 	}
 	return (SUCCESS);
+}
+
+char		last_char(char *str)
+{
+	int		i;
+	char	c;
+
+	i = 0;
+	while (str[i])
+		i++;
+	if (i > 0)
+		c = str[i - 1];
+	else
+		c = '\0';
+	return(c);
 }
 
 /*
@@ -259,6 +273,8 @@ int			str_isalpha(char *str)
 int			ft_export(int index_cmd)
 {
 	t_cmd	*cmd;
+	t_env	*env_tmp;
+	int		concat;
 	char	**key_value;
 
 	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
@@ -270,15 +286,25 @@ int			ft_export(int index_cmd)
 	if (!cmd->input || !ft_strchr(cmd->input, '='))
 		return (FAILURE);
 	key_value = ft_split(cmd->input, '=');
+	concat = 0;
+	if (last_char(key_value[0]) == '+')
+	{
+		remove_char(key_value[0], ft_strlen(key_value[0]) - 1);
+		concat = 1;
+	}
 	if (!key_value[1])
 		return (FAILURE);
-	if (str_isalpha(key_value[0]))
+	if (str_isalpha_withplus(key_value[0]) || key_value[0][0] == '+')
 	{
 		ft_printf("minisheh: export: '%s': not a valid identifier\n", cmd->input);
 		return (FAILURE);
 	}
-	ft_list_push_back(&info.env_head,
-		create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+	env_tmp = get_env_custom(key_value[0]);
+	if (!env_tmp)
+		ft_list_push_back(&info.env_head,
+			create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+	else
+		modify_env(key_value[0], key_value[1], concat);
 	free_tab(&key_value);
 	return (SUCCESS);
 }

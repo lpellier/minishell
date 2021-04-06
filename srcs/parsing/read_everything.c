@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 11:12:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 15:57:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,13 @@ char 	*read_everything()
 	return (line);
 }
 
+int			ft_isalpha_ordollar(int c)
+{
+	if (c == '?' || (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+		return (1);
+	else
+		return (0);
+}
 
 // bslashes within a dquote only work if the following character is a dollar, a dquote,(a backquote) or another bslash
 // not sure whether backquotes should be supported or not 
@@ -146,7 +153,7 @@ int			dollar(char *line, int *index, int dquote)
 	(void)dquote;
 
 	i = 0;
-	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && !ft_isalpha(line[*index + 1])))
+	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && !ft_isalpha_ordollar(line[*index + 1])))
 	{
 		*index += 1;
 		return (FAILURE);
@@ -290,6 +297,7 @@ void		read_line(int first)
 	{
 		if (transform_line(colon_split[i], 0, 0, 0))
 		{
+			info.cmd_status = 1;
 			ft_printf("\nminisheh: parsing error: number of quotes should be even\n");
 			break;
 		}

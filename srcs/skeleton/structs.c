@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/03 15:32:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 14:52:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,22 @@ t_env	*get_env_custom(char *key)
 	return (var);
 }
 
-int		modify_env(char *key, char *new_value)
+int		modify_env(char *key, char *new_value, int concat)
 {
 	t_env	*var;
+	char	*tmp_value;
 
 	var = get_env_custom(key);
+	tmp_value = ft_strdup(var->value);
 	if (var->value)
 		free(var->value);
-	var->value = ft_strdup(new_value);
+	var->value = NULL;
+	if (!concat)
+		var->value = ft_strdup(new_value);
+	else
+		var->value = ft_strjoin(tmp_value, new_value);
+	if (tmp_value)
+		free(tmp_value);
 	return (SUCCESS);
 }
 
@@ -62,8 +70,8 @@ t_env		*create_env_struct(char *key, char *value)
 
 	if (!(env = (t_env *)ft_calloc(1, sizeof(t_env))))
 		return (NULL);
-	env->key = key;
-	env->value = value;
+	env->key = ft_strdup(key);
+	env->value = ft_strdup(value);
 	return (env);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/04 13:37:43 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 14:53:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,6 @@ typedef struct	s_cursor
 	int				lin;
 }				t_cursor;
 
-// typedef	struct s_redir
-// {
-// 	char *str;
-
-// }				t_redir;
-
-
 typedef struct	s_info
 {
 	struct	termios termios_p;
@@ -153,15 +146,16 @@ enum			status_codes
 };
 
 // int main(int ac, char **av, char **envp);
-
+void		remove_char(char *line, int index);
 void		update_cmd_status();
 int			shell_loop(char **envp);
 int			get_pos(int *x, int *y);
 void		print_last_cmd(char *line);
 void		print_prev_cmd(char *line);
-int		modify_env(char *key, char *new_value);
-t_env	*get_env_custom(char *key);
+int			modify_env(char *key, char *new_value, int concat);
+t_env		*get_env_custom(char *key);
 void		delete_char(char *line, char *str, int index);
+
 /*
 ** termcap
 */

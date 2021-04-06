@@ -6,11 +6,27 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/04 15:57:31 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 16:37:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int			rem_hist(void *data, void *data_ref)
+{
+	t_history *ptr;
+	(void)		data_ref;
+
+	ptr = (t_history *)data;
+	if (!ptr->line || !ptr->line[0])
+		return (SUCCESS);
+	return (FAILURE);
+}
+
+void		remove_useless_history()
+{
+	ft_list_remove_if(&info.history_head, NULL, rem_hist, free_history_struct);
+}
 
 void		update_cmd_status()
 {
@@ -19,6 +35,7 @@ void		update_cmd_status()
 	data = (t_env *)info.env_head->data;
 	if (data->value)
 		free(data->value);
+	data->value = NULL;
 	data->value = ft_itoa(info.cmd_status);
 }
 
@@ -51,6 +68,7 @@ int			shell_loop(char **envp)
 		free(cur_dir);
 		cur_dir = NULL;
 		update_cmd_status();
+		remove_useless_history();
 	}
 	free_tab(&info.dir_paths);
 	if (info.output)

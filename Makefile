@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/03 15:23:43 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/06 12:41:55 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,6 @@ SRCS = srcs/main.c \
 		srcs/parsing/parsing_utils.c \
 		srcs/parsing/parsing.c \
 		srcs/parsing/read_everything.c \
-		srcs/parsing/str_manipulations.c \
 		srcs/shell_init/init.c \
 		srcs/termcap/all_signal.c \
 		srcs/termcap/termcap_utils.c \

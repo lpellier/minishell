@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/03 16:36:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 14:05:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int			ft_cd(int index_cmd)
 		ft_printf("Error\n");
 	if (chdir(path))
 		ft_printf("Couldn't access folder, check directory listing\n");
-	modify_env("OLDPWD", get_env_custom("PWD")->value);
-	modify_env("PWD", getcwd(cwd, sizeof(cwd)));
+	modify_env("OLDPWD", get_env_custom("PWD")->value, 0);
+	modify_env("PWD", getcwd(cwd, sizeof(cwd)), 0);
 	if (path)
 		free(path);
 	return (SUCCESS);
