@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/03 18:14:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/04 16:23:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,20 @@ int			ft_pwd(int index_cmd)
 	return (SUCCESS);
 }
 
+int			str_isalpha(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isalpha(str[i]))
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
+}
+
 /*
 ** exports a variable to environment
 ** need to figure out return codes for built in
@@ -258,9 +272,13 @@ int			ft_export(int index_cmd)
 	key_value = ft_split(cmd->input, '=');
 	if (!key_value[1])
 		return (FAILURE);
+	if (str_isalpha(key_value[0]))
+	{
+		ft_printf("minisheh: export: '%s': not a valid identifier\n", cmd->input);
+		return (FAILURE);
+	}
 	ft_list_push_back(&info.env_head,
 		create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
 	free_tab(&key_value);
-	key_value = NULL;
 	return (SUCCESS);
 }

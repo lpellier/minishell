@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/03 18:13:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/04 13:37:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define QUOTE 39
 # define DQUOTE 34
 # define DOLLAR 36
+# define COLON 59
 # define LINE_MAX 4096
 # define RED "\033[31m"
 # define BLUE "\033[34m"
@@ -125,7 +126,6 @@ enum			separator
 {
 	NOTHING,
 	PIPE,
-	COLON,
 	R_LEFT,
 	R_RIGHT,
 	R_RIGHTD
