@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 16:34:13 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:37:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void		add_key(char *dest, char key)
 
 	int		cursor;
 
-	cursor = info.cursor.posx - info.prompt_len + 1;
+	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
 	add_char(dest, key, cursor);
-	tputs(tgoto(tgetstr("cm", NULL), info.cursor.start_posx, info.cursor.posy), 1, ft_putchar);
+	tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.start_posx, g_info.cursor.posy), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	ft_putstr_fd(dest, 1);
-	tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx + 1, info.cursor.posy), 1, ft_putchar);
+	tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx + 1, g_info.cursor.posy), 1, ft_putchar);
 }
 
 void		delete_key(char *dest)
@@ -55,17 +55,17 @@ void		delete_key(char *dest)
 	int		cursor;
 
 	i = 0;
-	cursor = info.cursor.posx - info.prompt_len + 1;
-	if (info.cursor.posx >=	 info.prompt_len)
+	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
+	if (g_info.cursor.posx >=	 g_info.prompt_len)
 	{
 		while(dest[i] && i < cursor)
 			i++;
 		if (dest && dest[i - 1])
 			i--;
 		remove_char(dest, i);
-		if (info.cursor.posx >= info.prompt_len)
-			info.cursor.posx--;
-		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
+		if (g_info.cursor.posx >= g_info.prompt_len)
+			g_info.cursor.posx--;
+		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, g_info.cursor.posy), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
 }
@@ -74,23 +74,23 @@ int			control_d(char *line)
 {
 	int		cursor;
 
-	cursor = info.cursor.posx - info.prompt_len + 1;
+	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
 	if (line && line[cursor])
 	{
 		remove_char(line, cursor);
-		tputs(tgoto(tgetstr("cm", NULL), info.cursor.posx, info.cursor.posy), 1, ft_putchar);
+		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, g_info.cursor.posy), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
 	else if (!line || !line[0])
 	{
 		ft_printf("exit");
-		info.crashed = TRUE;
+		g_info.crashed = TRUE;
 		return (FAILURE);
 	}
 	return (SUCCESS);
 }
 
-// info.cursor.posx - info.prompt_len + 1 : this formula lets me checkout where cursor is on string
+// g_info.cursor.posx - g_info.prompt_len + 1 : this formula lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
 char 	*read_everything()
@@ -100,12 +100,13 @@ char 	*read_everything()
 	char		key;
 
 	key = 0;
-	line = ft_calloc(LINE_MAX, sizeof(char));
-	cur = (t_history *)info.history_head->data;
-	info.prompt_len += info.echo_padding;
+	if (ft_calloc((void **)&line, LINE_MAX, sizeof(char)))
+		return (NULL);
+	cur = (t_history *)g_info.history_head->data;
+	g_info.prompt_len += g_info.echo_padding;
 	while (key != '\n')
 	{
-		get_pos(&info.cursor.posx, &info.cursor.posy);
+		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
 		if (read(0, &key, 1) == -1)
 			return (NULL);
 		if (key == 27)
@@ -119,14 +120,14 @@ char 	*read_everything()
 		}
 		else if (key != '\n')
 			add_key(line, key);
-		if (info.cur_in_history == 0 || key == '\n')
+		if (g_info.cur_in_history == 0 || key == '\n')
 		{
 			ft_bzero(cur->line, ft_strlen(cur->line));
 			ft_strcpy(cur->line, line);
 		}
 	}
-	if (info.echo_padding > 0)
-		info.echo_padding = 0;
+	if (g_info.echo_padding > 0)
+		g_info.echo_padding = 0;
 	return (line);
 }
 
@@ -158,7 +159,8 @@ int			dollar(char *line, int *index, int dquote)
 		*index += 1;
 		return (FAILURE);
 	}
-	var = ft_calloc(256, sizeof(char));
+	if (ft_calloc((void **)&var, 256, sizeof(char)))
+		return (FAILURE);
 	while (line[*index] && (ft_isalpha(line[*index]) || (line[*index] == DOLLAR && i == 0) || (line[*index] == '?')))
 	{
 		if (i > 0)
@@ -166,7 +168,7 @@ int			dollar(char *line, int *index, int dquote)
 		remove_char(line, *index);
 		i++;
 	}
-	if ((var_list = ft_list_find(info.env_head, create_env_struct(var, NULL), cmp_env)))
+	if ((var_list = ft_list_find(g_info.env_head, create_env_struct(var, NULL), cmp_env)))
 	{
 		var_key = (t_env *)var_list->data;
 		i = 0;
@@ -223,7 +225,7 @@ int			transform_line(char *line, int index, int quote, int dquote)
 	if (line[index] == QUOTE)
 	{
 		remove_char(line, index);
-		ft_list_push_front(&info.block_head, create_block_struct(index, -1));
+		ft_list_push_front(&g_info.block_head, create_block_struct(index, -1));
 		while (line[index] && line[index] != QUOTE)
 			index++;
 		if (!line[index])
@@ -231,13 +233,13 @@ int			transform_line(char *line, int index, int quote, int dquote)
 		else if (line[index] == QUOTE)
 		{
 			remove_char(line, index);
-			((t_block *)info.block_head->data)->end = index;
+			((t_block *)g_info.block_head->data)->end = index;
 		}
 	}
 	if (line[index] == DQUOTE)
 	{
 		remove_char(line, index);
-		ft_list_push_front(&info.block_head, create_block_struct(index, -1));
+		ft_list_push_front(&g_info.block_head, create_block_struct(index, -1));
 		while (line[index] && line[index] != DQUOTE)
 		{
 			if (line[index] == BSLASH)
@@ -255,7 +257,7 @@ int			transform_line(char *line, int index, int quote, int dquote)
 		else if (line[index] == DQUOTE)
 		{
 			remove_char(line, index);
-			((t_block *)info.block_head->data)->end = index;
+			((t_block *)g_info.block_head->data)->end = index;
 		}
 	}
 	if (line[index])
@@ -300,9 +302,9 @@ void		read_line(int first)
 	i = 0;
 	crashed = FALSE;
 	if (first)
-		info.history_head = ft_create_elem(create_history_struct());
+		g_info.history_head = ft_create_elem(create_history_struct());
 	else
-    	ft_list_push_front(&info.history_head, create_history_struct());
+    	ft_list_push_front(&g_info.history_head, create_history_struct());
 	line = read_everything();
 	colon_split = ft_split(line, COLON);
 	ft_printf("\n");
@@ -310,7 +312,7 @@ void		read_line(int first)
 	{
 		if (transform_line(colon_split[i], 0, 0, 0))
 		{
-			info.cmd_status = 1;
+			g_info.cmd_status = 1;
 			ft_printf("\nminisheh: parsing error: number of quotes should be even\n");
 			break;
 		}
@@ -320,8 +322,8 @@ void		read_line(int first)
 	// i = 0;
 	// while (i < 16)
 	// {
-	// 	ft_printf("\n%d starting block : %d\n", i, info.starting_blocks[i]);
-	// 	ft_printf("%d ending block : %d\n", i, info.ending_blocks[i]);
+	// 	ft_printf("\n%d starting block : %d\n", i, g_info.starting_blocks[i]);
+	// 	ft_printf("%d ending block : %d\n", i, g_info.ending_blocks[i]);
 	// 	i++;
 	// }
 	if (line)

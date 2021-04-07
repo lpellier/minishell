@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 10:56:23 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 13:28:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 13:59:11 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@
 **	ETAPE 7 : PROFIT!;
 */
 
-int		ft_isinset(char c, char *set)
+int	ft_isinset(char c, char *set)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (set[i])
@@ -72,7 +72,7 @@ int		ft_isinset(char c, char *set)
 	return (0);
 }
 
-int		count_format(const char *format)
+int	count_format(const char *format)
 {
 	int	count;
 
@@ -84,7 +84,8 @@ int		count_format(const char *format)
 			format++;
 			while (!ft_isinset(*format, CONVERTER) && *format)
 				format++;
-			count = ft_isinset(*format, CONVERTER) ? count + 1 : count;
+			if (ft_isinset(*format, CONVERTER))
+				count = count + 1;
 		}
 		format++;
 	}
@@ -120,25 +121,26 @@ void	ft_parse_and_print(const char *format, t_printf *printf, va_list ap)
 	}
 }
 
-int		ft_printf(const char *format, ...)
+int	ft_printf(const char *format, ...)
 {
 	va_list		ap;
 	t_printf	*printf;
 	int			written;
 
-	if (!(printf = (t_printf *)ft_calloc(1, sizeof(t_printf))))
-		return (-1);
+	if (ft_calloc((void **)&printf, 1, sizeof(t_printf)))
+		return (0);
 	printf->outputlen = 0;
 	if (count_format(format) == 0)
-	{
-		print_before(format, printf);
-		written = printf->outputlen;
-		free(printf);
-		return (written);
-	}
+		return (return_written(format, printf));
 	va_start(ap, format);
-	printf->count = (count_format(format) == 1 ? 1 : count_format(format) + 1);
-	format = (*format == '%' ? format + 1 : print_before(format, printf));
+	if (count_format(format) == 1)
+		printf->count = 1;
+	else
+		printf->count = count_format(format) + 1;
+	if (*format == '%')
+		format = format + 1;
+	else
+		format = print_before(format, printf);
 	ft_parse_and_print(format, printf, ap);
 	va_end(ap);
 	written = printf->outputlen;

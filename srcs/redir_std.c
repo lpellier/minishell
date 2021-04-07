@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/03 15:40:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:36:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // ATTENTION, STRCHR CONTIENT UN TERNAIRE
 
-int		ft_checkc(char c, const char *set)
+int	ft_checkc(char c, const char *set)
 {
     while (*set)
     {
@@ -45,9 +45,9 @@ char	*ft_strtrim(char const *s1, char const *set)
     return (ft_strdup("\0"));
 }
 
-char *ft_strncpy(char *dest, char *src, unsigned int n)
+char	*ft_strncpy(char *dest, char *src, unsigned int n)
 {
-	unsigned int i;
+	unsigned int	i;
 
 	i = 0;
 	while (src[i] != '\0' && (i < n))
@@ -98,12 +98,12 @@ int	ft_isspace(int c)
 // 		{
 // 			if (line[i + 1] && line[i + 1] == '>')
 // 			{
-// 				info.nb_rd_redir--;
+// 				g_info.nb_rd_redir--;
 // 				return;
 // 			}
 // 			else
 // 			{
-// 				info.nb_r_redir--;
+// 				g_info.nb_r_redir--;
 // 				return;
 // 			}
 // 		}
@@ -121,7 +121,7 @@ int	ft_isspace(int c)
 
 // 	i = 0;
 // 	j = ft_strlen(str);
-// 	while ((info.nb_r_redir > 1 || info.nb_rd_redir > 1) || (info.nb_r_redir == 1 && info.nb_rd_redir == 1))
+// 	while ((g_info.nb_r_redir > 1 || g_info.nb_rd_redir > 1) || (g_info.nb_r_redir == 1 && g_info.nb_rd_redir == 1))
 // 	{
 // 		what_is_the_sep(str);
 // 		s = ft_strdup(get_file(str));
@@ -154,7 +154,7 @@ int	ft_isspace(int c)
 // 		// ft_printf("tmp = %s\n", tmp);
 // 		create_empty_file(tmp);
 // 	}
-// 	// ft_printf("%d && %d\n", info.nb_r_redir, info.nb_rd_redir);
+// 	// ft_printf("%d && %d\n", g_info.nb_r_redir, g_info.nb_rd_redir);
 // 	// ft_printf("str = %s\n", str);
 // 	return (tmp);
 // }
@@ -192,7 +192,7 @@ int	ft_isspace(int c)
 
 // 	str = ft_strdup(cmd->input);
 // 	i = 0;
-// 	if ((info.nb_r_redir > 1 || info.nb_rd_redir > 1) || (info.nb_r_redir == 1 && info.nb_rd_redir == 1))
+// 	if ((g_info.nb_r_redir > 1 || g_info.nb_rd_redir > 1) || (g_info.nb_r_redir == 1 && g_info.nb_rd_redir == 1))
 // 		str = ft_strdup(create_empty_file(str));
 // 	while (str[i] && !ft_isseparator(str[i]))
 // 		i++;
@@ -208,12 +208,12 @@ int	ft_isspace(int c)
 // 		return ;
 // 	s = ft_strncpy(s, str, j);
 // 	s = ft_strtrim(s, " ");
-// 	if (info.nb_r_redir == 1)
-// 		info.file_fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 00644);
-// 	else if (info.nb_rd_redir == 1)
-// 		info.file_fd = open(file, O_WRONLY | O_APPEND | O_CREAT, 00644);
-// 	ft_putstr_fd(s, info.file_fd);
-// 	close(info.file_fd);
+// 	if (g_info.nb_r_redir == 1)
+// 		g_info.file_fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, 00644);
+// 	else if (g_info.nb_rd_redir == 1)
+// 		g_info.file_fd = open(file, O_WRONLY | O_APPEND | O_CREAT, 00644);
+// 	ft_putstr_fd(s, g_info.file_fd);
+// 	close(g_info.file_fd);
 // }
 
 int			open_file(int separator, char *line, int *index)
@@ -252,8 +252,8 @@ int			open_file(int separator, char *line, int *index)
 
 // void ft_symbol(t_cmd *cmd)
 // { 
-// 	// if (info.nb_l_redir == 1)
+// 	// if (g_info.nb_l_redir == 1)
 // 	// 	redir_stdin();
-// 	if (info.nb_r_redir > 0 || info.nb_rd_redir > 0)
+// 	if (g_info.nb_r_redir > 0 || g_info.nb_rd_redir > 0)
 // 		redir_stdout(cmd);
 // }

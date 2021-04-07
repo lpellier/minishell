@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 15:49:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:34:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_env	*get_env_custom(char *key)
 	t_list	*var_list;
 	t_env	*var;
 
-	if (!(var_list = ft_list_find(info.env_head, create_env_struct(key, NULL), cmp_env)))
+	if (!(var_list = ft_list_find(g_info.env_head, create_env_struct(key, NULL), cmp_env)))
 		return (NULL);
 	var = (t_env *)var_list->data;
 	return (var);
@@ -50,7 +50,7 @@ t_cmd		*create_cmd_struct(void)
 {
 	t_cmd	*cmd;
 
-	if (!(cmd = (t_cmd *)ft_calloc(1, sizeof(t_cmd))))
+	if (ft_calloc((void **)&cmd, 1, sizeof(t_cmd)))
 		return (NULL);
 	cmd->bui = 9;
 	cmd->cmd = NULL;
@@ -68,7 +68,7 @@ t_env		*create_env_struct(char *key, char *value)
 {
 	t_env	*env;
 
-	if (!(env = (t_env *)ft_calloc(1, sizeof(t_env))))
+	if (ft_calloc((void **)&env, 1, sizeof(t_env)))
 		return (NULL);
 	env->key = ft_strdup(key);
 	env->value = ft_strdup(value);
@@ -79,9 +79,10 @@ t_history *create_history_struct()
 {
     t_history *history;
 
-    if (!(history = (t_history *)ft_calloc(1, sizeof(t_history))))
+    if (ft_calloc((void **)&history, 1, sizeof(t_history)))
 		return (NULL);
-	history->line = ft_calloc(LINE_MAX, sizeof(char));
+	if (ft_calloc((void **)&history->line, LINE_MAX, sizeof(char)))
+		return (NULL);
     return (history);
 }
 
@@ -89,7 +90,7 @@ t_block *create_block_struct(int a, int b)
 {
     t_block *block;
 
-    if (!(block = (t_block *)ft_calloc(1, sizeof(t_block))))
+    if (ft_calloc((void **)&block, 1, sizeof(t_block)))
 		return (NULL);
 	block->start = a;
 	block->end = b;

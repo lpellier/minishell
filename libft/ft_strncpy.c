@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_uintlen.c                                       :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/30 12:35:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 10:49:52 by tefroiss         ###   ########.fr       */
+/*   Created: 2021/04/06 11:49:34 by tefroiss          #+#    #+#             */
+/*   Updated: 2021/04/06 12:13:37 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_uintlen(unsigned long n)
-{
-	int	count;
+#include "libft.h"
 
-	count = 1;
-	while (n >= 10)
+char	*ft_strncpy(char *dest, char *src, unsigned int n)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (src[i] != '\0' && (i < n))
 	{
-		n /= 10;
-		count++;
+		dest[i] = src[i];
+		i++;
 	}
-	return (count);
+	dest[i] = '\0';
+	return (dest);
 }

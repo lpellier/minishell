@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 15:18:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:34:01 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int			ft_echo(int index_cmd)
 	t_cmd	*cmd;
 	char	*tmp;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	if (cmd->option && !only_n(cmd->option))
 		return (ft_echo_n(index_cmd));
 	else if (cmd->option)
@@ -59,19 +59,19 @@ void		store_output(int index_cmd)
 	char	*str;
 	t_cmd	*cmd;
 
-	cmd = (t_cmd *)ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = (t_cmd *)ft_list_at(g_info.cmd_head, index_cmd)->data;
 	get_next_line(STDIN_FILENO, &str);
-	info.output = ft_strdup(str);
+	g_info.output = ft_strdup(str);
 	if (cmd->bui != 1 && cmd->bui != 9)
-		info.output = ft_strjoin(str, "\n");
+		g_info.output = ft_strjoin(str, "\n");
 	else
-		info.output = ft_strdup(str);
+		g_info.output = ft_strdup(str);
 	while (get_next_line(STDIN_FILENO, &str))
 	{
 		if (cmd->bui != 1 && cmd->bui != 9)
-			info.output = ft_strjoin(ft_strjoin(info.output, str), "\n");
+			g_info.output = ft_strjoin(ft_strjoin(g_info.output, str), "\n");
 		else
-			info.output = ft_strjoin(info.output, str);
+			g_info.output = ft_strjoin(g_info.output, str);
 	}
 	if (str)
 		free(str);
@@ -85,7 +85,7 @@ int			redir(int index_cmd, char *line, int index, int separator)
 	pid_t	saved_stdout;
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	if ((file_fd = open_file(separator, line, &index)) == -1)
 		return (FAILURE);
 	index += spaces(&line[index]);
@@ -111,7 +111,7 @@ int			redir(int index_cmd, char *line, int index, int separator)
 		return (SUCCESS);
 	}
 	else
-		info.built_in[cmd->bui](index_cmd);
+		g_info.built_in[cmd->bui](index_cmd);
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(file_fd);
@@ -143,7 +143,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	t_cmd	*cmd;
 	int		status;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
 	if (pipe(pipefd) == -1)
@@ -155,33 +155,33 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	{
 		close(pipefd[0]);
 		dup2(pipefd[1], STDOUT_FILENO);
-		_exit((info.built_in[cmd->bui])(index_cmd));
+		_exit((g_info.built_in[cmd->bui])(index_cmd));
 	}
 	else
 	{
 		waitpid(cpid, &status, 0);
-		info.cmd_status = status - 255;
+		g_info.cmd_status = status - 255;
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		if (separator == PIPE)
 		{
 			while (!ft_cinset(line[index], SEPARATOR))
 				index++;
-			ft_list_push_back(&info.cmd_head, create_cmd_struct());
+			ft_list_push_back(&g_info.cmd_head, create_cmd_struct());
 			read_cmd(line, index, index_cmd + 1);
 		}
 		else if (separator == NOTHING)
 		{
 			store_output(index_cmd);
-			if (info.output)
+			if (g_info.output)
 			{
-				ft_printf("%s", info.output);
-				free(info.output);
+				ft_printf("%s", g_info.output);
+				free(g_info.output);
 			}
-			info.output = NULL;
+			g_info.output = NULL;
 		}
 		if (cmd->bui == 2)
-			info.crashed = TRUE;
+			g_info.crashed = TRUE;
 		close(pipefd[0]);
 		dup2(saved_stdout, STDOUT_FILENO);
 		dup2(saved_stdin, STDIN_FILENO);
@@ -197,10 +197,10 @@ int			ft_echo_n(int index_cmd)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	if (cmd->input)
 		ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
-	info.echo_padding = ft_strlen(cmd->input) + 1;
+	g_info.echo_padding = ft_strlen(cmd->input) + 1;
 	return (SUCCESS);
 }
 
@@ -211,7 +211,7 @@ int			ft_echo_n(int index_cmd)
 int			ft_exit(int index_cmd)
 {
 	(void)index_cmd;
-	info.crashed = TRUE;
+	g_info.crashed = TRUE;
 	ft_printf("exit\n");
 	return (SUCCESS);
 }
@@ -225,7 +225,7 @@ int			ft_pwd(int index_cmd)
 	char	cwd[PATH_MAX];
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
@@ -277,7 +277,7 @@ int			ft_export(int index_cmd)
 	int		concat;
 	char	**key_value;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
@@ -301,7 +301,7 @@ int			ft_export(int index_cmd)
 	}
 	env_tmp = get_env_custom(key_value[0]);
 	if (!env_tmp)
-		ft_list_push_back(&info.env_head,
+		ft_list_push_back(&g_info.env_head,
 			create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
 	else
 		modify_env(key_value[0], key_value[1], concat);

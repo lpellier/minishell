@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 16:34:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:39:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
 
 void		init_built_in(void)
 {
-	info.built_in[0] = ft_echo;
-	info.built_in[1] = ft_echo_n;
-	info.built_in[2] = ft_exit;
-	info.built_in[3] = ft_pwd;
-	info.built_in[4] = ft_export;
-	info.built_in[5] = ft_unset;
-	info.built_in[6] = ft_env;
-	info.built_in[7] = ft_cd;
-	info.built_in[8] = exec_binary;
+	g_info.built_in[0] = ft_echo;
+	g_info.built_in[1] = ft_echo_n;
+	g_info.built_in[2] = ft_exit;
+	g_info.built_in[3] = ft_pwd;
+	g_info.built_in[4] = ft_export;
+	g_info.built_in[5] = ft_unset;
+	g_info.built_in[6] = ft_env;
+	g_info.built_in[7] = ft_cd;
+	g_info.built_in[8] = exec_binary;
 }
 
 int			init_env(char **envp)
@@ -38,13 +38,13 @@ int			init_env(char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], '=');
-	info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+	g_info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
 	free_tab(&key_value);
 	i++;
 	while (envp[i])
 	{
 		if ((key_value = ft_split(envp[i], '=')) && key_value[0] && key_value[1])
-			ft_list_push_back(&info.env_head,
+			ft_list_push_back(&g_info.env_head,
 				create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
 		free_tab(&key_value);
 		i++;
@@ -55,19 +55,19 @@ int			init_env(char **envp)
 void		init_info(char **envp)
 {
 	init_built_in();
-	info.crashed = FALSE;
-	info.output = NULL;
-	info.echo_padding = 0;
-	info.cmd_status = 0;
+	g_info.echo_padding = 0;
+	g_info.crashed = FALSE;
+	g_info.output = NULL;
+	g_info.cmd_status = 0;
 	init_env(envp);
-	ft_list_push_front(&info.env_head, create_env_struct(ft_strdup("?"),
-		ft_itoa(info.cmd_status)));
-	info.dir_paths = ft_split(get_env_custom("PATH")->value, ':');
+	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"),
+		ft_itoa(g_info.cmd_status)));
+	g_info.dir_paths = ft_split(getenv("PATH"), ':');
 	reset_info();
 }
 
 void reset_info()
 {
-	info.cur_in_history = 0;
-	info.block_head = ft_create_elem(create_block_struct(-1, -1));
+	g_info.cur_in_history = 0;
+	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
 }

@@ -6,13 +6,13 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:24:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/01 13:58:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:26:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int			is_pipe(char c)
+int	is_pipe(char c)
 {
 	if (c == '|')
 		return (SUCCESS);
@@ -22,7 +22,7 @@ int			is_pipe(char c)
 		return (FAILURE);
 }
 
-int			is_colon(char c)
+int	is_colon(char c)
 {
 	if (c == ';')
 		return (SUCCESS);
@@ -32,7 +32,7 @@ int			is_colon(char c)
 		return (FAILURE);
 }
 
-int			is_redir_l(char c)
+int	is_redir_l(char c)
 {
 	if (c == '<')
 		return (SUCCESS);
@@ -42,7 +42,7 @@ int			is_redir_l(char c)
 		return (FAILURE);
 }
 
-int			is_redir_r(char c)
+int	is_redir_r(char c)
 {
 	if (c == '>')
 		return (SUCCESS);
@@ -52,14 +52,14 @@ int			is_redir_r(char c)
 		return (FAILURE);
 }
 
-int			is_whitespace(char c)
+int	is_whitespace(char c)
 {
     if (c == 32 || (c >= 9 && c <= 13))
         return (SUCCESS);
     return (FAILURE);
 }
 
-int			spaces(char *s)
+int	spaces(char *s)
 {
 	int i;
 	int count;
@@ -86,24 +86,24 @@ int			spaces(char *s)
 //  	while (line[i])
 //  	{
 //  		if (line[i] == '<')
-//  			info.nb_l_redir++;
+//  			g_info.nb_l_redir++;
 //  		else if (line[i] == '>')
 //  		{
 //  			if (line[i + 1] && line[i + 1] == '>')
 //  			{
-//  				info.nb_rd_redir++;
+//  				g_info.nb_rd_redir++;
 //  				i++;
 //  			}
 //  			else
-//  				info.nb_r_redir++;
+//  				g_info.nb_r_redir++;
 //  		}
 //  		else if (line[i] == '|')
-//  			info.nb_pipe++;
+//  			g_info.nb_pipe++;
 //  		else if (line[i] == ';')
-//  			info.nb_colon++;
+//  			g_info.nb_colon++;
 //  		i++;
 // 	}
-// 	if (info.nb_l_redir > 0 || info.nb_rd_redir > 0 || info.nb_r_redir > 0 || info.nb_pipe > 0 || info.nb_colon > 0)
+// 	if (g_info.nb_l_redir > 0 || g_info.nb_rd_redir > 0 || g_info.nb_r_redir > 0 || g_info.nb_pipe > 0 || g_info.nb_colon > 0)
 // 		ft_symbol(cmd);
 //  	return (0);
 //  }

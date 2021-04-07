@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fill_struct.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 10:29:31 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:05:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 10:55:16 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ const char	*checktype(const char *format, t_printf *printf)
 		format = init_perc(printf, format);
 		return (format);
 	}
-	if (*format == 'p' || *format == 'd' || *format == 'i'
-	|| *format == 'u' || *format == 'x' || *format == 'X')
+	if (*format == 'p' || *format == 'd' || *format == 'i' \
+		|| *format == 'u' || *format == 'x' || *format == 'X')
 	{
 		printf->type = *format;
 		printf->number = 1;

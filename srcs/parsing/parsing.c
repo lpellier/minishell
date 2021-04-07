@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 16:41:48 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:26:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int			check_if_block(int index)
 	t_list		*ptr;
 	t_block		*block;
 	
-	ptr = ft_list_find(info.block_head, create_block_struct(index, -1), cmp_block);
+	ptr = ft_list_find(g_info.block_head, create_block_struct(index, -1), cmp_block);
 	if (!ptr)
 		return (-1);
 	block = ptr->data;
@@ -129,7 +129,7 @@ void		read_cmd(char *line, int index, int index_cmd)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	index += spaces(&line[index]);
 	index += get_cmd(&line[index], cmd, index);
 	index += spaces(&line[index]);
@@ -140,10 +140,10 @@ void		read_cmd(char *line, int index, int index_cmd)
 	compare_cmd(cmd);
 	print_cmd_info(cmd);
 	if (cmd->cmd && cmd->bui == 9)
-		info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
+		g_info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
 			": command not found\n");
 	else if ((!line || (line && !line[index])) && cmd->bui == 9)
-		info.output = ft_strdup(""); /* might cause an issue later */
+		g_info.output = ft_strdup(""); /* might cause an issue later */
 	else if (!is_pipe(line[index]))
 		pipe_for_exec(index_cmd, line, index, PIPE);
 	else if (!is_colon(line[index]))
@@ -151,8 +151,8 @@ void		read_cmd(char *line, int index, int index_cmd)
 		if (cmd->bui == 8)
 			pipe_for_exec(index_cmd, line, index, NOTHING);
 		else
-			info.cmd_status = info.built_in[cmd->bui](index_cmd);
-		ft_list_push_back(&info.cmd_head, create_cmd_struct());
+			g_info.cmd_status = g_info.built_in[cmd->bui](index_cmd);
+		ft_list_push_back(&g_info.cmd_head, create_cmd_struct());
 		read_cmd(line, index + 1, index_cmd + 1);
 	}
 	else if (!is_redir_l(line[index]))
@@ -164,5 +164,5 @@ void		read_cmd(char *line, int index, int index_cmd)
 	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, NOTHING);
 	else
-		info.cmd_status = info.built_in[cmd->bui](index_cmd);
+		g_info.cmd_status = g_info.built_in[cmd->bui](index_cmd);
 }

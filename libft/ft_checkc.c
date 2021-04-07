@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_uintlen.c                                       :+:      :+:    :+:   */
+/*   ft_checkc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/30 12:35:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 10:49:52 by tefroiss         ###   ########.fr       */
+/*   Created: 2021/04/06 11:50:38 by tefroiss          #+#    #+#             */
+/*   Updated: 2021/04/06 12:26:53 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_uintlen(unsigned long n)
-{
-	int	count;
+#include "libft.h"
 
-	count = 1;
-	while (n >= 10)
+int	ft_checkc(char c, const char *set)
+{
+	while (*set)
 	{
-		n /= 10;
-		count++;
+		if (c == *set)
+			return (1);
+		set++;
 	}
-	return (count);
+	return (0);
 }

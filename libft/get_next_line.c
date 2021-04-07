@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 10:49:49 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:19:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:32:25 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*update_stock(char *stock, int i)
 
 char	*init_stock(char *stock, char *buf)
 {
-	char *temp;
+	char	*temp;
 
 	if (stock == NULL)
 		stock = ft_strdup(buf);
@@ -56,9 +56,9 @@ char	*init_stock(char *stock, char *buf)
 	return (stock);
 }
 
-int		append_and_update(char **stock, char **line)
+int	append_and_update(char **stock, char **line)
 {
-	int i;
+	int	i;
 
 	if ((i = check_n(*stock)) > 0)
 	{
@@ -69,7 +69,7 @@ int		append_and_update(char **stock, char **line)
 	return (0);
 }
 
-int		get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
 	int			ret;
 	int			i;
