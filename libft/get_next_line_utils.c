@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 10:49:54 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/08 22:53:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 11:01:50 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		check_n(char *stock)
+int	check_n(char *stock)
 {
 	int		i;
 

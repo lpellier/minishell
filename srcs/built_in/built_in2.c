@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/30 17:04:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 15:40:19 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ int			ft_unset(int index_cmd)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
-	if (!info.env_head || !info.env_head->next)
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	if (!g_info.env_head || !g_info.env_head->next)
 		return (FAILURE);
-	ft_list_remove_if(&info.env_head->next,
+	ft_list_remove_if(&g_info.env_head->next,
 		create_env_struct(cmd->input, NULL), cmp_env, free_env_struct);
 	return (SUCCESS);
 }
@@ -35,9 +35,9 @@ int			ft_unset(int index_cmd)
 int			ft_env(int index_cmd)
 {
 	(void)index_cmd;
-	if (!info.env_head || !info.env_head->next)
+	if (!g_info.env_head || !g_info.env_head->next)
 		return (FAILURE);
-	ft_list_foreach(info.env_head->next, print_env_struct);
+	ft_list_foreach(g_info.env_head->next, print_env_struct);
 	return (SUCCESS);
 }
 
@@ -52,8 +52,9 @@ int			ft_cd(int index_cmd)
 	char	cwd[PATH_MAX];
 	char	*home;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
-	home = ft_strdup(((t_env *)ft_list_find(info.env_head, create_env_struct("HOME", NULL), cmp_env)->data)->value);
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	home = ft_strdup(((t_env *)ft_list_find(g_info.env_head, \
+		create_env_struct("HOME", NULL), cmp_env)->data)->value);
 	if (!cmd->input)
 	{
 		if (chdir(home))
@@ -114,7 +115,7 @@ char		**list_to_tab(t_list *begin_list)
 
 	i = 0;
 	next = begin_list->next;
-	if (!(ret = (char **)ft_calloc(ft_list_size(next) + 1, sizeof(char *))))
+	if (ft_calloc((void **)&ret, ft_list_size(next) + 1, sizeof(char *)))
 		return (NULL);
 	while (next)
 	{
@@ -143,10 +144,10 @@ int			exec_binary(int index_cmd)
 	char	**split;
 	char	**env;
 
-	cmd = ft_list_at(info.cmd_head, index_cmd)->data;
-	env = list_to_tab(info.env_head);
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	env = list_to_tab(g_info.env_head);
 	split = count_args(cmd, &count);
-	if (!(argv = (char **)ft_calloc(count + 1, sizeof(char *))))
+	if (ft_calloc((void **)&argv, count + 1, sizeof(char *)))
 		return (FAILURE);
 	argv[0] = ft_strdup(cmd->cmd);
 	i = 0;
@@ -197,13 +198,13 @@ int			find_binary(t_cmd *cmd)
 	int		i;
 
 	i = 0;
-	if (!info.dir_paths)
+	if (!g_info.dir_paths)
 		return (FAILURE);
-	while (info.dir_paths[i])
+	while (g_info.dir_paths[i])
 	{
-		if (!directories(info.dir_paths[i], cmd->cmd))
+		if (!directories(g_info.dir_paths[i], cmd->cmd))
 		{
-			cmd->path = ft_strjoin(ft_strjoin(info.dir_paths[i], "/"),
+			cmd->path = ft_strjoin(ft_strjoin(g_info.dir_paths[i], "/"),
 				cmd->cmd);
 			return (SUCCESS);
 		}
@@ -238,6 +239,6 @@ void		compare_cmd(t_cmd *cmd)
 	else
 	{
 		cmd->bui = NONEXISTENT;
-		info.cmd_status = 127;
+		g_info.cmd_status = 127;
 	}
 }

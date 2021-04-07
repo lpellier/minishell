@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_auxiliary_functions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:28:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:05:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 10:57:58 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ const char	*print_aoutsider(const char *format, t_printf *printf)
 	return (format);
 }
 
-void		check_padding_case_int(t_printf *printf, int res)
+void	check_padding_case_int(t_printf *printf, int res)
 {
 	if (printf->padding == 2)
 	{
@@ -50,9 +50,11 @@ void		check_padding_case_int(t_printf *printf, int res)
 	}
 	else if (printf->padding == 1)
 	{
-		res = (printf->precision == -1 ? output_sign(printf, res) : res);
+		if (printf->precision == -1)
+			res = output_sign(printf, res);
 		output_flags(printf);
-		res = (printf->precision != -1 ? output_sign(printf, res) : res);
+		if (printf->precision != -1)
+			res = output_sign(printf, res);
 		put_zeros(printf);
 		ft_putnbr_fd(res, 1);
 	}
@@ -65,7 +67,7 @@ void		check_padding_case_int(t_printf *printf, int res)
 	}
 }
 
-void		check_padding_case_adress(t_printf *printf, void *res, char *str)
+void	check_padding_case_adress(t_printf *printf, void *res, char *str)
 {
 	if (printf->padding == 2)
 	{
@@ -83,7 +85,7 @@ void		check_padding_case_adress(t_printf *printf, void *res, char *str)
 	}
 }
 
-void		check_padding_case(t_printf *printf)
+void	check_padding_case(t_printf *printf)
 {
 	if (printf->padding == 2)
 	{

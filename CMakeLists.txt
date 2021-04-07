@@ -27,6 +27,8 @@ SET(LIBFT_SRC
 ./libft/ft_strjoin.c  
 ./libft/ft_substr.c  
 ./libft/ft_split.c
+./libft/ft_strcpy.c
+./libft/ft_strncat.c
 ./libft/ft_intlen.c  
 ./libft/ft_putunbr_fd.c  
 ./libft/ft_uintlen.c
@@ -46,19 +48,6 @@ SET(LIBFT_SRC
         )
 
 set(MINISHELL_SRC
-<<<<<<< HEAD
-        ./built_in.c
-        ./built_in2.c
-        ./init.c
-        ./linked_lists.c
-        ./free.c
-        ./main.c
-        ./parsing.c
-        ./minishell.h
-        ./all_signal.c
-        ./redir_std.c
-
-=======
         ./srcs/built_in/built_in.c
         ./srcs/built_in/built_in2.c
         ./srcs/shell_init/init.c
@@ -74,7 +63,7 @@ set(MINISHELL_SRC
         ./srcs/termcap/all_signal.c
         ./srcs/termcap/termcap_utils.c
         ./srcs/test/testing_func.c
->>>>>>> lucas
+        ./srcs/redir_std.c
         )
 add_library(LIBFT
         ${LIBFT_SRC}

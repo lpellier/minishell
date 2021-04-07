@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_output.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 11:52:38 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 13:28:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 17:17:10 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	output_int(t_printf *printf, va_list ap)
 {
-	int		res;
+	int	res;
 
 	res = va_arg(ap, int);
 	if (printf->orig == 1)
@@ -24,10 +24,15 @@ void	output_int(t_printf *printf, va_list ap)
 		output_flags(printf);
 		return ;
 	}
-	printf->minus = (res < 0 ? 1 : 0);
+	if (res < 0)
+		printf->minus = 1;
+	else
+		printf->minus = 0;
 	printf->len = ft_intlen(res);
-	printf->outputlen += ((printf->minus || printf->plus) ? \
-	printf->len + 1 : printf->len);
+	if (printf->minus || printf->plus)
+		printf->outputlen += printf->len + 1;
+	else
+		printf->outputlen += printf->len;
 	check_padding_case_int(printf, res);
 }
 
@@ -63,7 +68,7 @@ char	*negative_adress(int len)
 
 	i = 2;
 	diff = 16 - len;
-	if (!(str = ft_calloc((19 - len), sizeof(char))))
+	if (ft_calloc((void **)&str, (19 - len), sizeof(char)))
 		return (NULL);
 	str[0] = '0';
 	str[1] = 'x';
@@ -78,9 +83,9 @@ char	*negative_adress(int len)
 
 void	output_adress(t_printf *printf, va_list ap)
 {
-	void				*res;
-	long				a;
-	char				*str;
+	void	*res;
+	long	a;
+	char	*str;
 
 	a = va_arg(ap, long);
 	if (printf->orig == 1)

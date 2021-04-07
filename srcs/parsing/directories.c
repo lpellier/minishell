@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:25:58 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 11:44:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 15:40:19 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ char		*get_cur_dir()
 	char	*res;
 
 	i = 0;
-	getcwd(info.cur_path, sizeof(info.cur_path));
-	split = ft_split(info.cur_path, '/');
+	getcwd(g_info.cur_path, sizeof(g_info.cur_path));
+	split = ft_split(g_info.cur_path, '/');
 	while (split[i])
 		i++;
 	if (i == 0)

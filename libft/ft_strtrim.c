@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 12:50:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 13:27:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 17:12:10 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_checkset(char c, char const *set)
+int	ft_checkset(char c, char const *set)
 {
 	int		i;
 
@@ -26,9 +26,9 @@ int		ft_checkset(char c, char const *set)
 	return (0);
 }
 
-int		ft_checkend(char const *s1, char const *set)
+int	ft_checkend(char const *s1, char const *set)
 {
-	int end;
+	int	end;
 
 	end = ft_strlen(s1) - 1;
 	while (ft_checkset(s1[end], set))
@@ -36,7 +36,7 @@ int		ft_checkend(char const *s1, char const *set)
 	return (end + 1);
 }
 
-int		ft_len(char const *s1, char const *set)
+int	ft_len(char const *s1, char const *set)
 {
 	int		count;
 	int		i;
@@ -70,7 +70,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_checkend(s1, set);
 	i = 0;
 	start = 0;
-	if (!(res = ft_calloc(ft_len(s1, set), sizeof(char))))
+	if (ft_calloc((void **)&res, ft_len(s1, set), sizeof(char)))
 		return (NULL);
 	while (ft_checkset(s1[start], set))
 		start++;

@@ -14,7 +14,7 @@
 
 void		print_cmd_info(t_cmd *cmd)
 {
-	ft_printf(CYAN "\n'%s'" RESET, cmd->cmd);
+	ft_printf(CYAN "'%s'" RESET, cmd->cmd);
 	ft_printf(RED " | " RESET);
 	ft_printf(CYAN "'%s'" RESET, cmd->option);
 	ft_printf(RED " | " RESET);

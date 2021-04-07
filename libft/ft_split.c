@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 11:44:59 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 13:28:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 17:10:31 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,20 @@ static	char	**ft_strstr_push(char **old, char *new)
 	i = 0;
 	if (old)
 	{
-		ret = (char **)ft_calloc(ft_len(old) + 2, sizeof(char *));
+		if (ft_calloc((void **)&ret, ft_len(old) + 2, sizeof(char *)))
+			return (NULL);
 		ft_strstr_copy(ret, old, new);
 		free(old);
 		return (ret);
 	}
-	ret = (char **)ft_calloc(2, sizeof(char *));
+	if (ft_calloc((void **)&ret, 2, sizeof(char *)))
+		return (NULL);
 	ret[0] = new;
 	ret[1] = NULL;
 	return (ret);
 }
 
-char			**ft_split(const char *s, char c)
+char	**ft_split(const char *s, char c)
 {
 	static char	**buffer;
 	char		**ret;

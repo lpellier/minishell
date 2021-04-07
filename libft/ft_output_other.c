@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_output_other.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:34:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/25 13:28:59 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 13:32:32 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	output_string(t_printf *printf, va_list ap)
 	if (res == NULL)
 		res = "(null)";
 	printf->len = (int)ft_strlen(res);
-	printf->len = (printf->precision < printf->len && printf->precision != -1 ? \
-	printf->precision : printf->len);
+	if (printf->precision < printf->len && printf->precision != -1)
+		printf->len = printf->precision;
+	else
+		printf->len = printf->len;
 	printf->outputlen += printf->len;
 	if (printf->padding == 2)
 	{
@@ -48,13 +50,12 @@ void	output_uint(t_printf *printf, va_list ap)
 		return ;
 	}
 	printf->len = ft_uintlen(res);
-	printf->outputlen += (printf->plus ? printf->len + 1 : printf->len);
+	if (printf->plus)
+		printf->outputlen += printf->len + 1;
+	else
+		printf->outputlen += printf->len;
 	if (printf->padding == 2)
-	{
-		put_zeros(printf);
-		ft_putunbr_fd(res, 1);
-		output_flags(printf);
-	}
+		reduce_me(printf, res);
 	else
 	{
 		output_flags(printf);
@@ -72,7 +73,7 @@ char	*fill_f(char *res, int size)
 
 	i = 0;
 	diff = 8 - ft_strlen(res);
-	if (!(str = ft_calloc((8 - diff), sizeof(char))))
+	if (ft_calloc((void **)&str, (8 - diff), sizeof(char)))
 		return (NULL);
 	while (diff--)
 	{

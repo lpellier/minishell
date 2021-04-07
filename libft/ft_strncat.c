@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 12:22:32 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/29 12:22:34 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/06 10:52:38 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void		ft_strncat(char *dest, char *src, int nb)
+void	ft_strncat(char *dest, char *src, int nb)
 {
 	int	i;
 	int	j;
-	
+
 	i = 0;
 	while (dest[i] != '\0')
 		i++;

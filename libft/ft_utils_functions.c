@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_functions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:36:54 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/23 12:05:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 13:33:18 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int			output_sign(t_printf *printf, int res)
+int	output_sign(t_printf *printf, int res)
 {
 	if (printf->minus)
 	{
@@ -29,9 +29,9 @@ int			output_sign(t_printf *printf, int res)
 	return (res);
 }
 
-void		put_zeros(t_printf *printf)
+void	put_zeros(t_printf *printf)
 {
-	int		new;
+	int	new;
 
 	if (printf->precision > printf->len)
 	{
@@ -53,9 +53,9 @@ const char	*init_perc(t_printf *printf, const char *format)
 	return (format);
 }
 
-void		output_flags(t_printf *printf)
+void	output_flags(t_printf *printf)
 {
-	int		padlength;
+	int	padlength;
 
 	padlength = 0;
 	if (printf->number == 1 && printf->precision > printf->width)
@@ -63,24 +63,31 @@ void		output_flags(t_printf *printf)
 	else if (printf->number == 0 && printf->width > printf->len)
 		padlength = printf->width - printf->len;
 	else if (printf->number == 1 && printf->width > printf->len)
-		padlength = (printf->width >= printf->precision && \
-		printf->precision > printf->len ? \
-		printf->width - printf->precision : printf->width - printf->len);
+	{
+		if (printf->width >= printf->precision && \
+			printf->precision > printf->len)
+			padlength = printf->width - printf->precision;
+		else
+			padlength = printf->width - printf->len;
+	}
 	if ((printf->plus || printf->minus || printf->space) && padlength > 0)
 		padlength--;
 	printf->outputlen += padlength;
 	if (printf->padding == 1 && printf->precision != -1 \
 		&& printf->precision < printf->len)
 		printf->padding = 3;
-	if (printf->padding != 1 || (printf->number == 1 && printf->precision != -1))
-		while (padlength--)
-			ft_putchar_fd(' ', 1);
-	else
-		while (padlength--)
-			ft_putchar_fd('0', 1);
+	manque_de_place(printf, padlength);
 }
 
-void		check_padding_case_hex(t_printf *printf, void *ret)
+	// if (printf->padding != 1 || (printf->number == 1 &&
+	// 	printf->precision != -1))
+	// 	while (padlength--)
+	// 		ft_putchar_fd(' ', 1);
+	// else
+	// 	while (padlength--)
+	// 		ft_putchar_fd('0', 1);
+
+void	check_padding_case_hex(t_printf *printf, void *ret)
 {
 	if (printf->padding == 2)
 	{

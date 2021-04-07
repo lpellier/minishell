@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:03:40 by lpellier          #+#    #+#             */
-/*   Updated: 2021/03/24 14:31:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 15:22:48 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_sigint(int sig)
 {
     (void)sig;
     write(0, "\n", 1);
-    info.crashed = 2;
+    g_info.crashed = 2;
 }
 
 void		ft_sigquit(int sig)
@@ -34,5 +34,5 @@ void		ft_sigterm(int sig)
 //    ft_list_clear(info.env_head, free_env_struct);
 //    exit(1);
     ft_printf("exit\n");
-    info.crashed = 1;
+    g_info.crashed = 1;
 }
