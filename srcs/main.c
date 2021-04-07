@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 16:37:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:33:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int			shell_loop(char **envp)
 		free(info.output);
 	ft_list_clear(info.env_head, free_env_struct);
 	ft_list_clear(info.history_head, free_history_struct);
+	ft_list_clear(info.block_head, free);
 	return (SUCCESS);
 }
 

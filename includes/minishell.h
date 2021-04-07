@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 14:53:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:31:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,12 @@ typedef struct	s_history
     char	*line;
 }				t_history;
 
+typedef struct	s_block
+{
+    int		start;
+	int		end;
+}				t_block;
+
 /*
 ** pointer on next struct of linked list
 ** pointer on data, usually data is a struct
@@ -105,6 +111,7 @@ typedef struct	s_info
 	int		prompt_len;
 	int		echo_padding;
 	t_cursor cursor;
+	t_list	*block_head;
 	t_list	*cmd_head;
 	t_list	*env_head;
 	t_list	*history_head;
@@ -145,7 +152,6 @@ enum			status_codes
 	OTHER
 };
 
-// int main(int ac, char **av, char **envp);
 void		remove_char(char *line, int index);
 void		update_cmd_status();
 int			shell_loop(char **envp);
@@ -186,8 +192,9 @@ void		print_cmd_info(t_cmd *cmd);
 */
 
 char		*read_everything();
-int			get_input(char *line, t_cmd *cmd);
-int			get_cmd(char *line, t_cmd *cmd);
+int			get_input(char *line, t_cmd *cmd, int index);
+int			get_cmd(char *line, t_cmd *cmd, int index);
+int			get_option(char *line, t_cmd *cmd, int index);
 char		*str_replace(char *orig, char *rep, char *with);
 char		*replace_dollars_env(char *line);
 void			read_line(int first);
@@ -266,6 +273,7 @@ int				pipe_for_exec(int index_cmd,
 int				redir(int index_cmd, char *line, int index, int separator);
 int				init_env(char **envp);
 void			print_history(void *data);
+t_block			*create_block_struct(int a, int b);
 t_cmd			*create_cmd_struct();
 t_history 		*create_history_struct();
 t_env			*create_env_struct(char *key, char *value);

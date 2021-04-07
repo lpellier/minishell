@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 15:57:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:34:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,16 +223,21 @@ int			transform_line(char *line, int index, int quote, int dquote)
 	if (line[index] == QUOTE)
 	{
 		remove_char(line, index);
+		ft_list_push_front(&info.block_head, create_block_struct(index, -1));
 		while (line[index] && line[index] != QUOTE)
 			index++;
 		if (!line[index])
 			quote += 1;
 		else if (line[index] == QUOTE)
+		{
 			remove_char(line, index);
+			((t_block *)info.block_head->data)->end = index;
+		}
 	}
 	if (line[index] == DQUOTE)
 	{
 		remove_char(line, index);
+		ft_list_push_front(&info.block_head, create_block_struct(index, -1));
 		while (line[index] && line[index] != DQUOTE)
 		{
 			if (line[index] == BSLASH)
@@ -248,7 +253,10 @@ int			transform_line(char *line, int index, int quote, int dquote)
 		if (!line[index])
 			dquote += 1;
 		else if (line[index] == DQUOTE)
+		{
 			remove_char(line, index);
+			((t_block *)info.block_head->data)->end = index;
+		}
 	}
 	if (line[index])
 		ret = transform_line(line, index, quote, dquote);
@@ -278,9 +286,13 @@ int			is_there_colon_in_line(char *line)
 ** the point is to process our line so that it is readable by our read_cmd function
 */
 
+// currently building a way to know if blocks exist
+// colons won't work right now BECUASE OF THE SPLIT
+
 void		read_line(int first)
 {
 	char	**colon_split;
+	char	*line;
 	int		crashed;
 	int		i;
 
@@ -291,7 +303,8 @@ void		read_line(int first)
 		info.history_head = ft_create_elem(create_history_struct());
 	else
     	ft_list_push_front(&info.history_head, create_history_struct());
-	colon_split = ft_split(read_everything(), COLON);
+	line = read_everything();
+	colon_split = ft_split(line, COLON);
 	ft_printf("\n");
 	while (colon_split && colon_split[i])
 	{
@@ -304,5 +317,15 @@ void		read_line(int first)
 		read_cmd(colon_split[i], 0, 0);
 		i++;
 	}
+	// i = 0;
+	// while (i < 16)
+	// {
+	// 	ft_printf("\n%d starting block : %d\n", i, info.starting_blocks[i]);
+	// 	ft_printf("%d ending block : %d\n", i, info.ending_blocks[i]);
+	// 	i++;
+	// }
+	if (line)
+		free(line);
+	line = NULL;
 	free_tab(&colon_split);
 }

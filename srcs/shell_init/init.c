@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/04 13:37:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:34:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,5 @@ void		init_info(char **envp)
 void reset_info()
 {
 	info.cur_in_history = 0;
+	info.block_head = ft_create_elem(create_block_struct(-1, -1));
 }

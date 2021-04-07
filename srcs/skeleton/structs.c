@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 14:52:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/07 15:49:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,15 @@ t_history *create_history_struct()
 		return (NULL);
 	history->line = ft_calloc(LINE_MAX, sizeof(char));
     return (history);
+}
+
+t_block *create_block_struct(int a, int b)
+{
+    t_block *block;
+
+    if (!(block = (t_block *)ft_calloc(1, sizeof(t_block))))
+		return (NULL);
+	block->start = a;
+	block->end = b;
+    return (block);
 }
