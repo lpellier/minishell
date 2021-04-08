@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:22:36 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 15:41:02 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_info
 	int				cur_in_history;
 	int				prompt_len;
 	int				echo_padding;
+	int				kill;
 	t_cursor		cursor;
 	t_list			*cmd_head;
 	t_list			*env_head;
@@ -148,6 +149,8 @@ enum				e_status_codes
 	OTHER
 };
 
+int			rem_hist(void *data, void *data_ref);
+int			check_if_block(int index);
 void		remove_char(char *line, int index);
 // int main(int ac, char **av, char **envp);
 
@@ -175,7 +178,7 @@ int			is_colon(char c);
 int			is_redir_l(char c);
 int			is_redir_r(char c);
 int			is_whitespace(char c);
-int			spaces(char *s);
+int			spaces(char *s, int index);
 int			check_sep(char *line, t_cmd *cmd);
 
 /*

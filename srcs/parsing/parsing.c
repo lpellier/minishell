@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:26:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 11:51:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,20 +130,19 @@ void		read_cmd(char *line, int index, int index_cmd)
 	t_cmd	*cmd;
 
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	index += spaces(&line[index]);
+	index += spaces(&line[index], index);
 	index += get_cmd(&line[index], cmd, index);
-	index += spaces(&line[index]);
+	index += spaces(&line[index], index);
 	index += get_option(&line[index], cmd, index);
-	index += spaces(&line[index]);
+	index += spaces(&line[index], index);
 	index += get_input(&line[index], cmd, index);
-	index += spaces(&line[index]);
+	index += spaces(&line[index], index);
 	compare_cmd(cmd);
 	print_cmd_info(cmd);
 	if (cmd->cmd && cmd->bui == 9)
-		g_info.output = ft_strjoin(ft_strjoin("minisheh: ", cmd->cmd),
-			": command not found\n");
+		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
 	else if ((!line || (line && !line[index])) && cmd->bui == 9)
-		g_info.output = ft_strdup(""); /* might cause an issue later */
+		g_info.output = ft_strdup("");
 	else if (!is_pipe(line[index]))
 		pipe_for_exec(index_cmd, line, index, PIPE);
 	else if (!is_colon(line[index]))

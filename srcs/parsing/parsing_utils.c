@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:24:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:26:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 11:33:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,18 @@ int	is_whitespace(char c)
     return (FAILURE);
 }
 
-int	spaces(char *s)
+int	spaces(char *s, int index)
 {
 	int i;
+	int		block_end;
 	int count;
 
 	i = 0;
 	count = 0;
+	block_end = check_if_block(index);
 	if (!s && !s[i])
  		return (FAILURE);
-	while (!is_whitespace(s[i]))
+	while (!is_whitespace(s[i]) && !(block_end >= 0))
 	{
 		count++;
 		i++;

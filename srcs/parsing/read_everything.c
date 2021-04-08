@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:37:43 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 16:48:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,15 @@ char 	*read_everything()
 	g_info.prompt_len += g_info.echo_padding;
 	while (key != '\n')
 	{
-		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
 		if (read(0, &key, 1) == -1)
 			return (NULL);
+		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
+		if (g_info.kill)
+		{
+			g_info.kill = FALSE;
+			ft_bzero(line, ft_strlen(line));
+			ft_bzero(cur->line, ft_strlen(cur->line));
+		}
 		if (key == 27)
 			check_for_arrows(line);
 		else if (key == 127)
@@ -319,13 +325,6 @@ void		read_line(int first)
 		read_cmd(colon_split[i], 0, 0);
 		i++;
 	}
-	// i = 0;
-	// while (i < 16)
-	// {
-	// 	ft_printf("\n%d starting block : %d\n", i, g_info.starting_blocks[i]);
-	// 	ft_printf("%d ending block : %d\n", i, g_info.ending_blocks[i]);
-	// 	i++;
-	// }
 	if (line)
 		free(line);
 	line = NULL;

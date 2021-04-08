@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:26:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 15:10:38 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ int			main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
+	signal(SIGINT, ft_sigint);
     exit(shell_loop(envp));
 }

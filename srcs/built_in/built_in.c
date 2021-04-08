@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:34:01 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 16:50:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int			redir(int index_cmd, char *line, int index, int separator)
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	if ((file_fd = open_file(separator, line, &index)) == -1)
 		return (FAILURE);
-	index += spaces(&line[index]);
+	index += spaces(&line[index], index);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
 	if (separator == R_LEFT)
@@ -154,15 +154,20 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	if (cpid == 0)
 	{
 		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		_exit((g_info.built_in[cmd->bui])(index_cmd));
+		close(pipefd[1]);
+		// dup2(pipefd[0], STDIN_FILENO);
+		// dup2(pipefd[1], STDOUT_FILENO);
+		status = (g_info.built_in[cmd->bui])(index_cmd);
+		_exit(status);
 	}
 	else
 	{
-		waitpid(cpid, &status, 0);
-		g_info.cmd_status = status - 255;
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
+		if (g_info.kill)
+			kill(cpid, SIGINT);
+		waitpid(cpid, &status, 0);
+		g_info.cmd_status = status % 255;
 		if (separator == PIPE)
 		{
 			while (!ft_cinset(line[index], SEPARATOR))
