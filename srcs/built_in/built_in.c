@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 16:50:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 16:53:10 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,8 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	if (cpid == 0)
 	{
 		close(pipefd[0]);
-		close(pipefd[1]);
 		// dup2(pipefd[0], STDIN_FILENO);
-		// dup2(pipefd[1], STDOUT_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
 		status = (g_info.built_in[cmd->bui])(index_cmd);
 		_exit(status);
 	}
