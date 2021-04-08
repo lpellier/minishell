@@ -1,60 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parsing_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/24 11:24:33 by lpellier          #+#    #+#             */
+/*   Created: 2021/04/08 14:30:09 by tefroiss          #+#    #+#             */
 /*   Updated: 2021/04/08 14:35:09 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	is_pipe(char c)
+int	spaces(char *s)
 {
-	if (c == '|')
-		return (SUCCESS);
-	else if (c == '\0')
-		return (OTHER);
-	else
-		return (FAILURE);
-}
+	int	i;
+	int	count;
 
-int	is_colon(char c)
-{
-	if (c == ';')
-		return (SUCCESS);
-	else if (c == '\0')
-		return (OTHER);
-	else
+	i = 0;
+	count = 0;
+	if (!s && !s[i])
 		return (FAILURE);
-}
-
-int	is_redir_l(char c)
-{
-	if (c == '<')
-		return (SUCCESS);
-	else if (c == '\0')
-		return (OTHER);
-	else
-		return (FAILURE);
-}
-
-int	is_redir_r(char c)
-{
-	if (c == '>')
-		return (SUCCESS);
-	else if (c == '\0')
-		return (OTHER);
-	else
-		return (FAILURE);
-}
-
-int	is_whitespace(char c)
-{
-	if (c == 32 || (c >= 9 && c <= 13))
-		return (SUCCESS);
-	return (FAILURE);
+	while (!is_whitespace(s[i]))
+	{
+		count++;
+		i++;
+	}
+	return (count);
 }

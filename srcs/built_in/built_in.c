@@ -3,58 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:34:01 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 11:42:59 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/*
-** outputs input
-*/
-
-int			only_n(char *str)
-{
-	int		i;
-	
-	i= 1;
-	while (str[i])
-	{
-		if (str[i] != 'n')
-			return (FAILURE);
-		i++;
-	}
-	return (SUCCESS);
-}
-
-int			ft_echo(int index_cmd)
-{
-	t_cmd	*cmd;
-	char	*tmp;
-
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	if (cmd->option && !only_n(cmd->option))
-		return (ft_echo_n(index_cmd));
-	else if (cmd->option)
-	{
-		if (cmd->input)
-		{
-			tmp = ft_strdup(cmd->input);
-			free(cmd->input);
-			cmd->input = ft_strjoin(ft_strjoin(cmd->option, " "), tmp);
-		}
-	}
-	if (!cmd->input)
-		ft_printf("\n");
-	else
-		ft_printf("%s\n", cmd->input);
-	return (SUCCESS);
-}
-
-void		store_output(int index_cmd)
+void	store_output(int index_cmd)
 {
 	char	*str;
 	t_cmd	*cmd;
@@ -78,7 +36,7 @@ void		store_output(int index_cmd)
 	str = NULL;
 }
 
-int			redir(int index_cmd, char *line, int index, int separator)
+int	redir(int index_cmd, char *line, int index, int separator)
 {
 	int		file_fd;
 	pid_t	saved_stdin;
@@ -86,7 +44,8 @@ int			redir(int index_cmd, char *line, int index, int separator)
 	t_cmd	*cmd;
 
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	if ((file_fd = open_file(separator, line, &index)) == -1)
+	file_fd = open_file(separator, line, &index);
+	if (file_fd == -1)
 		return (FAILURE);
 	index += spaces(&line[index]);
 	saved_stdin = dup(STDIN_FILENO);
@@ -97,7 +56,8 @@ int			redir(int index_cmd, char *line, int index, int separator)
 		dup2(file_fd, STDOUT_FILENO);
 	if (line[index] && !is_redir_l(line[index]))
 		redir(index_cmd, line, index, R_LEFT);
-	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] && !is_redir_r(line[index + 1]))
+	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] \
+			&& !is_redir_r(line[index + 1]))
 		redir(index_cmd, line, index, R_RIGHTD);
 	else if (line[index] && !is_redir_r(line[index]))
 		redir(index_cmd, line, index, R_RIGHT);
@@ -134,7 +94,7 @@ int			redir(int index_cmd, char *line, int index, int separator)
 ** restoring stdout and stdin to original fds
 */
 
-int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
+int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 {
 	int		pipefd[2];
 	pid_t	cpid;
@@ -189,54 +149,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	}
 }
 
-/*
-** outputs input without \n
-*/
-
-int			ft_echo_n(int index_cmd)
-{
-	t_cmd	*cmd;
-
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	if (cmd->input)
-		ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
-	g_info.echo_padding = ft_strlen(cmd->input) + 1;
-	return (SUCCESS);
-}
-
-/*
-** exits terminal
-*/
-
-int			ft_exit(int index_cmd)
-{
-	(void)index_cmd;
-	g_info.crashed = TRUE;
-	ft_printf("exit\n");
-	return (SUCCESS);
-}
-
-/*
-** outputs current path
-*/
-
-int			ft_pwd(int index_cmd)
-{
-	char	cwd[PATH_MAX];
-	t_cmd	*cmd;
-
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		ft_printf("%s\n", cwd);
-	return (SUCCESS);
-}
-
-int			str_isalpha_withplus(char *str)
+int	str_isalpha_withplus(char *str)
 {
 	int		i;
 
@@ -250,7 +163,7 @@ int			str_isalpha_withplus(char *str)
 	return (SUCCESS);
 }
 
-char		last_char(char *str)
+char	last_char(char *str)
 {
 	int		i;
 	char	c;
@@ -262,7 +175,7 @@ char		last_char(char *str)
 		c = str[i - 1];
 	else
 		c = '\0';
-	return(c);
+	return (c);
 }
 
 /*
@@ -270,7 +183,7 @@ char		last_char(char *str)
 ** need to figure out return codes for built in
 */
 
-int			ft_export(int index_cmd)
+int	ft_export(int index_cmd)
 {
 	t_cmd	*cmd;
 	t_env	*env_tmp;
@@ -296,13 +209,15 @@ int			ft_export(int index_cmd)
 		return (FAILURE);
 	if (str_isalpha_withplus(key_value[0]) || key_value[0][0] == '+')
 	{
-		ft_printf("minisheh: export: '%s': not a valid identifier\n", cmd->input);
+		ft_printf("minisheh: export: '%s': not a valid identifier\n", \
+			cmd->input);
 		return (FAILURE);
 	}
 	env_tmp = get_env_custom(key_value[0]);
 	if (!env_tmp)
 		ft_list_push_back(&g_info.env_head,
-			create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+			create_env_struct(ft_strdup(key_value[0]), \
+				ft_strdup(key_value[1])));
 	else
 		modify_env(key_value[0], key_value[1], concat);
 	free_tab(&key_value);

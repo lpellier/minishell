@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 12:24:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 10:58:05 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void		free_tab(char ***tab)
+void	free_tab(char ***tab)
 {
 	int		i;
 	char	**cpy;
@@ -31,7 +31,7 @@ void		free_tab(char ***tab)
 	*tab = NULL;
 }
 
-void		free_cmd_struct(void *data)
+void	free_cmd_struct(void *data)
 {
 	t_cmd	*ptr;
 
@@ -54,7 +54,7 @@ void		free_cmd_struct(void *data)
 	ptr = NULL;
 }
 
-void		free_env_struct(void *data)
+void	free_env_struct(void *data)
 {
 	t_env	*ptr;
 
@@ -70,12 +70,12 @@ void		free_env_struct(void *data)
 	ptr = NULL;
 }
 
-void		free_history_struct(void *data)
+void	free_history_struct(void *data)
 {
-    t_history	*ptr;
+	t_history	*ptr;
 
-    ptr = (t_history *)data;
-    ft_bzero(ptr->line, ft_strlen(ptr->line));
+	ptr = (t_history *)data;
+	ft_bzero(ptr->line, ft_strlen(ptr->line));
 	if (ptr->line)
 		free(ptr->line);
 	if (ptr)
@@ -83,7 +83,7 @@ void		free_history_struct(void *data)
 	ptr = NULL;
 }
 
-void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
+void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
 {
 	t_list	*ptr;
 

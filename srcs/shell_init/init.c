@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:39:20 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 13:51:27 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** is used to reset all of the info after enter is pressed
 */
 
-void		init_built_in(void)
+void	init_built_in(void)
 {
 	g_info.built_in[0] = ft_echo;
 	g_info.built_in[1] = ft_echo_n;
@@ -29,7 +29,7 @@ void		init_built_in(void)
 	g_info.built_in[8] = exec_binary;
 }
 
-int			init_env(char **envp)
+int	init_env(char **envp)
 {
 	int		i;
 	char	**key_value;
@@ -38,21 +38,24 @@ int			init_env(char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], '=');
-	g_info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+	g_info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
+		ft_strdup(key_value[1])));
 	free_tab(&key_value);
 	i++;
 	while (envp[i])
 	{
-		if ((key_value = ft_split(envp[i], '=')) && key_value[0] && key_value[1])
-			ft_list_push_back(&g_info.env_head,
-				create_env_struct(ft_strdup(key_value[0]), ft_strdup(key_value[1])));
+		key_value = ft_split(envp[i], '=');
+		if (key_value && key_value[0] && key_value[1])
+			ft_list_push_back(&g_info.env_head, \
+				create_env_struct(ft_strdup(key_value[0]), \
+				ft_strdup(key_value[1])));
 		free_tab(&key_value);
 		i++;
 	}
 	return (SUCCESS);
 }
 
-void		init_info(char **envp)
+void	init_info(char **envp)
 {
 	init_built_in();
 	g_info.echo_padding = 0;
@@ -60,13 +63,13 @@ void		init_info(char **envp)
 	g_info.output = NULL;
 	g_info.cmd_status = 0;
 	init_env(envp);
-	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"),
+	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"), \
 		ft_itoa(g_info.cmd_status)));
 	g_info.dir_paths = ft_split(getenv("PATH"), ':');
 	reset_info();
 }
 
-void reset_info()
+void	reset_info(void)
 {
 	g_info.cur_in_history = 0;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));

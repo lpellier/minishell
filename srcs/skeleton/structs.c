@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 13:33:08 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/08 13:44:15 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ t_env	*get_env_custom(char *key)
 	t_list	*var_list;
 	t_env	*var;
 
-	if (!(var_list = ft_list_find(g_info.env_head, create_env_struct(key, NULL), cmp_env)))
+	var_list = ft_list_find(g_info.env_head, create_env_struct(key, NULL), \
+		cmp_env);
+	if (!(var_list))
 		return (NULL);
 	var = (t_env *)var_list->data;
 	return (var);
@@ -70,26 +72,4 @@ t_env	*create_env_struct(char *key, char *value)
 	env->key = ft_strdup(key);
 	env->value = ft_strdup(value);
 	return (env);
-}
-
-t_history	*create_history_struct()
-{
-    t_history	*history;
-
-    if (ft_calloc((void **)&history, 1, sizeof(t_history)))
-		return (NULL);
-	if (ft_calloc((void **)&history->line, LINE_MAX, sizeof(char)))
-		return (NULL);
-    return (history);
-}
-
-t_block	*create_block_struct(int a, int b)
-{
-    t_block	*block;
-
-    if (ft_calloc((void **)&block, 1, sizeof(t_block)))
-		return (NULL);
-	block->start = a;
-	block->end = b;
-    return (block);
 }

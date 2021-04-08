@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   termcap_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:26:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/08 13:47:28 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void		init_termcap()
+void	init_termcap()
 {
 	tgetent(NULL, getenv("TERM"));
 	tcgetattr(STDOUT_FILENO, &g_info.termios_p);
@@ -20,18 +20,17 @@ void		init_termcap()
     g_info.termios_p.c_cc[VTIME] = 0;
     g_info.termios_p.c_cc[VMIN] = 1;
 	tcsetattr(STDOUT_FILENO, TCSANOW, &g_info.termios_p);
-
 	g_info.cursor.col = tgetnum("co");
 	g_info.cursor.lin = tgetnum("li");
 	tputs(tgetstr("cl", NULL), 1, ft_putchar);
 }
 
-int get_pos(int *x, int *y)
+int	get_pos(int *x, int *y)
 {
-	char buf[30] = {0};
-	int i;
-	int pow;
-	char ch;
+	char	buf[30] = {0};
+	int		i;
+	int		pow;
+	char	ch;
 
 	*x = 0;
 	*y = 0;
