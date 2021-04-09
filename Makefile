@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
+#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/07 17:23:02 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/09 14:41:47 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRCS = srcs/main.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
 		srcs/free/free.c \
+		srcs/free/secure_free.c \
 		srcs/skeleton/linked_lists.c \
 		srcs/skeleton/structs.c \
 		srcs/parsing/directories.c \

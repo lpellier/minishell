@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 13:20:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 14:42:37 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,10 +243,15 @@ void		ft_sigterm(int sig);
 ** free
 */
 
+void		secure_free(void *ptr);
+
 void		free_tab(char ***tab);
 void		free_history_struct(void *data);
 void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);
+void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
+
+
 void		print_env_struct(void *data);
 int			cmp_env(void *data, void *data_ref);
 
@@ -281,7 +286,6 @@ t_list		*ft_create_elem(void *data);
 int			ft_list_size(t_list *list);
 void		ft_list_push_front(t_list **begin_list, void *data);
 void		ft_list_push_back(t_list **begin_list, void *data);
-void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 t_list		*ft_list_at(t_list *begin_list, unsigned int nbr);
 void		ft_list_remove_if(t_list **begin_list, void *data_ref,
 				int (*cmp)(), void (*free_fct)(void *));
