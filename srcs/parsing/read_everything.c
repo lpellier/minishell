@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 16:48:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 12:46:52 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,9 @@ char 	*read_everything()
 	g_info.prompt_len += g_info.echo_padding;
 	while (key != '\n')
 	{
+		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
 		if (read(0, &key, 1) == -1)
 			return (NULL);
-		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
 		if (g_info.kill)
 		{
 			g_info.kill = FALSE;

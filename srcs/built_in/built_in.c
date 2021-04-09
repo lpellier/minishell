@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 16:53:10 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 12:48:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	t_cmd	*cmd;
 	int		status;
 
+	g_info.bin_running = TRUE;
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
@@ -166,6 +167,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 		if (g_info.kill)
 			kill(cpid, SIGINT);
 		waitpid(cpid, &status, 0);
+		g_info.bin_running = FALSE;
 		g_info.cmd_status = status % 255;
 		if (separator == PIPE)
 		{
