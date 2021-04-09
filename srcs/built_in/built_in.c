@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 13:48:53 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 17:39:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,29 @@ int			ft_echo(int index_cmd)
 	return (SUCCESS);
 }
 
-void		store_output(int index_cmd)
-{
-	char	*str;
-	t_cmd	*cmd;
+// void		store_output(int index_cmd)
+// {
+// 	char	*str;
+// 	t_cmd	*cmd;
 
-	cmd = (t_cmd *)ft_list_at(g_info.cmd_head, index_cmd)->data;
-	get_next_line(STDIN_FILENO, &str);
-	g_info.output = ft_strdup(str);
-	if (cmd->bui != 1 && cmd->bui != 9)
-		g_info.output = ft_strjoin(str, "\n");
-	else
-		g_info.output = ft_strdup(str);
-	while (get_next_line(STDIN_FILENO, &str))
-	{
-		if (cmd->bui != 1 && cmd->bui != 9)
-			g_info.output = ft_strjoin(ft_strjoin(g_info.output, str), "\n");
-		else
-			g_info.output = ft_strjoin(g_info.output, str);
-	}
-	if (str)
-		free(str);
-	str = NULL;
-}
+// 	cmd = (t_cmd *)ft_list_at(g_info.cmd_head, index_cmd)->data;
+// 	get_next_line(STDIN_FILENO, &str);
+// 	g_info.output = ft_strdup(str);
+// 	if (cmd->bui != 1 && cmd->bui != 9)
+// 		g_info.output = ft_strjoin(str, "\n");
+// 	else
+// 		g_info.output = ft_strdup(str);
+// 	while (get_next_line(STDIN_FILENO, &str))
+// 	{
+// 		if (cmd->bui != 1 && cmd->bui != 9)
+// 			g_info.output = ft_strjoin(ft_strjoin(g_info.output, str), "\n");
+// 		else
+// 			g_info.output = ft_strjoin(g_info.output, str);
+// 	}
+// 	if (str)
+// 		free(str);
+// 	str = NULL;
+// }
 
 int			redir(int index_cmd, char *line, int index, int separator)
 {
@@ -147,6 +147,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
+	restore_term();
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
 	cpid = fork();
@@ -155,8 +156,10 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	if (cpid == 0)
 	{
 		close(pipefd[0]);
-		// dup2(pipefd[0], STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
+		if (separator == PIPE)
+			dup2(pipefd[1], STDOUT_FILENO);
+		else
+			close(pipefd[1]);
 		status = (g_info.built_in[cmd->bui])(index_cmd);
 		_exit(status);
 	}
@@ -167,6 +170,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 		if (g_info.kill)
 			kill(cpid, SIGINT);
 		waitpid(cpid, &status, 0);
+		init_termcap();
 		g_info.bin_running = FALSE;
 		g_info.cmd_status = status % 255;
 		if (separator == PIPE)
@@ -176,22 +180,9 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 			ft_list_push_back(&g_info.cmd_head, create_cmd_struct());
 			read_cmd(line, index, index_cmd + 1);
 		}
-		else if (separator == NOTHING)
-		{
-			store_output(index_cmd);
-			if (g_info.output)
-			{
-				ft_printf("%s", g_info.output);
-				free(g_info.output);
-			}
-			g_info.output = NULL;
-		}
-		if (cmd->bui == 2)
-			g_info.crashed = TRUE;
 		close(pipefd[0]);
 		dup2(saved_stdout, STDOUT_FILENO);
 		dup2(saved_stdin, STDIN_FILENO);
-		g_info.cur_fd = STDOUT_FILENO;
 		return (EXIT_SUCCESS);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 11:51:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 18:11:58 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,19 +141,8 @@ void		read_cmd(char *line, int index, int index_cmd)
 	print_cmd_info(cmd);
 	if (cmd->cmd && cmd->bui == 9)
 		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
-	else if ((!line || (line && !line[index])) && cmd->bui == 9)
-		g_info.output = ft_strdup("");
 	else if (!is_pipe(line[index]))
 		pipe_for_exec(index_cmd, line, index, PIPE);
-	else if (!is_colon(line[index]))
-	{
-		if (cmd->bui == 8)
-			pipe_for_exec(index_cmd, line, index, NOTHING);
-		else
-			g_info.cmd_status = g_info.built_in[cmd->bui](index_cmd);
-		ft_list_push_back(&g_info.cmd_head, create_cmd_struct());
-		read_cmd(line, index + 1, index_cmd + 1);
-	}
 	else if (!is_redir_l(line[index]))
 		redir(index_cmd, line, index, R_LEFT);
 	else if (!is_redir_r(line[index]) && line[index + 1] && !is_redir_r(line[index + 1]))
@@ -162,6 +151,8 @@ void		read_cmd(char *line, int index, int index_cmd)
 		redir(index_cmd, line, index, R_RIGHT);
 	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, NOTHING);
+	else if (!cmd->cmd)
+		return ;
 	else
 		g_info.cmd_status = g_info.built_in[cmd->bui](index_cmd);
 }

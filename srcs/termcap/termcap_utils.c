@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 15:08:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 17:33:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,12 @@
 
 void		init_termcap()
 {
-	tgetent(NULL, getenv("TERM"));
-	tcgetattr(STDOUT_FILENO, &g_info.termios_p);
-	g_info.termios_p.c_lflag &= ~(ICANON | ECHO);
-    g_info.termios_p.c_cc[VTIME] = 0;
-    g_info.termios_p.c_cc[VMIN] = 1;
 	tcsetattr(STDOUT_FILENO, TCSANOW, &g_info.termios_p);
+}
 
-	g_info.cursor.col = tgetnum("co");
-	g_info.cursor.lin = tgetnum("li");
-	tputs(tgetstr("cl", NULL), 1, ft_putchar);
+void		restore_term()
+{
+	tcsetattr(STDOUT_FILENO, TCSANOW, &g_info.saved_term);
 }
 
 int get_pos(int *x, int *y)

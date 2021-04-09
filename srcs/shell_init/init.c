@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 13:21:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 17:32:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void		init_info(char **envp)
 	init_built_in();
 	g_info.echo_padding = 0;
 	g_info.crashed = FALSE;
-	g_info.output = NULL;
 	g_info.cmd_status = 0;
 	init_env(envp);
 	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"),
@@ -71,6 +70,5 @@ void reset_info()
 	g_info.cur_in_history = 0;
 	g_info.kill = FALSE;
 	g_info.bin_running = FALSE;
-	g_info.cur_fd = STDOUT_FILENO;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
 }

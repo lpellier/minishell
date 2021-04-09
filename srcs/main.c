@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 15:10:38 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 17:33:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ int			shell_loop(char **envp)
 		remove_useless_history();
 	}
 	free_tab(&g_info.dir_paths);
-	if (g_info.output)
-		free(g_info.output);
 	ft_list_clear(g_info.env_head, free_env_struct);
 	ft_list_clear(g_info.history_head, free_history_struct);
 	ft_list_clear(g_info.block_head, free);
@@ -84,5 +82,14 @@ int			main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	signal(SIGINT, ft_sigint);
+	tgetent(NULL, getenv("TERM"));
+	tcgetattr(STDOUT_FILENO, &g_info.termios_p);
+	tcgetattr(STDOUT_FILENO, &g_info.saved_term);
+	g_info.termios_p.c_lflag &= ~(ICANON | ECHO);
+    g_info.termios_p.c_cc[VTIME] = 0;
+    g_info.termios_p.c_cc[VMIN] = 1;
+	g_info.cursor.col = tgetnum("co");
+	g_info.cursor.lin = tgetnum("li");
+	tputs(tgetstr("cl", NULL), 1, ft_putchar);
     exit(shell_loop(envp));
 }

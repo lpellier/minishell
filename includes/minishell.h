@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 13:20:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 18:06:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define CYAN "\x1b[36m"
 # define RESET "\x1b[0m"
 # define SEPARATOR "|<;>"
+# define WHITESPACE "\t\n\r\v\f"
 
 /*
 ** the cmd part of the command -- i.e. 'echo' or 'pwd' etc
@@ -99,6 +100,7 @@ typedef struct s_cursor
 typedef struct s_info
 {
 	struct termios	termios_p;
+	struct termios	saved_term;
 	int				(*built_in[9])(int index_cmd);
 	char			cur_path[PATH_MAX];
 	int				crashed;
@@ -108,13 +110,11 @@ typedef struct s_info
 	int				echo_padding;
 	int				kill;
 	int				bin_running;
-	int				cur_fd;
 	t_cursor		cursor;
 	t_list			*cmd_head;
 	t_list			*env_head;
 	t_list			*block_head;
 	t_list			*history_head;
-	char			*output;
 	char			**envp;
 	char			**dir_paths;
 }					t_info;
@@ -150,6 +150,8 @@ enum				e_status_codes
 	FAILURE,
 	OTHER
 };
+
+void		restore_term();
 
 int			rem_hist(void *data, void *data_ref);
 int			check_if_block(int index);
