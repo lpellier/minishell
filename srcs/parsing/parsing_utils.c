@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:24:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 11:33:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 12:32:05 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,35 +77,3 @@ int	spaces(char *s, int index)
 	}
 	return (count);
 }
-
-// int check_sep(char *line, t_cmd *cmd)
-//  {
-//  	int i;
-
-//  	i = 0;
-//  	if (!line[i])
-//  		return (FAILURE);
-//  	while (line[i])
-//  	{
-//  		if (line[i] == '<')
-//  			g_info.nb_l_redir++;
-//  		else if (line[i] == '>')
-//  		{
-//  			if (line[i + 1] && line[i + 1] == '>')
-//  			{
-//  				g_info.nb_rd_redir++;
-//  				i++;
-//  			}
-//  			else
-//  				g_info.nb_r_redir++;
-//  		}
-//  		else if (line[i] == '|')
-//  			g_info.nb_pipe++;
-//  		else if (line[i] == ';')
-//  			g_info.nb_colon++;
-//  		i++;
-// 	}
-// 	if (g_info.nb_l_redir > 0 || g_info.nb_rd_redir > 0 || g_info.nb_r_redir > 0 || g_info.nb_pipe > 0 || g_info.nb_colon > 0)
-// 		ft_symbol(cmd);
-//  	return (0);
-//  }
