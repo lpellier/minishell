@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 12:46:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 13:23:01 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ void		remove_char(char *line, int index)
 	}
 }
 
+int	ft_putchar_custom(int c)
+{
+	write(g_info.cur_fd, &c, 1);
+	return (EXIT_SUCCESS);
+}
+
 void		add_key(char *dest, char key)
 {
 
@@ -43,10 +49,10 @@ void		add_key(char *dest, char key)
 
 	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
 	add_char(dest, key, cursor);
-	tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.start_posx, g_info.cursor.posy), 1, ft_putchar);
+	tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.start_posx, g_info.cursor.posy), 1, ft_putchar_custom);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	ft_putstr_fd(dest, 1);
-	tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx + 1, g_info.cursor.posy), 1, ft_putchar);
+	tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx + 1, g_info.cursor.posy), 1, ft_putchar_custom);
 }
 
 void		delete_key(char *dest)
@@ -65,8 +71,8 @@ void		delete_key(char *dest)
 		remove_char(dest, i);
 		if (g_info.cursor.posx >= g_info.prompt_len)
 			g_info.cursor.posx--;
-		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, g_info.cursor.posy), 1, ft_putchar);
-		tputs(tgetstr("dc", NULL), 1, ft_putchar);
+		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, g_info.cursor.posy), 1, ft_putchar_custom);
+		tputs(tgetstr("dc", NULL), 1, ft_putchar_custom);
 	}
 }
 
@@ -78,8 +84,8 @@ int			control_d(char *line)
 	if (line && line[cursor])
 	{
 		remove_char(line, cursor);
-		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, g_info.cursor.posy), 1, ft_putchar);
-		tputs(tgetstr("dc", NULL), 1, ft_putchar);
+		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, g_info.cursor.posy), 1, ft_putchar_custom);
+		tputs(tgetstr("dc", NULL), 1, ft_putchar_custom);
 	}
 	else if (!line || !line[0])
 	{

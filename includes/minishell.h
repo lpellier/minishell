@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 12:48:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 13:20:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_info
 	int				echo_padding;
 	int				kill;
 	int				bin_running;
+	int				cur_fd;
 	t_cursor		cursor;
 	t_list			*cmd_head;
 	t_list			*env_head;
