@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 17:33:30 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 15:01:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,12 @@ void		update_cmd_status()
 ** sole reason of first var is to create head of history linked list in read_line
 */
 
-int			shell_loop(char **envp)
+int			shell_loop()
 {
 	int		first;
 	char	*cur_dir;
 
 	first = 1;
-	init_info(envp);
-	init_termcap();
 	ft_printf(RED "Welcome to Minisheh\n" RESET);
 	while (!g_info.crashed)
     {
@@ -77,10 +75,29 @@ int			shell_loop(char **envp)
 	return (SUCCESS);
 }
 
+int			check_exec_options(int argc, char **argv)
+{
+	if (argc == 1)
+		g_info.debug_option = FALSE;
+	else if (argc == 2 && !compare_size(argv[1], "-d"))
+		g_info.debug_option = TRUE;
+	else if (argc >= 3)
+	{
+		ft_printf("Too many arguments. Minishell only supports one option (-d).\n");
+		return (FAILURE);
+	}
+	else
+	{
+		ft_printf("Only one argument is currently supported : '-d'. It's there to help debugging.\n");
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
 int			main(int argc, char **argv, char **envp)
 {
-	(void)argc;
-	(void)argv;
+	if (check_exec_options(argc, argv))
+		exit(FAILURE);
 	signal(SIGINT, ft_sigint);
 	tgetent(NULL, getenv("TERM"));
 	tcgetattr(STDOUT_FILENO, &g_info.termios_p);
@@ -91,5 +108,7 @@ int			main(int argc, char **argv, char **envp)
 	g_info.cursor.col = tgetnum("co");
 	g_info.cursor.lin = tgetnum("li");
 	tputs(tgetstr("cl", NULL), 1, ft_putchar);
-    exit(shell_loop(envp));
+	init_info(envp);
+	init_termcap();
+    exit(shell_loop());
 }

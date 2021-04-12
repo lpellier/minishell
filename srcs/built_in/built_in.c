@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 17:39:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 12:55:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,9 @@ int			ft_export(int index_cmd)
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
 		return (FAILURE);
 	}
-	if (!cmd->input || !ft_strchr(cmd->input, '='))
+	if (!cmd->input)
+		return (print_declare_env());
+	if (!ft_strchr(cmd->input, '='))
 		return (FAILURE);
 	key_value = ft_split(cmd->input, '=');
 	concat = 0;

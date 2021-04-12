@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 18:10:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 14:50:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,6 +287,34 @@ int			is_there_colon_in_line(char *line)
 	return (0);
 }
 
+void		remove_colons(char *line, int i)
+{
+	while (line[i] && line[i] != QUOTE && line[i] != DQUOTE)
+		i++;
+	if (line[i] == QUOTE)
+	{
+		while (line[i] && line[i] != QUOTE)
+		{
+			if (line[i] == COLON)
+				remove_char(line, i);
+			else
+				i++;
+		}
+	}
+	if (line[i] == DQUOTE)
+	{
+		while (line[i] && line[i] != DQUOTE)
+		{
+			if (line[i] == COLON)
+				remove_char(line, i);
+			else
+				i++;
+		}
+	}
+	if (line[i])
+		remove_colons(line, i + 1);
+}
+
 /* 
 ** reads line using gnl and feeds t_cmd linked lists 
 ** i might modify our line in this function, as in removing any unnecessary backslashes,
@@ -312,6 +340,7 @@ void		read_line(int first)
 	else
     	ft_list_push_front(&g_info.history_head, create_history_struct());
 	line = read_everything();
+	remove_colons(line, 0);
 	colon_split = ft_split(line, COLON);
 	ft_printf("\n");
 	while (colon_split && colon_split[i])

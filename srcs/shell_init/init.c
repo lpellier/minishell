@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 17:32:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 14:52:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,23 @@ void		init_info(char **envp)
 	init_env(envp);
 	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"),
 		ft_itoa(g_info.cmd_status)));
-	g_info.dir_paths = ft_split(getenv("PATH"), ':');
 	reset_info();
 }
 
 void reset_info()
 {
+	t_env	*env;
+
+	env = get_env_custom("PATH");
+	if (g_info.dir_paths)
+		free(g_info.dir_paths);
+	if (env)
+		g_info.dir_paths = ft_split(env->value, ':');
+	else
+		g_info.dir_paths = NULL;
 	g_info.cur_in_history = 0;
 	g_info.kill = FALSE;
 	g_info.bin_running = FALSE;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
+	g_info.colon_nbr = 0;
 }

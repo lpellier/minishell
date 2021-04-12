@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_lists.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:45:57 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 16:53:08 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/12 12:57:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,14 @@ void		print_env_struct(void *data)
 
 	ptr = (t_env *)data;
 	ft_printf("%s=%s\n", ptr->key, ptr->value);
+}
+
+void		print_env_declare(void *data)
+{
+	t_env	*ptr;
+
+	ptr = (t_env *)data;
+	ft_printf("declare -x %s=\"%s\"\n", ptr->key, ptr->value);
 }
 
 void		print_history(void *data)

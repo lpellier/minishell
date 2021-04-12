@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:36:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 12:56:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ int			ft_unset(int index_cmd)
 		return (FAILURE);
 	ft_list_remove_if(&g_info.env_head->next,
 		create_env_struct(cmd->input, NULL), cmp_env, free_env_struct);
+	return (SUCCESS);
+}
+
+int			print_declare_env()
+{
+	if (!g_info.env_head || !g_info.env_head->next)
+		return (FAILURE);
+	ft_list_foreach(g_info.env_head->next, print_env_declare);
 	return (SUCCESS);
 }
 
@@ -206,11 +214,41 @@ int			compare_size(char *s1, char *s2)
 		return (FAILURE);
 }
 
+char		*get_folder_path(char *cmd, char **actu_cmd)
+{
+	char	*ret;
+	int		i;
+
+	i = ft_strlen(cmd);
+	if (i > 0)
+		i--;
+	while (cmd && cmd[i])
+	{
+		if (cmd[i] == '/')
+			break ;
+		i--;
+	}
+	if (i <= 0)
+		return (NULL);
+	ret = ft_strndup(cmd, i);
+	*actu_cmd = ft_substr(cmd, i + 1, ft_strlen(cmd));
+	return (ret);
+}
+
 int			find_binary(t_cmd *cmd)
 {
+	char	*path;
+	char	*actu_cmd;
 	int		i;
 
 	i = 0;
+	actu_cmd = NULL;
+	path = get_folder_path(cmd->cmd, &actu_cmd);
+	if (!directories(path, actu_cmd))
+	{
+		cmd->path = ft_strdup(cmd->cmd);
+		return (SUCCESS);
+	}
 	if (!g_info.dir_paths)
 		return (FAILURE);
 	while (g_info.dir_paths[i])

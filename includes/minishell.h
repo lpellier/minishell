@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 18:06:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 14:52:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ typedef struct s_info
 	int				prompt_len;
 	int				echo_padding;
 	int				kill;
+	int				colon_nbr;
 	int				bin_running;
+	int				debug_option;
 	t_cursor		cursor;
 	t_list			*cmd_head;
 	t_list			*env_head;
@@ -152,6 +154,8 @@ enum				e_status_codes
 };
 
 void		restore_term();
+int			print_declare_env();
+void		print_env_declare(void *data);
 
 int			rem_hist(void *data, void *data_ref);
 int			check_if_block(int index);
@@ -159,7 +163,7 @@ void		remove_char(char *line, int index);
 // int main(int ac, char **av, char **envp);
 
 void		update_cmd_status(void);
-int			shell_loop(char **envp);
+int			shell_loop();
 int			get_pos(int *x, int *y);
 void		print_last_cmd(char *line);
 void		print_prev_cmd(char *line);

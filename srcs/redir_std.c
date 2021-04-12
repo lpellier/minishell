@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/08 11:27:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:24:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,7 @@ int	ft_isspace(int c)
 
 int			open_file(int separator, char *line, int *index)
 {
+	t_env	*env;
 	char	*pwd;
 	char	*file_path;
 	char	*file_name;
@@ -225,7 +226,11 @@ int			open_file(int separator, char *line, int *index)
 	int		i;
 
 	i = 0;
-	pwd = getenv("PWD");
+	env = get_env_custom("PWD");
+	if (!env)
+		pwd = ft_strdup("./");
+	else
+		pwd = ft_strdup(env->value);
 	file_fd = -1;
 	while (!ft_cinset(line[*index], SEPARATOR))
 		*index += 1;
