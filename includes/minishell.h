@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 11:31:50 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/12 14:26:36 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ enum				e_status_codes
 };
 
 int			rem_hist(void *data, void *data_ref);
-int			check_if_block(int index);
 void		remove_char(char *line, int index);
 // int main(int ac, char **av, char **envp);
 
@@ -176,12 +175,6 @@ void		check_for_arrows(char *line);
 ** utils
 */
 
-int			is_pipe(char c);
-int			is_colon(char c);
-int			is_redir_l(char c);
-int			is_redir_r(char c);
-int			is_whitespace(char c);
-int			spaces(char *s, int index);
 int			check_sep(char *line, t_cmd *cmd);
 
 /*
@@ -194,16 +187,37 @@ void		print_cmd_info(t_cmd *cmd);
 ** parsing
 */
 
-char		*read_everything(void);
+char		*get_cur_dir(void);
+int			directories(char *path, char *cmd);
+
+int			is_pipe(char c);
+int			is_colon(char c);
+int			is_redir_l(char c);
+int			is_redir_r(char c);
+
+int			is_whitespace(char c);
+int			spaces(char *s, int index);
+
+void		add_char(char *dest, char key, int index);
+void		remove_char(char *line, int index);
+int			ft_putchar_custom(int c);
+void		add_key(char *dest, char key);
+void		delete_key(char *dest);
+
 int			get_input(char *line, t_cmd *cmd, int index);
 int			get_cmd(char *line, t_cmd *cmd, int index);
 int			get_option(char *line, t_cmd *cmd, int index);
+
+int			str_isalpha_withminus(char *str);
+int			cmp_block(void *data, void *data_ref);
+int			check_if_block(int index);
+int			ft_set_index(char *line, t_cmd *cmd, int index);
+void		read_cmd(char *line, int index, int index_cmd);
+
+char		*read_everything(void);
 char		*str_replace(char *orig, char *rep, char *with);
 char		*replace_dollars_env(char *line);
 void		read_line(int first);
-void		read_cmd(char *line, int index, int index_cmd);
-char		*get_cur_dir(void);
-int			directories(char *path, char *cmd);
 
 /*
 ** init
