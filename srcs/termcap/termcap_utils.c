@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   termcap_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/08 15:08:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 14:54:28 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void		init_termcap()
     g_info.termios_p.c_cc[VTIME] = 0;
     g_info.termios_p.c_cc[VMIN] = 1;
 	tcsetattr(STDOUT_FILENO, TCSANOW, &g_info.termios_p);
-
 	g_info.cursor.col = tgetnum("co");
 	g_info.cursor.lin = tgetnum("li");
 	tputs(tgetstr("cl", NULL), 1, ft_putchar);

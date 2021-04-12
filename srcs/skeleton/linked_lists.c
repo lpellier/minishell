@@ -6,37 +6,13 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:45:57 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 16:53:08 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:30:57 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_list		*ft_create_elem(void *data)
-{
-	t_list	*res;
-
-	if (ft_calloc((void **)&res, 1, sizeof(t_list)))
-		return (NULL);
-	res->data = data;
-	res->next = NULL;
-	return (res);
-}
-
-void	ft_list_push_front(t_list **begin_list, void *data)
-{
-	t_list	*list;
-if (*begin_list)
-	{
-		list = ft_create_elem(data);
-		list->next = *begin_list;
-		*begin_list = list;
-	}
-else
-		*begin_list = ft_create_elem(data);
-}
-
-int			ft_list_size(t_list *list)
+int	ft_list_size(t_list *list)
 {
 	t_list	*current;
 	int		i;
@@ -51,22 +27,7 @@ int			ft_list_size(t_list *list)
 	return (i);
 }
 
-void		ft_list_push_back(t_list **begin_list, void *data)
-{
-	t_list	*list;
-
-	if (!(*begin_list))
-	{
-		*begin_list = ft_create_elem(data);
-		return ;
-	}
-	list = *begin_list;
-	while (list->next)
-		list = list->next;
-	list->next = ft_create_elem(data);
-}
-
-t_list		*ft_list_at(t_list *begin_list, unsigned int nbr)
+t_list	*ft_list_at(t_list *begin_list, unsigned int nbr)
 {
 	t_list			*list;
 	unsigned int	i;
@@ -83,23 +44,7 @@ t_list		*ft_list_at(t_list *begin_list, unsigned int nbr)
 	return (list);
 }
 
-void		print_env_struct(void *data)
-{
-	t_env	*ptr;
-
-	ptr = (t_env *)data;
-	ft_printf("%s=%s\n", ptr->key, ptr->value);
-}
-
-void		print_history(void *data)
-{
-	t_history *ptr;
-
-	ptr = (t_history *)data;
-	ft_printf("%s\n", ptr->line);
-}
-
-void		ft_list_foreach(t_list *begin_list, void (*f)(void *))
+void	ft_list_foreach(t_list *begin_list, void (*f)(void *))
 {
 	t_list	*el;
 
@@ -113,24 +58,7 @@ void		ft_list_foreach(t_list *begin_list, void (*f)(void *))
 	}
 }
 
-int			cmp_env(void *data, void *data_ref)
-{
-	t_env	*env;
-	t_env	*env_ref;
-
-	env = (t_env *)data;
-	env_ref = (t_env *)data_ref;
-	if (!(compare_size(env->key, env_ref->key)))
-	{
-		return (SUCCESS);
-	}
-	else
-	{
-		return (FAILURE);
-	}
-}
-
-t_list		*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
+t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
 {
 	t_list	*el;
 
@@ -144,8 +72,8 @@ t_list		*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
 	return (NULL);
 }
 
-void		ft_list_remove_if(t_list **begin_list, void *data_ref,
-				int (*cmp)(), void (*free_fct)(void *))
+void	ft_list_remove_if(t_list **begin_list, void *data_ref,
+			int (*cmp)(), void (*free_fct)(void *))
 {
 	t_list	*tmp;
 	t_list	*el;

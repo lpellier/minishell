@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/09 14:41:47 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/12 11:30:19 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,10 @@ SRCS = srcs/main.c \
 		srcs/free/free.c \
 		srcs/free/secure_free.c \
 		srcs/skeleton/linked_lists.c \
+		srcs/skeleton/create_and_push.c \
+		srcs/skeleton/print_and_cmp.c \
 		srcs/skeleton/structs.c \
+		srcs/skeleton/struct_env.c \
 		srcs/parsing/directories.c \
 		srcs/parsing/parsing_utils.c \
 		srcs/parsing/parsing.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_everything.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 13:23:01 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/09 15:22:25 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int			control_d(char *line)
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
-char 	*read_everything()
+char 	*read_everything(void)
 {
 	t_history	*cur;
 	char		*line;

@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 14:42:37 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:31:50 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,9 +161,10 @@ int			shell_loop(char **envp);
 int			get_pos(int *x, int *y);
 void		print_last_cmd(char *line);
 void		print_prev_cmd(char *line);
-int			modify_env(char *key, char *new_value, int concat);
 t_env		*get_env_custom(char *key);
 void		delete_char(char *line, char *str, int index);
+void		print_env_struct(void *data);
+int			cmp_env(void *data, void *data_ref);
 
 /*
 ** termcap
@@ -251,10 +252,6 @@ void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);
 void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 
-
-void		print_env_struct(void *data);
-int			cmp_env(void *data, void *data_ref);
-
 /*
 ** redirection
 */
@@ -268,8 +265,31 @@ int			open_file(int separator, char *line, int *index);
 void		ft_symbol(t_cmd *cmd);
 
 /*
-** linked lists
+** skeleton
 */
+
+t_env		*get_env_custom(char *key);
+int			modify_env(char *key, char *new_value, int concat);
+
+t_cmd		*create_cmd_struct(void);
+t_env		*create_env_struct(char *key, char *value);
+t_history	*create_history_struct(void);
+t_block		*create_block_struct(int a, int b);
+
+t_list		*ft_create_elem(void *data);
+void		ft_list_push_front(t_list **begin_list, void *data);
+void		ft_list_push_back(t_list **begin_list, void *data);
+
+int			ft_list_size(t_list *list);
+void		ft_list_foreach(t_list *begin_list, void (*f)(void *));
+void		ft_list_remove_if(t_list **begin_list, void *data_ref,
+				int (*cmp)(), void (*free_fct)(void *));
+t_list		*ft_list_at(t_list *begin_list, unsigned int nbr);
+t_list		*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)());
+
+int			cmp_env(void *data, void *data_ref);
+void		print_env_struct(void *data);
+void		print_history(void *data);
 
 char		**count_args(t_cmd *cmd, int *count);
 char		**list_to_tab(t_list *begin_list);
@@ -277,19 +297,5 @@ int			pipe_for_exec(int index_cmd,
 				char *line, int index, int piped);
 int			redir(int index_cmd, char *line, int index, int separator);
 int			init_env(char **envp);
-void		print_history(void *data);
-t_cmd		*create_cmd_struct(void);
-t_block		*create_block_struct(int a, int b);
-t_history	*create_history_struct(void);
-t_env		*create_env_struct(char *key, char *value);
-t_list		*ft_create_elem(void *data);
-int			ft_list_size(t_list *list);
-void		ft_list_push_front(t_list **begin_list, void *data);
-void		ft_list_push_back(t_list **begin_list, void *data);
-t_list		*ft_list_at(t_list *begin_list, unsigned int nbr);
-void		ft_list_remove_if(t_list **begin_list, void *data_ref,
-				int (*cmp)(), void (*free_fct)(void *));
-void		ft_list_foreach(t_list *begin_list, void (*f)(void *));
-t_list		*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)());
 
 #endif
