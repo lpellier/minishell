@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:25:58 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:26:38 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 12:14:32 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** in directories addressed in $PATH
 */
 
-int			directories(char *path, char *cmd)
+int	directories(char *path, char *cmd)
 {
 	DIR				*d;
 	struct dirent	*dir;
@@ -25,15 +25,19 @@ int			directories(char *path, char *cmd)
 	d = opendir(path);
 	if (d)
 	{
-		while ((dir = readdir(d)) != NULL)
+		dir = readdir(d);
+		while (dir != NULL)
+		{
 			if (!compare_size(cmd, dir->d_name))
 				return (SUCCESS);
+			dir = readdir(d);
+		}
 		closedir(d);
 	}
 	return (FAILURE);
 }
 
-char		*get_cur_dir()
+char	*get_cur_dir(void)
 {
 	int		i;
 	char	**split;
