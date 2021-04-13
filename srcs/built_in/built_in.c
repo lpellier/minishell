@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:38:05 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/12 16:59:32 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** outputs input
 */
 
-int			only_n(char *str)
+int	only_n(char *str)
 {
 	int		i;
 	
@@ -30,7 +30,7 @@ int			only_n(char *str)
 	return (SUCCESS);
 }
 
-int			ft_echo(int index_cmd)
+int	ft_echo(int index_cmd)
 {
 	t_cmd	*cmd;
 	char	*tmp;
@@ -54,7 +54,7 @@ int			ft_echo(int index_cmd)
 	return (SUCCESS);
 }
 
-// void		store_output(int index_cmd)
+// void	store_output(int index_cmd)
 // {
 // 	char	*str;
 // 	t_cmd	*cmd;
@@ -78,7 +78,7 @@ int			ft_echo(int index_cmd)
 // 	str = NULL;
 // }
 
-int			redir(int index_cmd, char *line, int index, int separator)
+int	redir(int index_cmd, char *line, int index, int separator)
 {
 	int		file_fd;
 	pid_t	saved_stdin;
@@ -134,7 +134,7 @@ int			redir(int index_cmd, char *line, int index, int separator)
 ** restoring stdout and stdin to original fds
 */
 
-int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
+int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 {
 	int		pipefd[2];
 	pid_t	cpid;
@@ -191,7 +191,7 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 ** outputs input without \n
 */
 
-int			ft_echo_n(int index_cmd)
+int	ft_echo_n(int index_cmd)
 {
 	t_cmd	*cmd;
 
@@ -206,7 +206,7 @@ int			ft_echo_n(int index_cmd)
 ** exits terminal
 */
 
-int			ft_exit(int index_cmd)
+int	ft_exit(int index_cmd)
 {
 	(void)index_cmd;
 	g_info.crashed = TRUE;
@@ -218,7 +218,7 @@ int			ft_exit(int index_cmd)
 ** outputs current path
 */
 
-int			ft_pwd(int index_cmd)
+int	ft_pwd(int index_cmd)
 {
 	char	cwd[PATH_MAX];
 	t_cmd	*cmd;
@@ -234,7 +234,7 @@ int			ft_pwd(int index_cmd)
 	return (SUCCESS);
 }
 
-int			str_isalpha_withplus(char *str)
+int	str_isalpha_withplus(char *str)
 {
 	int		i;
 
@@ -248,7 +248,7 @@ int			str_isalpha_withplus(char *str)
 	return (SUCCESS);
 }
 
-char		last_char(char *str)
+char	last_char(char *str)
 {
 	int		i;
 	char	c;

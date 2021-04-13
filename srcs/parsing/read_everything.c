@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   read_everything.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:39:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/13 12:47:12 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-
-int			control_d(char *line)
+int	control_d(char *line)
 {
 	int		cursor;
 
@@ -176,7 +174,51 @@ int	count_exceptions(int quote, int dquote)
 		return (0);
 }
 
-int	transform_line(char *line, int index, int quote, int dquote)
+int	quote(char *line, int *index)
+{
+	remove_char(line, *index);
+	ft_list_push_front(&g_info.block_head, create_block_struct(*index, -1));
+	while (line[*index] && line[*index] != QUOTE)
+		*index += 1;
+	if (!line[*index])
+		return (1);
+	else if (line[*index] == QUOTE)
+	{
+		remove_char(line, *index);
+		((t_block *)g_info.block_head->data)->end = *index;
+		return (0);
+	}
+	return (1);
+}
+
+int	dquote(char *line, int *index)
+{
+	remove_char(line, *index);
+	ft_list_push_front(&g_info.block_head, create_block_struct(*index, -1));
+	while (line[*index] && line[*index] != DQUOTE)
+	{
+		if (line[*index] == BSLASH)
+		{
+			if (backslash(line, index, 1))
+				return (FAILURE);
+		}
+		else if (line[*index] == DOLLAR)
+			dollar(line, index, 0);
+		else
+			*index += 1;
+	}
+	if (!line[*index])
+		return (1);
+	else if (line[*index] == DQUOTE)
+	{
+		remove_char(line, *index);
+		((t_block *)g_info.block_head->data)->end = *index;
+		return (0);
+	}
+	return (1);
+}
+
+int	transform_line(char *line, int index, int quote_nb, int dquote_nb)
 {
 	int		ret;
 
@@ -189,47 +231,13 @@ int	transform_line(char *line, int index, int quote, int dquote)
 	if (line[index] == DOLLAR)
 		dollar(line, &index, 0);
 	if (line[index] == QUOTE)
-	{
-		remove_char(line, index);
-		ft_list_push_front(&g_info.block_head, create_block_struct(index, -1));
-		while (line[index] && line[index] != QUOTE)
-			index++;
-		if (!line[index])
-			quote += 1;
-		else if (line[index] == QUOTE)
-		{
-			remove_char(line, index);
-			((t_block *)g_info.block_head->data)->end = index;
-		}
-	}
+		quote_nb += quote(line, &index);
 	if (line[index] == DQUOTE)
-	{
-		remove_char(line, index);
-		ft_list_push_front(&g_info.block_head, create_block_struct(index, -1));
-		while (line[index] && line[index] != DQUOTE)
-		{
-			if (line[index] == BSLASH)
-			{
-				if (backslash(line, &index, 1))
-					return (FAILURE);
-			}
-			else if (line[index] == DOLLAR)
-				dollar(line, &index, 1);
-			else
-				index++;
-		}
-		if (!line[index])
-			dquote += 1;
-		else if (line[index] == DQUOTE)
-		{
-			remove_char(line, index);
-			((t_block *)g_info.block_head->data)->end = index;
-		}
-	}
+		dquote_nb += dquote(line, &index);
 	if (line[index])
-		ret = transform_line(line, index, quote, dquote);
+		ret = transform_line(line, index, quote_nb, dquote_nb);
 	else
-		ret = count_exceptions(quote, dquote);
+		ret = count_exceptions(quote_nb, dquote_nb);
 	return (ret);
 }
 
@@ -247,7 +255,7 @@ int	is_there_colon_in_line(char *line)
 	return (0);
 }
 
-void		remove_colons(char *line, int i)
+void	remove_colons(char *line, int i)
 {
 	while (line[i] && line[i] != QUOTE && line[i] != DQUOTE)
 		i++;
@@ -287,6 +295,22 @@ void		remove_colons(char *line, int i)
 // currently building a way to know if blocks exist
 // colons won't work right now BECUASE OF THE SPLIT
 
+void	do_colon_split(char	**colon_split, int i)
+{
+	while (colon_split && colon_split[i])
+	{
+		if (transform_line(colon_split[i], 0, 0, 0))
+		{
+			g_info.cmd_status = 1;
+			ft_printf("\nminisheh: parsing error: number of quotes ");
+			ft_printf("should be even\n");
+			break ;
+		}
+		read_cmd(colon_split[i], 0, 0);
+		i++;
+	}
+}
+
 void	read_line(int first)
 {
 	char	**colon_split;
@@ -305,20 +329,19 @@ void	read_line(int first)
 	remove_colons(line, 0);
 	colon_split = ft_split(line, COLON);
 	ft_printf("\n");
-	while (colon_split && colon_split[i])
-	{
-		if (transform_line(colon_split[i], 0, 0, 0))
-		{
-			g_info.cmd_status = 1;
-			ft_printf("\nminisheh: parsing error: number of quotes ");
-			ft_printf("should be even\n");
-			break ;
-		}
-		read_cmd(colon_split[i], 0, 0);
-		i++;
-	}
-	if (line)
-		free(line);
-	line = NULL;
+	do_colon_split(colon_split, i);
+	// while (colon_split && colon_split[i])
+	// {
+	// 	if (transform_line(colon_split[i], 0, 0, 0))
+	// 	{
+	// 		g_info.cmd_status = 1;
+	// 		ft_printf("\nminisheh: parsing error: number of quotes ");
+	// 		ft_printf("should be even\n");
+	// 		break ;
+	// 	}
+	// 	read_cmd(colon_split[i], 0, 0);
+	// 	i++;
+	// }
+	secure_free(line);
 	free_tab(&colon_split);
 }
