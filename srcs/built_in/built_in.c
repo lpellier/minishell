@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 16:59:32 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/13 14:49:34 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	only_n(char *str)
 {
 	int		i;
 	
-	i= 1;
+	i = 1;
 	while (str[i])
 	{
 		if (str[i] != 'n')

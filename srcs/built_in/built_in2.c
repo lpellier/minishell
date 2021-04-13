@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:38:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/13 14:48:46 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **destroys a environment variable from memory
 */
 
-int			ft_unset(int index_cmd)
+int	ft_unset(int index_cmd)
 {
 	t_cmd	*cmd;
 
@@ -33,7 +33,7 @@ int			ft_unset(int index_cmd)
 	return (SUCCESS);
 }
 
-int			print_declare_env()
+int	print_declare_env(void)
 {
 	if (!g_info.env_head || !g_info.env_head->next)
 		return (FAILURE);
@@ -45,7 +45,7 @@ int			print_declare_env()
 ** outputs all environment variables
 */
 
-int			ft_env(int index_cmd)
+int	ft_env(int index_cmd)
 {
 	t_cmd	*cmd;
 
@@ -66,7 +66,7 @@ int			ft_env(int index_cmd)
 ** to check for right bui and right input
 */
 
-int			ft_cd(int index_cmd)
+int	ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
 	char	cwd[PATH_MAX];
@@ -91,8 +91,7 @@ int			ft_cd(int index_cmd)
 		ft_printf("Couldn't access folder, check directory listing\n");
 	modify_env("OLDPWD", get_env_custom("PWD")->value, 0);
 	modify_env("PWD", getcwd(cwd, sizeof(cwd)), 0);
-	if (path)
-		free(path);
+	secure_free(path);
 	return (SUCCESS);
 }
 
@@ -103,9 +102,8 @@ int			ft_cd(int index_cmd)
 ** and there might be backslashes canceling quotes -> it's going to be tough
 */
 
-char		**count_args(t_cmd *cmd, int *count)
+char	**count_args(t_cmd *cmd, int *count)
 {
-
 	char	**split;
 	int		i;
 
@@ -127,7 +125,7 @@ char		**count_args(t_cmd *cmd, int *count)
 	return (split);
 }
 
-char		**list_to_tab(t_list *begin_list)
+char	**list_to_tab(t_list *begin_list)
 {
 	t_list	*next;
 	t_env	*env;
@@ -155,22 +153,11 @@ char		**list_to_tab(t_list *begin_list)
 ** for now it's only split by spaces for simplicity
 */
 
-int			exec_binary(int index_cmd)
+void	exec_binary_check(t_cmd *cmd, char **argv, char **split)
 {
-	t_cmd	*cmd;
-	int		count;
-	int		i;
-	int		j;
-	char	**argv;
-	char	**split;
-	char	**env;
+	int	i;
+	int	j;
 
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	env = list_to_tab(g_info.env_head);
-	split = count_args(cmd, &count);
-	if (ft_calloc((void **)&argv, count + 1, sizeof(char *)))
-		return (FAILURE);
-	argv[0] = ft_strdup(cmd->cmd);
 	i = 0;
 	j = 1;
 	if (cmd->option)
@@ -193,6 +180,23 @@ int			exec_binary(int index_cmd)
 		j++;
 	}
 	argv[j] = NULL;
+}
+
+int	exec_binary(int index_cmd)
+{
+	t_cmd	*cmd;
+	int		count;
+	char	**argv;
+	char	**split;
+	char	**env;
+
+	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	env = list_to_tab(g_info.env_head);
+	split = count_args(cmd, &count);
+	if (ft_calloc((void **)&argv, count + 1, sizeof(char *)))
+		return (FAILURE);
+	argv[0] = ft_strdup(cmd->cmd);
+	exec_binary_check(cmd, argv, split);
 	if (execve(cmd->path, argv, env) == -1)
 		return (FAILURE);
 	free_tab(&split);
@@ -201,7 +205,7 @@ int			exec_binary(int index_cmd)
 	return (SUCCESS);
 }
 
-int			compare_size(char *s1, char *s2)
+int	compare_size(char *s1, char *s2)
 {
 	int		len1;
 	int		len2;
@@ -214,7 +218,7 @@ int			compare_size(char *s1, char *s2)
 		return (FAILURE);
 }
 
-char		*get_folder_path(char *cmd, char **actu_cmd)
+char	*get_folder_path(char *cmd, char **actu_cmd)
 {
 	char	*ret;
 	int		i;
@@ -235,7 +239,7 @@ char		*get_folder_path(char *cmd, char **actu_cmd)
 	return (ret);
 }
 
-int			find_binary(t_cmd *cmd)
+int	find_binary(t_cmd *cmd)
 {
 	char	*path;
 	char	*actu_cmd;
@@ -255,7 +259,7 @@ int			find_binary(t_cmd *cmd)
 	{
 		if (!directories(g_info.dir_paths[i], cmd->cmd))
 		{
-			cmd->path = ft_strjoin(ft_strjoin(g_info.dir_paths[i], "/"),
+			cmd->path = ft_strjoin(ft_strjoin(g_info.dir_paths[i], "/"), \
 				cmd->cmd);
 			return (SUCCESS);
 		}
@@ -264,7 +268,7 @@ int			find_binary(t_cmd *cmd)
 	return (FAILURE);
 }
 
-void		compare_cmd(t_cmd *cmd)
+void	compare_cmd(t_cmd *cmd)
 {
 	if (!cmd->cmd)
 		cmd->bui = NONEXISTENT;
