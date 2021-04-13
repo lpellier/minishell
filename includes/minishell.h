@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 16:56:13 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/13 15:01:21 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,6 +251,10 @@ int			find_binary(t_cmd *cmd);
 void		compare_cmd(t_cmd *cmd);
 int			compare_size(char *s1, char *s2);
 
+int			pipe_for_exec(int index_cmd,
+				char *line, int index, int piped);
+int			redir(int index_cmd, char *line, int index, int separator);
+
 /*
 ** signal
 */
@@ -312,9 +316,6 @@ void		print_history(void *data);
 
 char		**count_args(t_cmd *cmd, int *count);
 char		**list_to_tab(t_list *begin_list);
-int			pipe_for_exec(int index_cmd,
-				char *line, int index, int piped);
-int			redir(int index_cmd, char *line, int index, int separator);
 int			init_env(char **envp);
 
 #endif

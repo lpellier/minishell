@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/12 13:59:48 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/13 15:00:26 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ CC = clang
 SRCS = srcs/main.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
+		srcs/built_in/pipe_and_redir.c \
 		srcs/free/free.c \
 		srcs/free/secure_free.c \
 		srcs/skeleton/linked_lists.c \
