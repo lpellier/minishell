@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/13 16:37:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/13 17:41:52 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,6 +313,29 @@ char		**ft_split_colon(char *line)
 	return (ret);
 }
 
+void		remove_spaces(char *line, int i)
+{
+	if (line[i] && line[i] == QUOTE)
+	{
+		i++;
+		while (line[i] && line[i] != QUOTE)
+			i++;
+	}
+	if (line[i] && line[i] == DQUOTE)
+	{
+		i++;
+		while (line[i] && line[i] != DQUOTE)
+			i++;
+	}
+	if (line[i] && line[i] == 32)
+	{
+		i++;
+		while (line[i] && line[i] == 32)
+			remove_char(line, i);
+	}
+	if (line[i + 1])
+		remove_spaces(line, i + 1);
+}
 /* 
 ** reads line using gnl and feeds t_cmd linked lists 
 ** i might modify our line in this function, as in removing 
@@ -328,7 +351,6 @@ char		**ft_split_colon(char *line)
 void	read_line(int first)
 {
 	char	**colon_split;
-	// char	**new_split;
 	char	*line;
 	int		crashed;
 	int		i;
@@ -341,6 +363,7 @@ void	read_line(int first)
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
 	line = read_everything();
+	remove_spaces(line, 0);
 	colon_split = ft_split_colon(line);
 	ft_printf("\n");
 	while (colon_split && colon_split[i])

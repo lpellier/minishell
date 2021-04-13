@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_something.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/12 13:59:28 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/13 17:09:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	get_input(char *line, t_cmd *cmd, int index)
 	{
 		while (line[i] && ft_cinset(line[i], SEPARATOR))
 			i++;
+		while (line[i - 1] == 32)
+			i--;
 		if (i >= 1)
 			cmd->input = ft_strndup(line, i);
 		else
