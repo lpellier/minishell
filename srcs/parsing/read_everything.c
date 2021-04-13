@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:39:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/13 16:37:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,46 +233,84 @@ int	transform_line(char *line, int index, int quote, int dquote)
 	return (ret);
 }
 
-int	is_there_colon_in_line(char *line)
+int			count_words_colon(char *line)
 {
 	int		i;
+	int		count;
 
+	count = 1;
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == COLON)
-			return (1);
+		if (line[i] && line[i] == QUOTE)
+		{
+			i++;
+			while (line[i] && line[i] != QUOTE)
+				i++;
+		}
+		if (line[i] && line[i] == DQUOTE)
+		{
+			i++;
+			while (line[i] && line[i] != DQUOTE)
+				i++;
+		}
+		if (line[i] && line[i] == COLON)
+			count++;
 		i++;
 	}
-	return (0);
+	return (count);
 }
 
-void		remove_colons(char *line, int i)
+char		**ft_split_colon(char *line)
 {
-	while (line[i] && line[i] != QUOTE && line[i] != DQUOTE)
+	int		i;
+	int		old;
+	int		count;
+	int		words_len;
+	char	**ret;
+
+	i = 0;
+	words_len = count_words_colon(line);
+	old = 0;
+	count = 0;
+	ret = NULL;
+	if (ft_calloc((void **)&ret, words_len + 1, sizeof(char *)))
+		return (NULL);
+	if (words_len == 1)
+	{
+		ret[0] = ft_strdup(line);
+		ret[1] = NULL;
+		return (ret);
+	}
+	while (line[i])
+	{
+		if (line[i] && line[i] == QUOTE)
+		{
+			i++;
+			while (line[i] && line[i] != QUOTE)
+				i++;
+		}
+		if (line[i] && line[i] == DQUOTE)
+		{
+			i++;
+			while (line[i] && line[i] != DQUOTE)
+				i++;
+		}
+		if (line[i] && line[i] == COLON)
+		{
+			ret[count] = ft_substr(line, old, i - old);
+			old = i + 1;
+			count++;
+		}
+		else if (line[i] && count == words_len - 1)
+		{
+			ret[count] = ft_substr(line, old, ft_strlen(&line[old]));
+			count++;
+		}
 		i++;
-	if (line[i] == QUOTE)
-	{
-		while (line[i] && line[i] != QUOTE)
-		{
-			if (line[i] == COLON)
-				remove_char(line, i);
-			else
-				i++;
-		}
 	}
-	if (line[i] == DQUOTE)
-	{
-		while (line[i] && line[i] != DQUOTE)
-		{
-			if (line[i] == COLON)
-				remove_char(line, i);
-			else
-				i++;
-		}
-	}
-	if (line[i])
-		remove_colons(line, i + 1);
+	ret[count] = NULL;
+	return (ret);
 }
 
 /* 
@@ -290,6 +328,7 @@ void		remove_colons(char *line, int i)
 void	read_line(int first)
 {
 	char	**colon_split;
+	// char	**new_split;
 	char	*line;
 	int		crashed;
 	int		i;
@@ -302,8 +341,7 @@ void	read_line(int first)
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
 	line = read_everything();
-	remove_colons(line, 0);
-	colon_split = ft_split(line, COLON);
+	colon_split = ft_split_colon(line);
 	ft_printf("\n");
 	while (colon_split && colon_split[i])
 	{
@@ -317,8 +355,6 @@ void	read_line(int first)
 		read_cmd(colon_split[i], 0, 0);
 		i++;
 	}
-	if (line)
-		free(line);
-	line = NULL;
+	secure_free(line);
 	free_tab(&colon_split);
 }
