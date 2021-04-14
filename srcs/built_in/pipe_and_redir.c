@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/13 17:01:12 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/14 16:42:33 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,17 @@ int	print_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd)
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(file_fd);
 	return (SUCCESS);
+}
+
+void	redir_something(char *line, int index, int index_cmd)
+{
+	if (line[index] && !is_redir_l(line[index]))
+		redir(index_cmd, line, index, R_LEFT);
+	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] && \
+		!is_redir_r(line[index + 1]))
+		redir(index_cmd, line, index, R_RIGHTD);
+	else if (line[index] && !is_redir_r(line[index]))
+		redir(index_cmd, line, index, R_RIGHT);
 }
 
 int	redir(int index_cmd, char *line, int index, int separator)
@@ -38,13 +49,8 @@ int	redir(int index_cmd, char *line, int index, int separator)
 		dup2(file_fd, STDIN_FILENO);
 	else if (separator == R_RIGHT || separator == R_RIGHTD)
 		dup2(file_fd, STDOUT_FILENO);
-	if (line[index] && !is_redir_l(line[index]))
-		redir(index_cmd, line, index, R_LEFT);
-	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] && \
-		!is_redir_r(line[index + 1]))
-		redir(index_cmd, line, index, R_RIGHTD);
-	else if (line[index] && !is_redir_r(line[index]))
-		redir(index_cmd, line, index, R_RIGHT);
+	if (line[index])
+		redir_something(line, index, index_cmd);
 	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, NOTHING);
 	else if (cmd->bui == 9)
@@ -74,15 +80,13 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 {
 	int		pipefd[2];
 	pid_t	cpid;
-	pid_t	saved_stdin;
-	pid_t	saved_stdout;
 	t_cmd	*cmd;
 	int		status;
 
 	g_info.bin_running = TRUE;
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
+	g_info.saved_stdin = dup(STDIN_FILENO);
+	g_info.saved_stdout = dup(STDOUT_FILENO);
 	restore_term();
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
@@ -116,6 +120,6 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 			ft_list_push_back(&g_info.cmd_head, create_cmd_struct());
 			read_cmd(line, index, index_cmd + 1);
 		}
-		return (print_std(saved_stdin, saved_stdout, pipefd[0]));
+		return (print_std(g_info.saved_stdin, g_info.saved_stdout, pipefd[0]));
 	}
 }

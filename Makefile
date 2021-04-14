@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/13 15:00:26 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/14 17:26:57 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,10 @@ SRCS = srcs/main.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
 		srcs/built_in/pipe_and_redir.c \
+		srcs/built_in/binary_things.c \
+		srcs/built_in/env_things.c \
+		srcs/built_in/cmp_size_and_cmd.c \
+		srcs/built_in/pure_shell.c \
 		srcs/free/free.c \
 		srcs/free/secure_free.c \
 		srcs/skeleton/linked_lists.c \

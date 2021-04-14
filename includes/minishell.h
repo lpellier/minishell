@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/13 15:01:21 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:26:40 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ typedef struct s_info
 	t_list			*env_head;
 	t_list			*block_head;
 	t_list			*history_head;
+	pid_t			saved_stdin;
+	pid_t			saved_stdout;
 	char			**envp;
 	char			**dir_paths;
 }					t_info;
@@ -154,11 +156,8 @@ enum				e_status_codes
 };
 
 void		restore_term();
-int			print_declare_env();
-void		print_env_declare(void *data);
 
 int			rem_hist(void *data, void *data_ref);
-void		remove_char(char *line, int index);
 // int main(int ac, char **av, char **envp);
 
 void		update_cmd_status(void);
@@ -166,22 +165,13 @@ int			shell_loop();
 int			get_pos(int *x, int *y);
 void		print_last_cmd(char *line);
 void		print_prev_cmd(char *line);
-t_env		*get_env_custom(char *key);
 void		delete_char(char *line, char *str, int index);
-void		print_env_struct(void *data);
-int			cmp_env(void *data, void *data_ref);
 
 /*
 ** termcap
 */
 
 void		check_for_arrows(char *line);
-
-/*
-** utils
-*/
-
-int			check_sep(char *line, t_cmd *cmd);
 
 /*
 ** test
@@ -228,6 +218,7 @@ void		read_line(int first);
 ** init
 */
 
+int			init_env(char **envp);
 void		reset_info(void);
 void		init_info(char **envp);
 void		init_termcap(void);
@@ -237,23 +228,36 @@ void		init_built_in(void);
 ** built-in
 */
 
-void		store_output(int index_cmd);
-int			ft_echo(int index_cmd);
-int			ft_exit(int index_cmd);
-int			ft_echo_n(int index_cmd);
-int			ft_pwd(int index_cmd);
-int			ft_export(int index_cmd);
-int			ft_unset(int index_cmd);
-int			ft_env(int index_cmd);
-int			ft_cd(int index_cmd);
 int			exec_binary(int index_cmd);
 int			find_binary(t_cmd *cmd);
-void		compare_cmd(t_cmd *cmd);
-int			compare_size(char *s1, char *s2);
+void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
 
-int			pipe_for_exec(int index_cmd,
-				char *line, int index, int piped);
+char		last_char(char *str);
+int			str_isalpha_withplus(char *str);
+int			ft_export(int index_cmd);
+
+int			ft_pwd(int index_cmd);
+int			ft_exit(int index_cmd);
+int			ft_echo_n(int index_cmd);
+int			ft_echo(int index_cmd);
+int			only_n(char *str);
+
+char		**count_args(t_cmd *cmd, int *count);
+char		**list_to_tab(t_list *begin_list);
+char		*get_folder_path(char *cmd, char **actu_cmd);
+int			ft_cd(int index_cmd);
+
+int			ft_unset(int index_cmd);
+int			print_declare_env(void);
+int			ft_env(int index_cmd);
+
+int			compare_size(char *s1, char *s2);
+void		compare_cmd(t_cmd *cmd);
+
+int			print_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
+int			pipe_for_exec(int index_cmd, char *line, int index, int piped);
 int			redir(int index_cmd, char *line, int index, int separator);
+void		redir_something(char *line, int index, int index_cmd);
 
 /*
 ** signal
@@ -313,9 +317,6 @@ t_list		*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)());
 int			cmp_env(void *data, void *data_ref);
 void		print_env_struct(void *data);
 void		print_history(void *data);
-
-char		**count_args(t_cmd *cmd, int *count);
-char		**list_to_tab(t_list *begin_list);
-int			init_env(char **envp);
+void		print_env_declare(void *data);
 
 #endif
