@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/12 15:40:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/14 20:00:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,14 @@ void	print_history(void *data)
 	ft_printf("%s\n", ptr->line);
 }
 
+void	print_block(void *data)
+{
+	t_block	*ptr;
+
+	ptr = (t_block *)data;
+	ft_printf("\n|start : %d||end : %d|\n", ptr->start, ptr->end);
+}
+
 int	cmp_env(void *data, void *data_ref)
 {
 	t_env	*env;
@@ -35,14 +43,12 @@ int	cmp_env(void *data, void *data_ref)
 
 	env = (t_env *)data;
 	env_ref = (t_env *)data_ref;
-	if (!(compare_size(env->key, env_ref->key)))
-	{
-		return (SUCCESS);
-	}
-	else
-	{
+	if (!env || !env_ref)
 		return (FAILURE);
-	}
+	if (!(compare_size(env->key, env_ref->key)))
+		return (SUCCESS);
+	else
+		return (FAILURE);
 }
 
 void		print_env_declare(void *data)

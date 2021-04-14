@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/13 11:37:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/14 20:18:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void		add_char(char *dest, char key, int index)
 	ft_strcpy(dest, tmp_one);
 	ft_strncat(dest, &key, 1);
 	ft_strncat(dest, tmp_two, ft_strlen(tmp_two));
-	free(tmp_one);
-	free(tmp_two);
+	secure_free(tmp_one);
+	secure_free(tmp_two);
 }
 
 void		remove_char(char *line, int index)

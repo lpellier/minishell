@@ -6,11 +6,21 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/13 17:09:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:16:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int		complete_portion(char *line, int index, int block_end)
+{
+	int		i;
+
+	i = block_end - index;
+	while (line[i] && is_whitespace(line[i]))
+		i++;
+	return (i);
+}
 
 int	get_input(char *line, t_cmd *cmd, int index)
 {
@@ -20,7 +30,10 @@ int	get_input(char *line, t_cmd *cmd, int index)
 	i = 0;
 	block_end = check_if_block(index);
 	if (block_end >= 0)
-		cmd->input = ft_strndup(line, block_end - index);
+	{
+		block_end = complete_portion(line, index, block_end);
+		cmd->input = ft_strndup(line, block_end);
+	}
 	else
 	{
 		while (line[i] && ft_cinset(line[i], SEPARATOR))
@@ -37,10 +50,15 @@ int	get_input(char *line, t_cmd *cmd, int index)
 
 int	get_option(char *line, t_cmd *cmd, int index)
 {
+	int		block_end;
 	char	**words;
 
-	if (check_if_block(index) >= 0)
-		cmd->option = NULL;
+	block_end = check_if_block(index);
+	if (block_end >= 0)
+	{
+		block_end = complete_portion(line, index, block_end);
+		cmd->option = ft_strndup(line, block_end);
+	}
 	else
 	{
 		words = ft_split(line, 32);
@@ -52,6 +70,7 @@ int	get_option(char *line, t_cmd *cmd, int index)
 	return (ft_strlen(cmd->option));
 }
 
+
 int	get_cmd(char *line, t_cmd *cmd, int index)
 {
 	char	**words;
@@ -61,7 +80,10 @@ int	get_cmd(char *line, t_cmd *cmd, int index)
 	i = 0;
 	block_end = check_if_block(index);
 	if (block_end >= 0)
-		cmd->cmd = ft_strndup(line, block_end - index);
+	{
+		block_end = complete_portion(line, index, block_end);
+		cmd->cmd = ft_strndup(line, block_end);
+	}
 	else
 	{
 		if (line && line[i] && !ft_cinset(line[i], SEPARATOR))

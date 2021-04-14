@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:39:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:09:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ enum				e_status_codes
 	OTHER
 };
 
+void		print_block(void *data);
 void		restore_term();
 int			print_declare_env();
 void		print_env_declare(void *data);

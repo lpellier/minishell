@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:38:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:37:34 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,13 @@ int			ft_cd(int index_cmd)
 	}
 	if (!cmd->input)
 		path = ft_strdup(get_env_custom("HOME")->value);
-	else if (cmd->input[0] == '/' && compare_size(cmd->input, "/"))
-		path = ft_strdup(cmd->input);
-	else if (getcwd(cwd, sizeof(cwd)))
-		path = ft_strjoin(ft_strjoin(cwd, "/"), cmd->input);
 	else
-		ft_printf("Error\n");
+		path = ft_strdup(cmd->input);
 	if (chdir(path))
 		ft_printf("Couldn't access folder, check directory listing\n");
 	modify_env("OLDPWD", get_env_custom("PWD")->value, 0);
 	modify_env("PWD", getcwd(cwd, sizeof(cwd)), 0);
-	if (path)
-		free(path);
+	secure_free(path);
 	return (SUCCESS);
 }
 

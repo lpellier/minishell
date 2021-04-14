@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 14:24:05 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/14 20:21:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ void	free_tab(char ***tab)
 		return ;
 	while (cpy[i])
 	{
-		free(cpy[i]);
-		cpy[i] = NULL;
+		secure_free(cpy[i]);
 		i++;
 	}
-	free(*tab);
-	*tab = NULL;
+	secure_free(*tab);
 }
 
 void	free_cmd_struct(void *data)
