@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:25:58 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 12:14:32 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:41:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,6 @@ char	*get_cur_dir(void)
 		res = NULL;
 	else
 		res = ft_strdup(split[i - 1]);
-	free_tab(&split);
+	free_tab(split);
 	return (res);
 }

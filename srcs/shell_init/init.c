@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:40:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:41:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	init_env(char **envp)
 	key_value = ft_split(envp[i], '=');
 	g_info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
 		ft_strdup(key_value[1])));
-	free_tab(&key_value);
+	free_tab(key_value);
 	i++;
 	while (envp[i])
 	{
@@ -49,14 +49,16 @@ int	init_env(char **envp)
 			ft_list_push_back(&g_info.env_head, \
 				create_env_struct(ft_strdup(key_value[0]), \
 				ft_strdup(key_value[1])));
-		free_tab(&key_value);
+		free_tab(key_value);
 		i++;
 	}
 	return (SUCCESS);
 }
 
-void	init_info(char **envp)
+int		init_info(char **envp)
 {
+	if (ft_calloc((void **)&g_info.line, 4096, sizeof(char)))
+		return (FAILURE);
 	init_built_in();
 	g_info.echo_padding = 0;
 	g_info.crashed = FALSE;
@@ -65,6 +67,7 @@ void	init_info(char **envp)
 	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"), \
 		ft_itoa(g_info.cmd_status)));
 	reset_info();
+	return (SUCCESS);
 }
 
 void	reset_info(void)

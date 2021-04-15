@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/14 17:09:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:40:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_info
 	t_list			*history_head;
 	char			**envp;
 	char			**dir_paths;
+	char			*line;
 }					t_info;
 
 t_info				g_info;
@@ -220,7 +221,7 @@ int			check_if_block(int index);
 int			ft_set_index(char *line, t_cmd *cmd, int index);
 void		read_cmd(char *line, int index, int index_cmd);
 
-char		*read_everything(void);
+int			read_everything(void);
 char		*str_replace(char *orig, char *rep, char *with);
 char		*replace_dollars_env(char *line);
 void		read_line(int first);
@@ -230,7 +231,7 @@ void		read_line(int first);
 */
 
 void		reset_info(void);
-void		init_info(char **envp);
+int			init_info(char **envp);
 void		init_termcap(void);
 void		init_built_in(void);
 
@@ -266,7 +267,7 @@ void		ft_sigterm(int sig);
 
 void		secure_free(void *ptr);
 
-void		free_tab(char ***tab);
+void		free_tab(char **tab);
 void		free_history_struct(void *data);
 void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);

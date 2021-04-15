@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/14 17:16:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:41:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	get_option(char *line, t_cmd *cmd, int index)
 		if (words && words[0] && words[0][0] == '-')
 			if (!str_isalpha_withminus(words[0]))
 				cmd->option = ft_strdup(words[0]);
-		free_tab(&words);
+		free_tab(words);
 	}
 	return (ft_strlen(cmd->option));
 }
@@ -97,7 +97,7 @@ int	get_cmd(char *line, t_cmd *cmd, int index)
 		}
 		if (words && words[0])
 			cmd->cmd = ft_strdup(words[0]);
-		free_tab(&words);
+		free_tab(words);
 	}
 	return (ft_strlen(cmd->cmd));
 }

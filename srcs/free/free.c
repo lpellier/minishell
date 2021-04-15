@@ -6,27 +6,25 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/14 20:21:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:40:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	free_tab(char ***tab)
+void	free_tab(char **tab)
 {
 	int		i;
-	char	**cpy;
 
 	i = 0;
-	cpy = *tab;
-	if (!cpy)
+	if (!tab)
 		return ;
-	while (cpy[i])
+	while (tab[i])
 	{
-		secure_free(cpy[i]);
+		free(tab[i]);
 		i++;
 	}
-	secure_free(*tab);
+	free(tab);
 }
 
 void	free_cmd_struct(void *data)
@@ -57,6 +55,8 @@ void	free_env_struct(void *data)
 	t_env	*ptr;
 
 	ptr = (t_env *)data;
+	if (!ptr)
+		return ;
 	if (ptr->value)
 		free(ptr->value);
 	ptr->value = NULL;
@@ -73,6 +73,8 @@ void	free_history_struct(void *data)
 	t_history	*ptr;
 
 	ptr = (t_history *)data;
+	if (!ptr)
+		return ;
 	ft_bzero(ptr->line, ft_strlen(ptr->line));
 	if (ptr->line)
 		free(ptr->line);

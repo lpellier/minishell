@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/14 17:37:34 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:41:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,9 +190,9 @@ int			exec_binary(int index_cmd)
 	argv[j] = NULL;
 	if (execve(cmd->path, argv, env) == -1)
 		return (FAILURE);
-	free_tab(&split);
-	free_tab(&argv);
-	free_tab(&env);
+	free_tab(split);
+	free_tab(argv);
+	free_tab(env);
 	return (SUCCESS);
 }
 

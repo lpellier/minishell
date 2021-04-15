@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:41:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:41:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int			rem_hist(void *data, void *data_ref)
 	(void)		data_ref;
 
 	ptr = (t_history *)data;
-	if (!ptr->line || !ptr->line[0])
+	if (!ptr || !ptr->line || (ptr->line && !ptr->line[0]))
 		return (SUCCESS);
 	return (FAILURE);
 }
@@ -68,7 +68,7 @@ int			shell_loop()
 		update_cmd_status();
 		remove_useless_history();
 	}
-	free_tab(&g_info.dir_paths);
+	free_tab(g_info.dir_paths);
 	ft_list_clear(g_info.env_head, free_env_struct);
 	ft_list_clear(g_info.history_head, free_history_struct);
 	ft_list_clear(g_info.block_head, free);
@@ -108,7 +108,8 @@ int			main(int argc, char **argv, char **envp)
 	g_info.cursor.col = tgetnum("co");
 	g_info.cursor.lin = tgetnum("li");
 	tputs(tgetstr("cl", NULL), 1, ft_putchar);
-	init_info(envp);
+	if (init_info(envp))
+		exit(EXIT_FAILURE);
 	init_termcap();
     exit(shell_loop());
 }

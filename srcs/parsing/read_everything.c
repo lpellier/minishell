@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/14 20:18:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:27:24 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,48 +39,46 @@ int			control_d(char *line)
 //     lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
-char	*read_everything(void)
+int		read_everything(void)
 {
 	t_history	*cur;
-	char		*line;
 	char		key;
 
 	key = 0;
-	if (ft_calloc((void **)&line, LINE_MAX, sizeof(char)))
-		return (NULL);
+	ft_bzero(g_info.line, ft_strlen(g_info.line));
 	cur = (t_history *)g_info.history_head->data;
 	g_info.prompt_len += g_info.echo_padding;
 	while (key != '\n')
 	{
 		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
 		if (read(STDIN_FILENO, &key, 1) == -1)
-			return (NULL);
+			return (FAILURE);
 		if (g_info.kill)
 		{
 			g_info.kill = FALSE;
-			ft_bzero(line, ft_strlen(line));
+			ft_bzero(g_info.line, ft_strlen(g_info.line));
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
 		if (key == 27)
-			check_for_arrows(line);
+			check_for_arrows(g_info.line);
 		else if (key == 127)
-			delete_key(line);
+			delete_key(g_info.line);
 		else if (key == 4)
 		{
-			if (control_d(line))
+			if (control_d(g_info.line))
 				break ;
 		}
 		else if (key != '\n' && ft_cinset(key, WHITESPACE))
-			add_key(line, key);
+			add_key(g_info.line, key);
 		if (g_info.cur_in_history == 0 || key == '\n')
 		{
 			ft_bzero(cur->line, ft_strlen(cur->line));
-			ft_strcpy(cur->line, line);
+			ft_strcpy(cur->line, g_info.line);
 		}
 	}
 	if (g_info.echo_padding > 0)
 		g_info.echo_padding = 0;
-	return (line);
+	return (SUCCESS);
 }
 
 int	ft_isalpha_ordollar(int c)
@@ -120,13 +118,13 @@ void	dollar_suite(char *line, char *var, int *index)
 	}
 }
 
-int	dollar(char *line, int *index, int dquote)
+int	dollar(char *line, int *index)
 {
 	char	*var;
 	int		i;
 
-	(void)dquote;
 	i = 0;
+	var = NULL;
 	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && \
 		!ft_isalpha_ordollar(line[*index + 1])))
 	{
@@ -181,13 +179,15 @@ int	transform_line(char *line, int index, int quote, int dquote)
 	int		ret;
 
 	ret = 0;
-	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && \
-		line[index] != DQUOTE && line[index] != DOLLAR)
+	if (!line)
+		return (FAILURE);
+	while (line[index] && line[index] != BSLASH && \
+		line[index] != QUOTE && line[index] != DQUOTE && line[index] != DOLLAR)
 		index++;
 	if (line[index] == BSLASH)
 		backslash(line, &index, 0);
 	if (line[index] == DOLLAR)
-		dollar(line, &index, 0);
+		dollar(line, &index);
 	if (line[index] == QUOTE)
 	{
 		remove_char(line, index);
@@ -214,7 +214,7 @@ int	transform_line(char *line, int index, int quote, int dquote)
 					return (FAILURE);
 			}
 			else if (line[index] == DOLLAR)
-				dollar(line, &index, 1);
+				dollar(line, &index);
 			else
 				index++;
 		}
@@ -274,12 +274,13 @@ char		**ft_split_colon(char *line)
 	old = 0;
 	count = 0;
 	ret = NULL;
-	if (ft_calloc((void **)&ret, words_len, sizeof(char *)))
+	if (ft_calloc((void **)&ret, words_len + 1, sizeof(char *)))
 		return (NULL);
 	if (words_len == 1)
 	{
-		ret[0] = ft_strdup(line);
-		ret[1] = ft_strdup(NULL);
+		if (ft_calloc((void **)&ret[0], 4096, sizeof(char)))
+			return (NULL);
+		ft_strcpy(ret[0], line);
 		return (ret);
 	}
 	while (line[i])
@@ -298,18 +299,21 @@ char		**ft_split_colon(char *line)
 		}
 		if (line[i] && line[i] == COLON)
 		{
-			ret[count] = ft_substr(line, old, i - old);
+			if (ft_calloc((void **)&ret[count], 4096, sizeof(char)))
+				return (NULL);
+			ft_strcpy(ret[count], ft_substr(line, old, i - old));
 			old = i + 1;
 			count++;
 		}
 		else if (line[i] && count == words_len - 1)
 		{
-			ret[count] = ft_substr(line, old, ft_strlen(&line[old]));
+			if (ft_calloc((void **)&ret[count], 4096, sizeof(char)))
+				return (NULL);
+			ft_strcpy(ret[count], ft_substr(line, old, ft_strlen(&line[old])));
 			count++;
 		}
 		i++;
 	}
-	ret[count] = ft_strdup(NULL);
 	return (ret);
 }
 
@@ -324,8 +328,11 @@ void			toggle(int *bo)
 void			remove_spaces(char *line)
 {
 	int		i;
-	int		quote, dquote = FALSE;
+	int		quote;
+	int		dquote;
 
+	quote = FALSE;
+	dquote = FALSE;
 	i = 0;
 	if (!line)
 		return ;
@@ -360,7 +367,6 @@ void			remove_spaces(char *line)
 void	read_line(int first)
 {
 	char	**colon_split;
-	char	*line;
 	int		crashed;
 	int		i;
 
@@ -371,9 +377,9 @@ void	read_line(int first)
 		g_info.history_head = ft_create_elem(create_history_struct());
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
-	line = read_everything();
-	remove_spaces(line);
-	colon_split = ft_split_colon(line);
+	read_everything();
+	remove_spaces(g_info.line);
+	colon_split = ft_split_colon(g_info.line);
 	ft_printf("\n");
 	while (colon_split && colon_split[i])
 	{
@@ -387,6 +393,5 @@ void	read_line(int first)
 		read_cmd(colon_split[i], 0, 0);
 		i++;
 	}
-	secure_free(line);
-	free_tab(&colon_split);
+	free_tab(colon_split);
 }
