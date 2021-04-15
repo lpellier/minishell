@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:36 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 18:25:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	reset_info(void)
 		g_info.dir_paths = NULL;
 	g_info.cur_in_history = 0;
 	g_info.kill = FALSE;
+	g_info.sig_status = 0;
 	g_info.bin_running = FALSE;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
 	g_info.colon_nbr = 0;

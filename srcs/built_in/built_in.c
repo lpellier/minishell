@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 18:29:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int			ft_echo(int index_cmd)
 			free(cmd->input);
 			cmd->input = ft_strjoin(ft_strjoin(cmd->option, " "), tmp);
 		}
+		else
+			cmd->input = ft_strdup(cmd->option);
 	}
 	if (!cmd->input)
 		ft_printf("\n");
@@ -168,7 +170,10 @@ int			pipe_for_exec(int index_cmd, char *line, int index, int separator)
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		if (g_info.kill)
+		{
 			kill(cpid, SIGINT);
+			g_info.sig_status = 130;
+		}
 		waitpid(cpid, &status, 0);
 		init_termcap();
 		g_info.bin_running = FALSE;

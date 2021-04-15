@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:39:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	get_option(char *line, t_cmd *cmd, int index)
 	char	**words;
 
 	block_end = check_if_block(index);
-	if (block_end >= 0)
+	if (block_end >= 0 && line[0] == '-')
 	{
 		block_end = complete_portion(line, index, block_end);
 		cmd->option = ft_strndup(line, block_end);

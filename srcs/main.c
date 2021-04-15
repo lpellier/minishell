@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 18:41:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ void		update_cmd_status()
 	t_env *data;
 
 	data = (t_env *)g_info.env_head->data;
-	if (data->value)
-		free(data->value);
-	data->value = NULL;
-	data->value = ft_itoa(g_info.cmd_status);
+	secure_free(data->value);
+	if (g_info.sig_status)
+		data->value = ft_itoa(g_info.sig_status);
+	else
+		data->value = ft_itoa(g_info.cmd_status);
 }
 
 /*
@@ -60,12 +61,11 @@ int			shell_loop()
 		g_info.cmd_head = ft_create_elem(create_cmd_struct());
 		read_line(first);
 		first = 0;
-		reset_info();
+		secure_free(cur_dir);
 		ft_list_clear(g_info.cmd_head, free_cmd_struct);
 		ft_bzero(g_info.cur_path, ft_strlen(g_info.cur_path));
-		free(cur_dir);
-		cur_dir = NULL;
 		update_cmd_status();
+		reset_info();
 		remove_useless_history();
 	}
 	free_tab(g_info.dir_paths);
@@ -99,6 +99,7 @@ int			main(int argc, char **argv, char **envp)
 	if (check_exec_options(argc, argv))
 		exit(FAILURE);
 	signal(SIGINT, ft_sigint);
+	signal(SIGQUIT, ft_sigquit);
 	tgetent(NULL, getenv("TERM"));
 	tcgetattr(STDOUT_FILENO, &g_info.termios_p);
 	tcgetattr(STDOUT_FILENO, &g_info.saved_term);

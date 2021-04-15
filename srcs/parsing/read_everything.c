@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 16:27:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 18:29:49 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		read_everything(void)
 		if (g_info.kill)
 		{
 			g_info.kill = FALSE;
+			g_info.sig_status = 1;
 			ft_bzero(g_info.line, ft_strlen(g_info.line));
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
@@ -342,6 +343,8 @@ void			remove_spaces(char *line)
 			toggle(&quote);
 		else if (line[i] && line[i] == DQUOTE)
 			toggle(&dquote);
+		else if (line[i] && line[i] == BSLASH && line[i + 1] && line[i + 1] == 32)
+			i += 2;
 		else if (line[i] && line[i] == 32)
 		{
 			i++;

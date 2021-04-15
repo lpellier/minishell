@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:40:48 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/15 18:23:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_info
 	int				prompt_len;
 	int				echo_padding;
 	int				kill;
+	int				sig_status;
 	int				colon_nbr;
 	int				bin_running;
 	int				debug_option;
