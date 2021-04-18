@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/18 15:57:57 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/18 16:21:27 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,9 +214,31 @@ void		read_cmd(char *line, int index, int index_cmd);
 
 // read_everything
 char		*read_everything(void);
+char		read_everything_suite(char key, char *line, t_history *cur);
+void		bzero_and_cpy(t_history *cur, char *line);
+void		arrow_or_delete(char key, char *line);
+void		read_line(int first);
+
+// backsl_and_quote
+int			backslash(char *line, int *index, int dquote);
+int			quote(char *line, int *index);
+int			dquote(char *line, int *index);
+int			transform_line(char *line, int index, int quote_nb, int dquote_nb);
+
+// control_and_dollar
+int			control_d(char *line);
+int			ft_isalpha_ordollar(int c);
+int			dollar(char *line, int *index);
+void		dollar_suite(char *line, char *var, int *index, int i);
+
+// colon_and_count
+int			is_there_colon_in_line(char *line);
+int			count_exceptions(int quote, int dquote);
+void		remove_colons(char *line, int i);
+void		do_colon_split(char	**colon_split, int i);
+
 char		*str_replace(char *orig, char *rep, char *with);
 char		*replace_dollars_env(char *line);
-void		read_line(int first);
 
 /*********
 ** init **

@@ -6,34 +6,13 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/16 15:23:40 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/18 16:21:27 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	control_d(char *line)
-{
-	int		cursor;
-
-	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
-	if (line && line[cursor])
-	{
-		remove_char(line, cursor);
-		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, \
-			g_info.cursor.posy), 1, ft_putchar);
-		tputs(tgetstr("dc", NULL), 1, ft_putchar);
-	}
-	else if (!line || !line[0])
-	{
-		ft_printf("exit");
-		g_info.crashed = TRUE;
-		return (FAILURE);
-	}
-	return (SUCCESS);
-}
-
-void	test2(char key, char *line)
+void	arrow_or_delete(char key, char *line)
 {
 	if (key == 27)
 		check_for_arrows(line);
@@ -41,16 +20,17 @@ void	test2(char key, char *line)
 		delete_key(line);
 }
 
-void	test3(t_history *cur, char *line)
+void	bzero_and_cpy(t_history *cur, char *line)
 {
 	ft_bzero(cur->line, ft_strlen(cur->line));
 	ft_strcpy(cur->line, line);
 }
+
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
 //     lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
-char	test(char key, char *line, t_history *cur)
+char	read_everything_suite(char key, char *line, t_history *cur)
 {
 	while (key != '\n')
 	{
@@ -64,7 +44,7 @@ char	test(char key, char *line, t_history *cur)
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
 		if (key == 27 || key == 127)
-			test2(key, line);
+			arrow_or_delete(key, line);
 		else if (key == 4)
 		{
 			if (control_d(line))
@@ -73,7 +53,7 @@ char	test(char key, char *line, t_history *cur)
 		else if (key != '\n' && ft_cinset(key, WHITESPACE))
 			add_key(line, key);
 		if (g_info.cur_in_history == 0 || key == '\n')
-			test3(cur, line);
+			bzero_and_cpy(cur, line);
 	}
 	return (0);
 }
@@ -89,19 +69,11 @@ char	*read_everything(void)
 		return (NULL);
 	cur = (t_history *)g_info.history_head->data;
 	g_info.prompt_len += g_info.echo_padding;
-	if (test(key, line, cur))
+	if (read_everything_suite(key, line, cur))
 		return (NULL);
 	if (g_info.echo_padding > 0)
 		g_info.echo_padding = 0;
 	return (line);
-}
-
-int	ft_isalpha_ordollar(int c)
-{
-	if (c == '?' || (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	else
-		return (0);
 }
 
 // bslashes within a dquote only work if the following character is a 
@@ -111,191 +83,6 @@ int	ft_isalpha_ordollar(int c)
 // other warning : when used solo, a backslash lets you finish a 
 //	command in line under current one. 
 // should i implement this ?
-
-void	dollar_suite(char *line, char *var, int *index, int i)
-{
-	t_list	*var_list;
-	t_env	*var_key;
-
-	var_list = ft_list_find(g_info.env_head, \
-		create_env_struct(var, NULL), cmp_env);
-	if (var_list)
-	{
-		var_key = (t_env *)var_list->data;
-		i = 0;
-		while (var_key->value[i])
-		{
-			add_char(line, var_key->value[i], *index);
-			*index += 1;
-			i++;
-		}
-	}
-}
-
-int	dollar(char *line, int *index, int dquote)
-{
-	char	*var;
-	int		i;
-
-	(void)dquote;
-	i = 0;
-	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && \
-		!ft_isalpha_ordollar(line[*index + 1])))
-	{
-		*index += 1;
-		return (FAILURE);
-	}
-	if (ft_calloc((void **)&var, 256, sizeof(char)))
-		return (FAILURE);
-	while (line[*index] && (ft_isalpha(line[*index]) || (line[*index] == \
-		DOLLAR && i == 0) || (line[*index] == '?')))
-	{
-		if (i > 0)
-			var[i - 1] = line[*index];
-		remove_char(line, *index);
-		i++;
-	}
-	dollar_suite(line, var, index, i);
-	return (SUCCESS);
-}
-
-int	backslash(char *line, int *index, int dquote)
-{
-	if (!dquote)
-	{
-		remove_char(line, *index);
-		*index += 1;
-	}
-	else if (dquote)
-	{
-		if (line[*index + 1] && (line[*index + 1] == BSLASH || \
-			line[*index + 1] == '$' || line[*index + 1] == DQUOTE))
-		{
-			remove_char(line, *index);
-			if (!line[*index + 1])
-				return (FAILURE);
-		}
-		*index += 1;
-	}
-	return (SUCCESS);
-}
-
-int	count_exceptions(int quote, int dquote)
-{
-	if (quote % 2 != 0 || dquote % 2 != 0)
-		return (1);
-	else
-		return (0);
-}
-
-int	quote(char *line, int *index)
-{
-	remove_char(line, *index);
-	ft_list_push_front(&g_info.block_head, create_block_struct(*index, -1));
-	while (line[*index] && line[*index] != QUOTE)
-		*index += 1;
-	if (!line[*index])
-		return (1);
-	else if (line[*index] == QUOTE)
-	{
-		remove_char(line, *index);
-		((t_block *)g_info.block_head->data)->end = *index;
-		return (0);
-	}
-	return (1);
-}
-
-int	dquote(char *line, int *index)
-{
-	remove_char(line, *index);
-	ft_list_push_front(&g_info.block_head, create_block_struct(*index, -1));
-	while (line[*index] && line[*index] != DQUOTE)
-	{
-		if (line[*index] == BSLASH)
-		{
-			if (backslash(line, index, 1))
-				return (FAILURE);
-		}
-		else if (line[*index] == DOLLAR)
-			dollar(line, index, 0);
-		else
-			*index += 1;
-	}
-	if (!line[*index])
-		return (1);
-	else if (line[*index] == DQUOTE)
-	{
-		remove_char(line, *index);
-		((t_block *)g_info.block_head->data)->end = *index;
-		return (0);
-	}
-	return (1);
-}
-
-int	transform_line(char *line, int index, int quote_nb, int dquote_nb)
-{
-	int		ret;
-
-	ret = 0;
-	while (line[index] && line[index] != BSLASH && line[index] != QUOTE && \
-		line[index] != DQUOTE && line[index] != DOLLAR)
-		index++;
-	if (line[index] == BSLASH)
-		backslash(line, &index, 0);
-	if (line[index] == DOLLAR)
-		dollar(line, &index, 0);
-	if (line[index] == QUOTE)
-		quote_nb += quote(line, &index);
-	if (line[index] == DQUOTE)
-		dquote_nb += dquote(line, &index);
-	if (line[index])
-		ret = transform_line(line, index, quote_nb, dquote_nb);
-	else
-		ret = count_exceptions(quote_nb, dquote_nb);
-	return (ret);
-}
-
-int	is_there_colon_in_line(char *line)
-{
-	int		i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] == COLON)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void	remove_colons(char *line, int i)
-{
-	while (line[i] && line[i] != QUOTE && line[i] != DQUOTE)
-		i++;
-	if (line[i] == QUOTE)
-	{
-		while (line[i] && line[i] != QUOTE)
-		{
-			if (line[i] == COLON)
-				remove_char(line, i);
-			else
-				i++;
-		}
-	}
-	if (line[i] == DQUOTE)
-	{
-		while (line[i] && line[i] != DQUOTE)
-		{
-			if (line[i] == COLON)
-				remove_char(line, i);
-			else
-				i++;
-		}
-	}
-	if (line[i])
-		remove_colons(line, i + 1);
-}
 
 /* 
 ** reads line using gnl and feeds t_cmd linked lists 
@@ -308,22 +95,6 @@ void	remove_colons(char *line, int i)
 
 // currently building a way to know if blocks exist
 // colons won't work right now BECUASE OF THE SPLIT
-
-void	do_colon_split(char	**colon_split, int i)
-{
-	while (colon_split && colon_split[i])
-	{
-		if (transform_line(colon_split[i], 0, 0, 0))
-		{
-			g_info.cmd_status = 1;
-			ft_printf("\nminisheh: parsing error: number of quotes ");
-			ft_printf("should be even\n");
-			break ;
-		}
-		read_cmd(colon_split[i], 0, 0);
-		i++;
-	}
-}
 
 void	read_line(int first)
 {

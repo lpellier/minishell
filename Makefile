@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/18 15:50:50 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/18 16:17:18 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,9 @@ SRCS = srcs/main.c \
 		srcs/parsing/get_something.c \
 		srcs/parsing/read_everything.c \
 		srcs/parsing/char_and_key.c \
+		srcs/parsing/colon_and_count.c \
+		srcs/parsing/backsl_and_quote.c \
+		srcs/parsing/control_and_dollar.c \
 		srcs/shell_init/init.c \
 		srcs/termcap/all_signal.c \
 		srcs/termcap/termcap_utils.c \
