@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/14 17:26:57 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/18 14:42:44 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ CC = clang
 SRCS = srcs/main.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
-		srcs/built_in/pipe_and_redir.c \
+		srcs/built_in/do_redir.c \
+		srcs/built_in/do_pipe.c \
 		srcs/built_in/binary_things.c \
 		srcs/built_in/env_things.c \
 		srcs/built_in/cmp_size_and_cmd.c \

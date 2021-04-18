@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:40:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/18 14:33:41 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,5 @@ void	reset_info(void)
 	g_info.bin_running = FALSE;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
 	g_info.colon_nbr = 0;
+	g_info.status = 0;
 }

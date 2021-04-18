@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/13 12:47:12 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/16 15:23:40 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,50 @@ int	control_d(char *line)
 	return (SUCCESS);
 }
 
+void	test2(char key, char *line)
+{
+	if (key == 27)
+		check_for_arrows(line);
+	else if (key == 127)
+		delete_key(line);
+}
+
+void	test3(t_history *cur, char *line)
+{
+	ft_bzero(cur->line, ft_strlen(cur->line));
+	ft_strcpy(cur->line, line);
+}
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
 //     lets me checkout where cursor is on string
 // may be useful to insert or delete characters
+
+char	test(char key, char *line, t_history *cur)
+{
+	while (key != '\n')
+	{
+		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
+		if (read(STDIN_FILENO, &key, 1) == -1)
+			return (1);
+		if (g_info.kill)
+		{
+			g_info.kill = FALSE;
+			ft_bzero(line, ft_strlen(line));
+			ft_bzero(cur->line, ft_strlen(cur->line));
+		}
+		if (key == 27 || key == 127)
+			test2(key, line);
+		else if (key == 4)
+		{
+			if (control_d(line))
+				break ;
+		}
+		else if (key != '\n' && ft_cinset(key, WHITESPACE))
+			add_key(line, key);
+		if (g_info.cur_in_history == 0 || key == '\n')
+			test3(cur, line);
+	}
+	return (0);
+}
 
 char	*read_everything(void)
 {
@@ -48,34 +89,8 @@ char	*read_everything(void)
 		return (NULL);
 	cur = (t_history *)g_info.history_head->data;
 	g_info.prompt_len += g_info.echo_padding;
-	while (key != '\n')
-	{
-		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
-		if (read(STDIN_FILENO, &key, 1) == -1)
-			return (NULL);
-		if (g_info.kill)
-		{
-			g_info.kill = FALSE;
-			ft_bzero(line, ft_strlen(line));
-			ft_bzero(cur->line, ft_strlen(cur->line));
-		}
-		if (key == 27)
-			check_for_arrows(line);
-		else if (key == 127)
-			delete_key(line);
-		else if (key == 4)
-		{
-			if (control_d(line))
-				break ;
-		}
-		else if (key != '\n' && ft_cinset(key, WHITESPACE))
-			add_key(line, key);
-		if (g_info.cur_in_history == 0 || key == '\n')
-		{
-			ft_bzero(cur->line, ft_strlen(cur->line));
-			ft_strcpy(cur->line, line);
-		}
-	}
+	if (test(key, line, cur))
+		return (NULL);
 	if (g_info.echo_padding > 0)
 		g_info.echo_padding = 0;
 	return (line);
@@ -97,9 +112,8 @@ int	ft_isalpha_ordollar(int c)
 //	command in line under current one. 
 // should i implement this ?
 
-void	dollar_suite(char *line, char *var, int *index)
+void	dollar_suite(char *line, char *var, int *index, int i)
 {
-	int		i;
 	t_list	*var_list;
 	t_env	*var_key;
 
@@ -141,7 +155,7 @@ int	dollar(char *line, int *index, int dquote)
 		remove_char(line, *index);
 		i++;
 	}
-	dollar_suite(line, var, index);
+	dollar_suite(line, var, index, i);
 	return (SUCCESS);
 }
 
@@ -330,18 +344,6 @@ void	read_line(int first)
 	colon_split = ft_split(line, COLON);
 	ft_printf("\n");
 	do_colon_split(colon_split, i);
-	// while (colon_split && colon_split[i])
-	// {
-	// 	if (transform_line(colon_split[i], 0, 0, 0))
-	// 	{
-	// 		g_info.cmd_status = 1;
-	// 		ft_printf("\nminisheh: parsing error: number of quotes ");
-	// 		ft_printf("should be even\n");
-	// 		break ;
-	// 	}
-	// 	read_cmd(colon_split[i], 0, 0);
-	// 	i++;
-	// }
 	secure_free(line);
 	free_tab(&colon_split);
 }

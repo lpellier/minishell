@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/14 17:26:40 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/18 15:30:36 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	ft_export(int index_cmd)
 			cmd->input);
 		return (FAILURE);
 	}
+	test(key_value, concat);
 	env_tmp = get_env_custom(key_value[0]);
 	if (!env_tmp)
 		ft_list_push_back(&g_info.env_head, \
