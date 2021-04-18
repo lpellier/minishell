@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/18 14:57:33 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/18 15:57:57 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,6 @@ void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
 // built_in
 char		last_char(char *str);
 int			str_isalpha_withplus(char *str);
-int			ft_export(int index_cmd);
 
 // pure_shell
 int			ft_pwd(int index_cmd);
@@ -263,6 +262,12 @@ int			ft_env(int index_cmd);
 // cmp_size_and_cmp
 int			compare_size(char *s1, char *s2);
 void		compare_cmd(t_cmd *cmd);
+
+// do_export
+int			ft_export(int index_cmd);
+int			export_error(t_cmd *cmd);
+int			export_remove_char(char **key_value);
+void		modify_export(char **key_value, int concat);
 
 // do_redir
 int			print_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
