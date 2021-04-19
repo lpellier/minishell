@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:42:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 17:55:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,13 +234,15 @@ int		add_word(char *word, int where)
 	return (count);
 }
 
-int		move_around(char *str, int start)
+int		move_around(char *str, int *start)
 {
 	int		i;
 	int		count;
+	int		ret;
 	char	**words;
 
 	i = 0;
+	ret = 0;
 	count = 0;
 	words = NULL;
 	words = ft_split(str, 32);
@@ -249,10 +251,14 @@ int		move_around(char *str, int start)
 	while (words[i])
 	{
 		if (i > 0)
-			count += add_word(words[i], start);
+		{
+			count = add_word(words[i], *start);
+			ret += count;
+			*start += count;
+		}
 		i++;
 	}
-	return (count);
+	return (ret);
 }
 
 int		count_until_redir(char *str)
@@ -303,7 +309,7 @@ void	modify_line_redir(void)
 				i++;
 			count = count_until_redir(&g_info.line[i]);
 			tmp = ft_substr(g_info.line, i, count);
-			i += move_around(tmp, start);
+			i += move_around(tmp, &start);
 			remove_words(i);
 			secure_free(tmp);
 		}
