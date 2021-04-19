@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_everything.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:28:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 17:16:48 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,61 +26,60 @@ void	bzero_and_cpy(t_history *cur, char *line)
 	ft_strcpy(cur->line, line);
 }
 
-
-void    update_history(t_history *cur)
+void	update_history(t_history *cur)
 {
-    ft_bzero(cur->line, ft_strlen(cur->line));
-    ft_strcpy(cur->line, g_info.line);
+	ft_bzero(cur->line, ft_strlen(cur->line));
+	ft_strcpy(cur->line, g_info.line);
 }
 
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
 //     lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
-int	    read_keys(char key, t_history *cur)
+int	read_keys(char key, t_history *cur)
 {
-    while (key != '\n')
-    {
-        get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
-        if (read(STDIN_FILENO, &key, 1) == -1)
-            return (FAILURE);
-        if (g_info.kill)
-        {
-            g_info.kill = FALSE;
-            ft_bzero(g_info.line, ft_strlen(g_info.line));
-            ft_bzero(cur->line, ft_strlen(cur->line));
-        }
-        if (key == 27 || key == 127)
-            special_keys(key);
-        else if (key == 4)
-        {
-            if (control_d())
-                break ;
-        }
-        else if (key != '\n' && ft_cinset(key, WHITESPACE))
-            add_key(g_info.line, key);
-        if (g_info.cur_in_history == 0 || key == '\n')
-            update_history(cur);
-    }
-    return (SUCCESS);
+	while (key != '\n')
+	{
+		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
+		if (read(STDIN_FILENO, &key, 1) == -1)
+			return (FAILURE);
+		if (g_info.kill)
+		{
+			g_info.kill = FALSE;
+			ft_bzero(g_info.line, ft_strlen(g_info.line));
+			ft_bzero(cur->line, ft_strlen(cur->line));
+		}
+		if (key == 27 || key == 127)
+			special_keys(key);
+		else if (key == 4)
+		{
+			if (control_d())
+				break ;
+		}
+		else if (key != '\n' && ft_cinset(key, WHITESPACE))
+			add_key(g_info.line, key);
+		if (g_info.cur_in_history == 0 || key == '\n')
+			update_history(cur);
+	}
+	return (SUCCESS);
 }
 
-int		read_line(void)
+int	read_line(void)
 {
-	t_history   *cur;
-    char        key;
+	t_history	*cur;
+	char		key;
 
-    key = 0;
+	key = 0;
 	ft_bzero(g_info.line, ft_strlen(g_info.line));
-    cur = (t_history *)g_info.history_head->data;
-    g_info.prompt_len += g_info.echo_padding;
-    if (read_keys(key, cur))
-    {
+	cur = (t_history *)g_info.history_head->data;
+	g_info.prompt_len += g_info.echo_padding;
+	if (read_keys(key, cur))
+	{
 		g_info.sig_status = 1;
 		return (FAILURE);
 	}
 	if (g_info.echo_padding > 0)
-        g_info.echo_padding = 0;
+		g_info.echo_padding = 0;
 	return (SUCCESS);
 }
 
@@ -92,7 +91,7 @@ int		read_line(void)
 //	command in line under current one. 
 // should i implement this ?
 
-int			count_words_colon(char *line)
+int	count_words_colon(char *line)
 {
 	int		i;
 	int		count;
@@ -120,7 +119,24 @@ int			count_words_colon(char *line)
 	return (count);
 }
 
-char		**ft_split_colon(char *line)
+int	test(char *line, int i)
+{
+	if (line[i] && line[i] == QUOTE)
+	{
+		i++;
+		while (line[i] && line[i] != QUOTE)
+			i++;
+	}
+	if (line[i] && line[i] == DQUOTE)
+	{
+		i++;
+		while (line[i] && line[i] != DQUOTE)
+			i++;
+	}
+	return (i);
+}
+
+char	**ft_split_colon(char *line)
 {
 	int		i;
 	int		old;
@@ -144,18 +160,7 @@ char		**ft_split_colon(char *line)
 	}
 	while (line[i])
 	{
-		if (line[i] && line[i] == QUOTE)
-		{
-			i++;
-			while (line[i] && line[i] != QUOTE)
-				i++;
-		}
-		if (line[i] && line[i] == DQUOTE)
-		{
-			i++;
-			while (line[i] && line[i] != DQUOTE)
-				i++;
-		}
+		i = test(line, i);
 		if (line[i] && line[i] == COLON)
 		{
 			if (ft_calloc((void **)&ret[count], 4096, sizeof(char)))
@@ -176,7 +181,7 @@ char		**ft_split_colon(char *line)
 	return (ret);
 }
 
-void			toggle(int *bo)
+void	toggle(int *bo)
 {
 	if (*bo == FALSE)
 		*bo = TRUE;
@@ -184,30 +189,30 @@ void			toggle(int *bo)
 		*bo = FALSE;
 }
 
-void			remove_spaces(char *line)
+void	remove_spaces(char *l)
 {
 	int		i;
-	int		quote;
-	int		dquote;
+	int		q;
+	int		dq;
 
-	quote = FALSE;
-	dquote = FALSE;
+	q = FALSE;
+	dq = FALSE;
 	i = 0;
-	if (!line)
+	if (!l)
 		return ;
-	while (line[i])
+	while (l[i])
 	{
-		if (line[i] && line[i] == QUOTE)
-			toggle(&quote);
-		else if (line[i] && line[i] == DQUOTE)
-			toggle(&dquote);
-		else if (line[i] && line[i] == BSLASH && line[i + 1] && line[i + 1] == 32)
+		if (l[i] && l[i] == QUOTE)
+			toggle(&q);
+		else if (l[i] && l[i] == DQUOTE)
+			toggle(&dq);
+		else if (l[i] && l[i] == BSLASH && l[i + 1] && l[i + 1] == 32)
 			i += 2;
-		else if (line[i] && line[i] == 32)
+		else if (l[i] && l[i] == 32)
 		{
 			i++;
-			while (line[i] && line[i] == 32 && quote == FALSE && dquote == FALSE)
-				remove_char(line, i);
+			while (l[i] && l[i] == 32 && q == FALSE && dq == FALSE)
+				remove_char(l, i);
 		}
 		i++;
 	}

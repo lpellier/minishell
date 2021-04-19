@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_something.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/19 14:26:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 15:09:48 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		complete_portion(char *line, int index, int block_end)
+int	complete_portion(char *line, int index, int block_end)
 {
 	int		i;
 
@@ -70,6 +70,12 @@ int	get_option(char *line, t_cmd *cmd, int index)
 	return (ft_strlen(cmd->option));
 }
 
+int	block_end_calc(char *line, int index, int block_end, t_cmd *cmd)
+{
+	block_end = complete_portion(line, index, block_end);
+	cmd->cmd = ft_strndup(line, block_end);
+	return (block_end);
+}
 
 int	get_cmd(char *line, t_cmd *cmd, int index)
 {
@@ -80,10 +86,7 @@ int	get_cmd(char *line, t_cmd *cmd, int index)
 	i = 0;
 	block_end = check_if_block(index);
 	if (block_end >= 0)
-	{
-		block_end = complete_portion(line, index, block_end);
-		cmd->cmd = ft_strndup(line, block_end);
-	}
+		block_end = block_end_calc(line, index, block_end, cmd);
 	else
 	{
 		if (line && line[i] && !ft_cinset(line[i], SEPARATOR))

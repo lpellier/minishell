@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:00:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:50:20 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,6 @@ enum				e_status_codes
 };
 
 void		print_block(void *data);
-void		restore_term();
-int			print_declare_env();
-void		print_env_declare(void *data);
-
 int			rem_hist(void *data, void *data_ref);
 int			shell_loop(void);
 int			get_pos(int *x, int *y);
@@ -232,7 +228,7 @@ int			dquote(char *line, int *index);
 int			transform_line(char *line, int index, int quote_nb, int dquote_nb);
 
 // control_and_dollar
-int			control_d();
+int			control_d(void);
 int			ft_isalpha_ordollar(int c);
 int			dollar(char *line, int *index);
 void		dollar_suite(char *line, char *var, int *index, int i);
