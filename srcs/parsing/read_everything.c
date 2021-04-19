@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 12:35:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:41:49 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -400,7 +400,7 @@ void	process_line(int first)
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
 	read_line();
-	modify_line_redir();
+	// modify_line_redir();
 	remove_spaces(g_info.line);
 	colon_split = ft_split_colon(g_info.line);
 	ft_printf("\n");
