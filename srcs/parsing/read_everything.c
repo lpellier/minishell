@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 16:52:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 17:42:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,12 +176,13 @@ char		**ft_split_colon(char *line)
 	return (ret);
 }
 
-void			toggle(int *bo)
+void			toggle(int *bo, int *index)
 {
 	if (*bo == FALSE)
 		*bo = TRUE;
 	else
 		*bo = FALSE;
+	*index += 1;
 }
 
 void			remove_spaces(char *line)
@@ -197,19 +198,20 @@ void			remove_spaces(char *line)
 		return ;
 	while (line[i])
 	{
-		if (line[i] && line[i] == QUOTE)
-			toggle(&quote);
-		else if (line[i] && line[i] == DQUOTE)
-			toggle(&dquote);
-		else if (line[i] && line[i] == BSLASH && line[i + 1] && line[i + 1] == 32)
+		if (line[i] == QUOTE)
+			toggle(&quote, &i);
+		else if (line[i] == DQUOTE)
+			toggle(&dquote, &i);
+		else if (line[i] == BSLASH && line[i + 1] && line[i + 1] == 32)
 			i += 2;
-		else if (line[i] && line[i] == 32)
+		else if (line[i] == 32)
 		{
 			i++;
 			while (line[i] && line[i] == 32 && quote == FALSE && dquote == FALSE)
 				remove_char(line, i);
 		}
-		i++;
+		else
+			i++;
 	}
 }
 
