@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/12 15:41:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 16:57:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int			open_file(int separator, char *line, int *index)
 		*index += 1;
 	*index += spaces(&line[*index], *index);
 	i = *index;
-	while (line[i] && ft_isprint(line[i]) && line[i] != 32)
+	while (line[i] && ft_isprint(line[i]) && line[i] != 32 && ft_cinset(line[i], "<>"))
 		i++;
 	i -= *index;
 	file_name = ft_substr(line, *index, i);
