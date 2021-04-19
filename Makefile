@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/14 19:20:31 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/19 14:04:35 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,13 @@ CC = clang
 SRCS = srcs/main.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
+		srcs/built_in/do_redir.c \
+		srcs/built_in/do_pipe.c \
+		srcs/built_in/do_export.c \
+		srcs/built_in/binary_things.c \
+		srcs/built_in/env_things.c \
+		srcs/built_in/cmp_size_and_cmd.c \
+		srcs/built_in/pure_shell.c \
 		srcs/free/free.c \
 		srcs/free/secure_free.c \
 		srcs/skeleton/linked_lists.c \
@@ -35,6 +42,9 @@ SRCS = srcs/main.c \
 		srcs/parsing/get_something.c \
 		srcs/parsing/read_everything.c \
 		srcs/parsing/char_and_key.c \
+		srcs/parsing/colon_and_count.c \
+		srcs/parsing/backsl_and_quote.c \
+		srcs/parsing/control_and_dollar.c \
 		srcs/shell_init/init.c \
 		srcs/termcap/all_signal.c \
 		srcs/termcap/termcap_utils.c \

@@ -6,27 +6,30 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:40:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:02:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	free_tab(char **tab)
+void	free_tab(char ***tab)
 {
 	int		i;
+	char	**cpy;
 
 	i = 0;
-	if (!tab)
+	cpy = *tab;
+	if (!cpy)
 		return ;
-	while (tab[i])
+	while (cpy[i])
 	{
-		free(tab[i]);
+		free(cpy[i]);
+		cpy[i] = NULL;
 		i++;
 	}
-	free(tab);
+	free(*tab);
+	*tab = NULL;
 }
-
 void	free_cmd_struct(void *data)
 {
 	t_cmd	*ptr;

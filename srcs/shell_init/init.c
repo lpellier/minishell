@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/18 11:53:57 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:26:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	init_env(char **envp)
 	key_value = ft_split(envp[i], '=');
 	g_info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
 		ft_strdup(key_value[1])));
-	free_tab(key_value);
+	free_tab(&key_value);
 	i++;
 	while (envp[i])
 	{
@@ -49,7 +49,7 @@ int	init_env(char **envp)
 			ft_list_push_back(&g_info.env_head, \
 				create_env_struct(ft_strdup(key_value[0]), \
 				ft_strdup(key_value[1])));
-		free_tab(key_value);
+		free_tab(&key_value);
 		i++;
 	}
 	return (SUCCESS);
@@ -87,4 +87,5 @@ void	reset_info(void)
 	g_info.bin_running = FALSE;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
 	g_info.colon_nbr = 0;
+	g_info.status = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:25:58 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/18 12:01:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:26:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,6 @@ char	*get_cur_dir(void)
 		res = NULL;
 	else
 		res = ft_strdup(split[i - 1]);
-	free_tab(split);
+	free_tab(&split);
 	return (res);
 }
