@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/18 11:59:02 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int			ft_env(int index_cmd)
 int			ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
+	t_env	*pwd;
 	char	cwd[PATH_MAX];
 	char	*path;
 
@@ -85,9 +86,12 @@ int			ft_cd(int index_cmd)
 		path = ft_strdup(cmd->input);
 	if (chdir(path))
 		ft_printf("Couldn't access folder, check directory listing\n");
-	modify_env("OLDPWD", get_env_custom("PWD")->value, 0);
-	modify_env("PWD", getcwd(cwd, sizeof(cwd)), 0);
 	secure_free(path);
+	pwd = get_env_custom("PWD");
+	if (!pwd)
+		return (FAILURE);
+	modify_env("OLDPWD", pwd->value, 0);
+	modify_env("PWD", getcwd(cwd, sizeof(cwd)), 0);
 	return (SUCCESS);
 }
 

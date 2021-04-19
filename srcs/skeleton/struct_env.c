@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 17:47:05 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/09 17:47:19 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/18 11:57:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	modify_env(char *key, char *new_value, int concat)
 	char	*tmp_value;
 
 	var = get_env_custom(key);
+	if (!var)
+		return (FAILURE);
 	tmp_value = ft_strdup(var->value);
 	if (var->value)
 		free(var->value);

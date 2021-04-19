@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 18:29:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 12:16:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,30 +55,6 @@ int			ft_echo(int index_cmd)
 		ft_printf("%s\n", cmd->input);
 	return (SUCCESS);
 }
-
-// void		store_output(int index_cmd)
-// {
-// 	char	*str;
-// 	t_cmd	*cmd;
-
-// 	cmd = (t_cmd *)ft_list_at(g_info.cmd_head, index_cmd)->data;
-// 	get_next_line(STDIN_FILENO, &str);
-// 	g_info.output = ft_strdup(str);
-// 	if (cmd->bui != 1 && cmd->bui != 9)
-// 		g_info.output = ft_strjoin(str, "\n");
-// 	else
-// 		g_info.output = ft_strdup(str);
-// 	while (get_next_line(STDIN_FILENO, &str))
-// 	{
-// 		if (cmd->bui != 1 && cmd->bui != 9)
-// 			g_info.output = ft_strjoin(ft_strjoin(g_info.output, str), "\n");
-// 		else
-// 			g_info.output = ft_strjoin(g_info.output, str);
-// 	}
-// 	if (str)
-// 		free(str);
-// 	str = NULL;
-// }
 
 int			redir(int index_cmd, char *line, int index, int separator)
 {

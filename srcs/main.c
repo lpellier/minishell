@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 18:41:56 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/18 11:44:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int			shell_loop()
 		get_pos(&g_info.cursor.start_posx, &g_info.cursor.start_posy);
 		g_info.prompt_len = ft_strlen(cur_dir) + 6;
 		g_info.cmd_head = ft_create_elem(create_cmd_struct());
-		read_line(first);
+		process_line(first);
 		first = 0;
 		secure_free(cur_dir);
 		ft_list_clear(g_info.cmd_head, free_cmd_struct);
@@ -68,6 +68,7 @@ int			shell_loop()
 		reset_info();
 		remove_useless_history();
 	}
+	secure_free(g_info.line);
 	free_tab(g_info.dir_paths);
 	ft_list_clear(g_info.env_head, free_env_struct);
 	ft_list_clear(g_info.history_head, free_history_struct);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 18:29:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 12:35:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 
 
-int			control_d(char *line)
+int			control_d()
 {
 	int		cursor;
 
 	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
-	if (line && line[cursor])
+	if (g_info.line && g_info.line[cursor])
 	{
-		remove_char(line, cursor);
+		remove_char(g_info.line, cursor);
 		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, \
 			g_info.cursor.posy), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
-	else if (!line || !line[0])
+	else if (!g_info.line || !g_info.line[0])
 	{
 		ft_printf("exit");
 		g_info.crashed = TRUE;
@@ -35,50 +35,69 @@ int			control_d(char *line)
 	return (SUCCESS);
 }
 
+
+void    update_history(t_history *cur)
+{
+    ft_bzero(cur->line, ft_strlen(cur->line));
+    ft_strcpy(cur->line, g_info.line);
+}
+
+void    special_keys(char key)
+{
+    if (key == 27)
+        check_for_arrows(g_info.line);
+    else if (key == 127)
+        delete_key(g_info.line);
+}
+
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
 //     lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
-int		read_everything(void)
+int	    read_keys(char key, t_history *cur)
 {
-	t_history	*cur;
-	char		key;
+    while (key != '\n')
+    {
+        get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
+        if (read(STDIN_FILENO, &key, 1) == -1)
+            return (FAILURE);
+        if (g_info.kill)
+        {
+            g_info.kill = FALSE;
+            ft_bzero(g_info.line, ft_strlen(g_info.line));
+            ft_bzero(cur->line, ft_strlen(cur->line));
+        }
+        if (key == 27 || key == 127)
+            special_keys(key);
+        else if (key == 4)
+        {
+            if (control_d())
+                break ;
+        }
+        else if (key != '\n' && ft_cinset(key, WHITESPACE))
+            add_key(g_info.line, key);
+        if (g_info.cur_in_history == 0 || key == '\n')
+            update_history(cur);
+    }
+    return (SUCCESS);
+}
 
-	key = 0;
+int			read_line(void)
+{
+    t_history   *cur;
+    char        key;
+
+    key = 0;
 	ft_bzero(g_info.line, ft_strlen(g_info.line));
-	cur = (t_history *)g_info.history_head->data;
-	g_info.prompt_len += g_info.echo_padding;
-	while (key != '\n')
-	{
-		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
-		if (read(STDIN_FILENO, &key, 1) == -1)
-			return (FAILURE);
-		if (g_info.kill)
-		{
-			g_info.kill = FALSE;
-			g_info.sig_status = 1;
-			ft_bzero(g_info.line, ft_strlen(g_info.line));
-			ft_bzero(cur->line, ft_strlen(cur->line));
-		}
-		if (key == 27)
-			check_for_arrows(g_info.line);
-		else if (key == 127)
-			delete_key(g_info.line);
-		else if (key == 4)
-		{
-			if (control_d(g_info.line))
-				break ;
-		}
-		else if (key != '\n' && ft_cinset(key, WHITESPACE))
-			add_key(g_info.line, key);
-		if (g_info.cur_in_history == 0 || key == '\n')
-		{
-			ft_bzero(cur->line, ft_strlen(cur->line));
-			ft_strcpy(cur->line, g_info.line);
-		}
+    cur = (t_history *)g_info.history_head->data;
+    g_info.prompt_len += g_info.echo_padding;
+    if (read_keys(key, cur))
+    {
+		g_info.sig_status = 1;
+		return (FAILURE);
 	}
 	if (g_info.echo_padding > 0)
-		g_info.echo_padding = 0;
+        g_info.echo_padding = 0;
 	return (SUCCESS);
 }
 
@@ -367,7 +386,7 @@ void			remove_spaces(char *line)
 // currently building a way to know if blocks exist
 // colons won't work right now BECUASE OF THE SPLIT
 
-void	read_line(int first)
+void	process_line(int first)
 {
 	char	**colon_split;
 	int		crashed;
@@ -380,7 +399,8 @@ void	read_line(int first)
 		g_info.history_head = ft_create_elem(create_history_struct());
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
-	read_everything();
+	read_line();
+	modify_line_redir();
 	remove_spaces(g_info.line);
 	colon_split = ft_split_colon(g_info.line);
 	ft_printf("\n");

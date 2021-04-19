@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:25:58 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/18 12:01:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ char	*get_cur_dir(void)
 
 	i = 0;
 	getcwd(g_info.cur_path, sizeof(g_info.cur_path));
+	if (!compare_size(g_info.cur_path, "/"))
+	{
+		res = ft_strdup(g_info.cur_path);
+		return (res); 
+	}	
 	split = ft_split(g_info.cur_path, '/');
 	while (split[i])
 		i++;

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 18:23:20 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/18 11:49:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,10 +222,10 @@ int			check_if_block(int index);
 int			ft_set_index(char *line, t_cmd *cmd, int index);
 void		read_cmd(char *line, int index, int index_cmd);
 
-int			read_everything(void);
+int			read_line(void);
 char		*str_replace(char *orig, char *rep, char *with);
 char		*replace_dollars_env(char *line);
-void		read_line(int first);
+void		process_line(int first);
 
 /*
 ** init
@@ -240,7 +240,6 @@ void		init_built_in(void);
 ** built-in
 */
 
-void		store_output(int index_cmd);
 int			ft_echo(int index_cmd);
 int			ft_exit(int index_cmd);
 int			ft_echo_n(int index_cmd);
