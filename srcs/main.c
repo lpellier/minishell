@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/18 11:44:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:25:38 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int			shell_loop()
 		remove_useless_history();
 	}
 	secure_free(g_info.line);
-	free_tab(g_info.dir_paths);
+	free_tab(&g_info.dir_paths);
 	ft_list_clear(g_info.env_head, free_env_struct);
 	ft_list_clear(g_info.history_head, free_history_struct);
 	ft_list_clear(g_info.block_head, free);

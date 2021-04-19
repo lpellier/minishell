@@ -6,33 +6,24 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 12:35:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/19 14:28:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-
-int			control_d()
+void	special_keys(char key)
 {
-	int		cursor;
+	if (key == 27)
+		check_for_arrows(g_info.line);
+	else if (key == 127)
+		delete_key(g_info.line);
+}
 
-	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
-	if (g_info.line && g_info.line[cursor])
-	{
-		remove_char(g_info.line, cursor);
-		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, \
-			g_info.cursor.posy), 1, ft_putchar);
-		tputs(tgetstr("dc", NULL), 1, ft_putchar);
-	}
-	else if (!g_info.line || !g_info.line[0])
-	{
-		ft_printf("exit");
-		g_info.crashed = TRUE;
-		return (FAILURE);
-	}
-	return (SUCCESS);
+void	bzero_and_cpy(t_history *cur, char *line)
+{
+	ft_bzero(cur->line, ft_strlen(cur->line));
+	ft_strcpy(cur->line, line);
 }
 
 
@@ -40,14 +31,6 @@ void    update_history(t_history *cur)
 {
     ft_bzero(cur->line, ft_strlen(cur->line));
     ft_strcpy(cur->line, g_info.line);
-}
-
-void    special_keys(char key)
-{
-    if (key == 27)
-        check_for_arrows(g_info.line);
-    else if (key == 127)
-        delete_key(g_info.line);
 }
 
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
@@ -82,9 +65,9 @@ int	    read_keys(char key, t_history *cur)
     return (SUCCESS);
 }
 
-int			read_line(void)
+int		read_line(void)
 {
-    t_history   *cur;
+	t_history   *cur;
     char        key;
 
     key = 0;
@@ -101,14 +84,6 @@ int			read_line(void)
 	return (SUCCESS);
 }
 
-int	ft_isalpha_ordollar(int c)
-{
-	if (c == '?' || (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	else
-		return (0);
-}
-
 // bslashes within a dquote only work if the following character is a 
 //	dollar, a dquote,(a backquote) or another bslash
 // not sure whether backquotes should be supported or not 
@@ -116,142 +91,6 @@ int	ft_isalpha_ordollar(int c)
 // other warning : when used solo, a backslash lets you finish a 
 //	command in line under current one. 
 // should i implement this ?
-
-void	dollar_suite(char *line, char *var, int *index)
-{
-	int		i;
-	t_list	*var_list;
-	t_env	*var_key;
-
-	var_list = ft_list_find(g_info.env_head, \
-		create_env_struct(var, NULL), cmp_env);
-	if (var_list)
-	{
-		var_key = (t_env *)var_list->data;
-		i = 0;
-		while (var_key->value[i])
-		{
-			add_char(line, var_key->value[i], *index);
-			*index += 1;
-			i++;
-		}
-	}
-}
-
-int	dollar(char *line, int *index)
-{
-	char	*var;
-	int		i;
-
-	i = 0;
-	var = NULL;
-	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && \
-		!ft_isalpha_ordollar(line[*index + 1])))
-	{
-		*index += 1;
-		return (FAILURE);
-	}
-	if (ft_calloc((void **)&var, 256, sizeof(char)))
-		return (FAILURE);
-	while (line[*index] && (ft_isalpha(line[*index]) || (line[*index] == \
-		DOLLAR && i == 0) || (line[*index] == '?')))
-	{
-		if (i > 0)
-			var[i - 1] = line[*index];
-		remove_char(line, *index);
-		i++;
-	}
-	dollar_suite(line, var, index);
-	return (SUCCESS);
-}
-
-int	backslash(char *line, int *index, int dquote)
-{
-	if (!dquote)
-	{
-		remove_char(line, *index);
-		*index += 1;
-	}
-	else if (dquote)
-	{
-		if (line[*index + 1] && (line[*index + 1] == BSLASH || \
-			line[*index + 1] == '$' || line[*index + 1] == DQUOTE))
-		{
-			remove_char(line, *index);
-			if (!line[*index + 1])
-				return (FAILURE);
-		}
-		*index += 1;
-	}
-	return (SUCCESS);
-}
-
-int	count_exceptions(int quote, int dquote)
-{
-	if (quote % 2 != 0 || dquote % 2 != 0)
-		return (1);
-	else
-		return (0);
-}
-
-int	transform_line(char *line, int index, int quote, int dquote)
-{
-	int		ret;
-
-	ret = 0;
-	if (!line)
-		return (FAILURE);
-	while (line[index] && line[index] != BSLASH && \
-		line[index] != QUOTE && line[index] != DQUOTE && line[index] != DOLLAR)
-		index++;
-	if (line[index] == BSLASH)
-		backslash(line, &index, 0);
-	if (line[index] == DOLLAR)
-		dollar(line, &index);
-	if (line[index] == QUOTE)
-	{
-		remove_char(line, index);
-		ft_list_push_front(&g_info.block_head, create_block_struct(index, -1));
-		while (line[index] && line[index] != QUOTE)
-			index++;
-		if (!line[index])
-			quote += 1;
-		else if (line[index] == QUOTE)
-		{
-			remove_char(line, index);
-			((t_block *)g_info.block_head->data)->end = index;
-		}
-	}
-	if (line[index] == DQUOTE)
-	{
-		remove_char(line, index);
-		ft_list_push_front(&g_info.block_head, create_block_struct(index, -1));
-		while (line[index] && line[index] != DQUOTE)
-		{
-			if (line[index] == BSLASH)
-			{
-				if (backslash(line, &index, 1))
-					return (FAILURE);
-			}
-			else if (line[index] == DOLLAR)
-				dollar(line, &index);
-			else
-				index++;
-		}
-		if (!line[index])
-			dquote += 1;
-		else if (line[index] == DQUOTE)
-		{
-			remove_char(line, index);
-			((t_block *)g_info.block_head->data)->end = index;
-		}
-	}
-	if (line[index])
-		ret = transform_line(line, index, quote, dquote);
-	else
-		ret = count_exceptions(quote, dquote);
-	return (ret);
-}
 
 int			count_words_colon(char *line)
 {
@@ -400,21 +239,10 @@ void	process_line(int first)
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
 	read_line();
-	modify_line_redir();
+	// modify_line_redir();
 	remove_spaces(g_info.line);
 	colon_split = ft_split_colon(g_info.line);
 	ft_printf("\n");
-	while (colon_split && colon_split[i])
-	{
-		if (transform_line(colon_split[i], 0, 0, 0))
-		{
-			g_info.cmd_status = 1;
-			ft_printf("\nminisheh: parsing error: number of quotes ");
-			ft_printf("should be even\n");
-			break ;
-		}
-		read_cmd(colon_split[i], 0, 0);
-		i++;
-	}
-	free_tab(colon_split);
+	do_colon_split(colon_split, i);
+	free_tab(&colon_split);
 }
