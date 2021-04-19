@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:16:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/19 17:49:39 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,12 +181,13 @@ char	**ft_split_colon(char *line)
 	return (ret);
 }
 
-void	toggle(int *bo)
+void			toggle(int *bo, int *index)
 {
 	if (*bo == FALSE)
 		*bo = TRUE;
 	else
 		*bo = FALSE;
+	*index += 1;
 }
 
 void	remove_spaces(char *l)
@@ -203,9 +204,9 @@ void	remove_spaces(char *l)
 	while (l[i])
 	{
 		if (l[i] && l[i] == QUOTE)
-			toggle(&q);
+			toggle(&q, &i);
 		else if (l[i] && l[i] == DQUOTE)
-			toggle(&dq);
+			toggle(&dq, &i);
 		else if (l[i] && l[i] == BSLASH && l[i + 1] && l[i + 1] == 32)
 			i += 2;
 		else if (l[i] && l[i] == 32)
@@ -213,6 +214,103 @@ void	remove_spaces(char *l)
 			i++;
 			while (l[i] && l[i] == 32 && q == FALSE && dq == FALSE)
 				remove_char(l, i);
+		}
+		else
+			i++;
+	}
+}
+
+int		add_word(char *word, int where)
+{
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (word[i])
+	{
+		add_char(g_info.line, word[i], where);
+		i++;
+		where++;
+		count++;
+	}
+	add_char(g_info.line, 32, where);
+	count++;
+	return (count);
+}
+
+int		move_around(char *str, int start)
+{
+	int		i;
+	int		count;
+	char	**words;
+
+	i = 0;
+	count = 0;
+	words = NULL;
+	words = ft_split(str, 32);
+	if (!words)
+		return (0);
+	while (words[i])
+	{
+		if (i > 0)
+			count += add_word(words[i], start);
+		i++;
+	}
+	return (count);
+}
+
+int		count_until_redir(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] && is_redir_l(str[i]) && is_redir_r(str[i]))
+		i++;
+	return (i);
+}
+
+int		remove_words(int i)
+{
+	int		count;
+
+	count = 0;
+	while (g_info.line[i] && g_info.line[i] == 32)
+		i++;
+	while (g_info.line[i] && g_info.line[i] != 32)
+		i++;
+	while (g_info.line[i] && g_info.line[i] != '<' && g_info.line[i] != '>')
+	{
+		count++;
+		remove_char(g_info.line, i);
+	}
+	return (count);
+}
+
+void	modify_line_redir(void)
+{
+	int		i;
+	int		start;
+	int		count;
+	char	*tmp;
+
+	i = 0;
+	start = 0;
+	tmp = NULL;
+	while (g_info.line[i])
+	{
+		count = 0;
+		if (!is_redir_l(g_info.line[i]) || !is_redir_r(g_info.line[i]))
+		{
+			if (!start)
+				start = i;
+			while (g_info.line[i] && !ft_cinset(g_info.line[i], SEPARATOR))
+				i++;
+			count = count_until_redir(&g_info.line[i]);
+			tmp = ft_substr(g_info.line, i, count);
+			i += move_around(tmp, start);
+			remove_words(i);
+			secure_free(tmp);
 		}
 		i++;
 	}
@@ -244,7 +342,7 @@ void	process_line(int first)
 	else
 		ft_list_push_front(&g_info.history_head, create_history_struct());
 	read_line();
-	// modify_line_redir();
+	modify_line_redir();
 	remove_spaces(g_info.line);
 	colon_split = ft_split_colon(g_info.line);
 	ft_printf("\n");
