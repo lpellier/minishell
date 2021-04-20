@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 13:09:56 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 13:27:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	ft_set_index(char *line, t_cmd *cmd, int index)
 	index += spaces(&line[index], index);
 	index += get_option(&line[index], cmd, index);
 	index += spaces(&line[index], index);
-	// ft_printf("\ntest : |%s|\n", &line[index]);
 	index += get_input(&line[index], cmd, index);
 	index += spaces(&line[index], index);
 	return (index);
