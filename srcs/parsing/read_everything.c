@@ -6,31 +6,11 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:49:39 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:06:07 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	special_keys(char key)
-{
-	if (key == 27)
-		check_for_arrows(g_info.line);
-	else if (key == 127)
-		delete_key(g_info.line);
-}
-
-void	bzero_and_cpy(t_history *cur, char *line)
-{
-	ft_bzero(cur->line, ft_strlen(cur->line));
-	ft_strcpy(cur->line, line);
-}
-
-void	update_history(t_history *cur)
-{
-	ft_bzero(cur->line, ft_strlen(cur->line));
-	ft_strcpy(cur->line, g_info.line);
-}
 
 // g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
 //     lets me checkout where cursor is on string
@@ -91,176 +71,7 @@ int	read_line(void)
 //	command in line under current one. 
 // should i implement this ?
 
-int	count_words_colon(char *line)
-{
-	int		i;
-	int		count;
-
-	count = 1;
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] && line[i] == QUOTE)
-		{
-			i++;
-			while (line[i] && line[i] != QUOTE)
-				i++;
-		}
-		if (line[i] && line[i] == DQUOTE)
-		{
-			i++;
-			while (line[i] && line[i] != DQUOTE)
-				i++;
-		}
-		if (line[i] && line[i] == COLON)
-			count++;
-		i++;
-	}
-	return (count);
-}
-
-int	test(char *line, int i)
-{
-	if (line[i] && line[i] == QUOTE)
-	{
-		i++;
-		while (line[i] && line[i] != QUOTE)
-			i++;
-	}
-	if (line[i] && line[i] == DQUOTE)
-	{
-		i++;
-		while (line[i] && line[i] != DQUOTE)
-			i++;
-	}
-	return (i);
-}
-
-char	**ft_split_colon(char *line)
-{
-	int		i;
-	int		old;
-	int		count;
-	int		words_len;
-	char	**ret;
-
-	i = 0;
-	words_len = count_words_colon(line);
-	old = 0;
-	count = 0;
-	ret = NULL;
-	if (ft_calloc((void **)&ret, words_len + 1, sizeof(char *)))
-		return (NULL);
-	if (words_len == 1)
-	{
-		if (ft_calloc((void **)&ret[0], 4096, sizeof(char)))
-			return (NULL);
-		ft_strcpy(ret[0], line);
-		return (ret);
-	}
-	while (line[i])
-	{
-		i = test(line, i);
-		if (line[i] && line[i] == COLON)
-		{
-			if (ft_calloc((void **)&ret[count], 4096, sizeof(char)))
-				return (NULL);
-			ft_strcpy(ret[count], ft_substr(line, old, i - old));
-			old = i + 1;
-			count++;
-		}
-		else if (line[i] && count == words_len - 1)
-		{
-			if (ft_calloc((void **)&ret[count], 4096, sizeof(char)))
-				return (NULL);
-			ft_strcpy(ret[count], ft_substr(line, old, ft_strlen(&line[old])));
-			count++;
-		}
-		i++;
-	}
-	return (ret);
-}
-
-void			toggle(int *bo, int *index)
-{
-	if (*bo == FALSE)
-		*bo = TRUE;
-	else
-		*bo = FALSE;
-	*index += 1;
-}
-
-void	remove_spaces(char *l)
-{
-	int		i;
-	int		q;
-	int		dq;
-
-	q = FALSE;
-	dq = FALSE;
-	i = 0;
-	if (!l)
-		return ;
-	while (l[i])
-	{
-		if (l[i] && l[i] == QUOTE)
-			toggle(&q, &i);
-		else if (l[i] && l[i] == DQUOTE)
-			toggle(&dq, &i);
-		else if (l[i] && l[i] == BSLASH && l[i + 1] && l[i + 1] == 32)
-			i += 2;
-		else if (l[i] && l[i] == 32)
-		{
-			i++;
-			while (l[i] && l[i] == 32 && q == FALSE && dq == FALSE)
-				remove_char(l, i);
-		}
-		else
-			i++;
-	}
-}
-
-int		add_word(char *word, int where)
-{
-	int		i;
-	int		count;
-
-	i = 0;
-	count = 0;
-	while (word[i])
-	{
-		add_char(g_info.line, word[i], where);
-		i++;
-		where++;
-		count++;
-	}
-	add_char(g_info.line, 32, where);
-	count++;
-	return (count);
-}
-
-int		move_around(char *str, int start)
-{
-	int		i;
-	int		count;
-	char	**words;
-
-	i = 0;
-	count = 0;
-	words = NULL;
-	words = ft_split(str, 32);
-	if (!words)
-		return (0);
-	while (words[i])
-	{
-		if (i > 0)
-			count += add_word(words[i], start);
-		i++;
-	}
-	return (count);
-}
-
-int		count_until_redir(char *str)
+int	count_until_redir(char *str)
 {
 	int		i;
 
@@ -268,23 +79,6 @@ int		count_until_redir(char *str)
 	while (str[i] && is_redir_l(str[i]) && is_redir_r(str[i]))
 		i++;
 	return (i);
-}
-
-int		remove_words(int i)
-{
-	int		count;
-
-	count = 0;
-	while (g_info.line[i] && g_info.line[i] == 32)
-		i++;
-	while (g_info.line[i] && g_info.line[i] != 32)
-		i++;
-	while (g_info.line[i] && g_info.line[i] != '<' && g_info.line[i] != '>')
-	{
-		count++;
-		remove_char(g_info.line, i);
-	}
-	return (count);
 }
 
 void	modify_line_redir(void)

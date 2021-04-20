@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
+#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/19 14:04:35 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/20 17:07:34 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,9 @@ SRCS = srcs/main.c \
 		srcs/parsing/parsing.c \
 		srcs/parsing/get_something.c \
 		srcs/parsing/read_everything.c \
+		srcs/parsing/read_everything_suite.c \
+		srcs/parsing/colon_count_split.c \
+		srcs/parsing/move_remove_add.c \
 		srcs/parsing/char_and_key.c \
 		srcs/parsing/colon_and_count.c \
 		srcs/parsing/backsl_and_quote.c \

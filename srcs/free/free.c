@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:02:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:09:28 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	free_tab(char ***tab)
 	free(*tab);
 	*tab = NULL;
 }
+
 void	free_cmd_struct(void *data)
 {
 	t_cmd	*ptr;

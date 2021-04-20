@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:50:20 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:03:08 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,15 @@ typedef struct s_cursor
 	int				col;
 	int				lin;
 }					t_cursor;
+
+typedef struct s_split
+{
+	int				i;
+	int				old;
+	int				count;
+	int				words_len;
+	char			**ret;
+}					t_split;
 
 typedef struct s_info
 {
@@ -214,12 +223,31 @@ int			check_if_block(int index);
 int			ft_set_index(char *line, t_cmd *cmd, int index);
 void		read_cmd(char *line, int index, int index_cmd);
 
+// colon_count_split
+char		**split_colon_suite(char *line, t_split split);
+char		**ft_split_colon(char *line);
+int			count_words_colon(char *line);
+
+// move_remove_add
+int			prepare_remove(char *line, int q, int dq, int i);
+int			add_word(char *word, int where);
+int			move_around(char *str, int start);
+int			remove_words(int i);
+void		remove_spaces(char *l);
+
 // read_everything
 int			read_line(void);
 int			read_keys(char key, t_history *cur);
+int			count_until_redir(char *str);
+void		process_line(int first);
+void		modify_line_redir(void);
+
+// read_everything_suite
+int			pass_q_and_dq(char *line, int i);
+void		update_history(t_history *cur);
 void		bzero_and_cpy(t_history *cur, char *line);
 void		special_keys(char key);
-void		process_line(int first);
+void		toggle(int *bo, int *index);
 
 // backsl_and_quote
 int			backslash(char *line, int *index, int dquote);
