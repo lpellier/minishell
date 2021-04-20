@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   backsl_and_quote.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/18 16:16:20 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:52:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	backslash(char *line, int *index, int dquote)
 int	quote(char *line, int *index)
 {
 	remove_char(line, *index);
-	ft_list_push_front(&g_info.block_head, create_block_struct(*index, -1));
+	ft_list_push_front(&g_info->block_head, create_block_struct(*index, -1));
 	while (line[*index] && line[*index] != QUOTE)
 		*index += 1;
 	if (!line[*index])
@@ -44,7 +44,7 @@ int	quote(char *line, int *index)
 	else if (line[*index] == QUOTE)
 	{
 		remove_char(line, *index);
-		((t_block *)g_info.block_head->data)->end = *index;
+		((t_block *)g_info->block_head->data)->end = *index;
 		return (0);
 	}
 	return (1);
@@ -53,7 +53,7 @@ int	quote(char *line, int *index)
 int	dquote(char *line, int *index)
 {
 	remove_char(line, *index);
-	ft_list_push_front(&g_info.block_head, create_block_struct(*index, -1));
+	ft_list_push_front(&g_info->block_head, create_block_struct(*index, -1));
 	while (line[*index] && line[*index] != DQUOTE)
 	{
 		if (line[*index] == BSLASH)
@@ -71,7 +71,7 @@ int	dquote(char *line, int *index)
 	else if (line[*index] == DQUOTE)
 	{
 		remove_char(line, *index);
-		((t_block *)g_info.block_head->data)->end = *index;
+		((t_block *)g_info->block_head->data)->end = *index;
 		return (0);
 	}
 	return (1);

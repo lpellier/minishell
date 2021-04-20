@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:51:57 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:51:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ typedef struct s_info
 	int				status;
 }					t_info;
 
-t_info				g_info;
+t_info				*g_info;
 
 enum				e_separator
 {

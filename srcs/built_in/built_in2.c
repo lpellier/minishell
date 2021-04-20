@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:56:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:52:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_cd(int index_cmd)
 	char	*path;
 
 	path = NULL;
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
@@ -122,7 +122,7 @@ char		*get_folder_path(char *cmd, char **actu_cmd)
 int			nothing(int index_cmd)
 {
 	(void)index_cmd;
-	if (g_info.kill == FALSE)
-		g_info.kill = TRUE;
+	if (g_info->kill == FALSE)
+		g_info->kill = TRUE;
 	return (FAILURE);
 }

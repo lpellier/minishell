@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control_and_dollar.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/18 16:12:44 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:52:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@ int	control_d(void)
 {
 	int		cursor;
 
-	cursor = g_info.cursor.posx - g_info.prompt_len + 1;
-	if (g_info.line && g_info.line[cursor])
+	cursor = g_info->cursor.posx - g_info->prompt_len + 1;
+	if (g_info->line && g_info->line[cursor])
 	{
-		remove_char(g_info.line, cursor);
-		tputs(tgoto(tgetstr("cm", NULL), g_info.cursor.posx, \
-			g_info.cursor.posy), 1, ft_putchar);
+		remove_char(g_info->line, cursor);
+		tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.posx, \
+			g_info->cursor.posy), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
-	else if (!g_info.line || !g_info.line[0])
+	else if (!g_info->line || !g_info->line[0])
 	{
 		ft_printf("exit");
-		g_info.crashed = TRUE;
+		g_info->crashed = TRUE;
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -46,7 +46,7 @@ void	dollar_suite(char *line, char *var, int *index, int i)
 	t_list	*var_list;
 	t_env	*var_key;
 
-	var_list = ft_list_find(g_info.env_head, \
+	var_list = ft_list_find(g_info->env_head, \
 		create_env_struct(var, NULL), cmp_env);
 	if (var_list)
 	{
