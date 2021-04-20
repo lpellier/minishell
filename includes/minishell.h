@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 18:51:43 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 19:19:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,7 +305,7 @@ void		redir_something(char *line, int index, int index_cmd);
 int			pipe_for_exec(int index_cmd, char *line, int index, int piped);
 int			child_process(int separator, int index_cmd, t_cmd *cmd, \
 				int *pipefd);
-void		get_child(int separator, pid_t cpid);
+void		get_child(int separator, int index_cmd, pid_t cpid);
 void		check_pipe(int separator, char *line, int index, \
 				int index_cmd);
 
