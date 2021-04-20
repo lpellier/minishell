@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/19 14:19:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:44:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	ft_echo(int index_cmd)
 	char	*tmp;
 
 	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	g_info.status = 0;
 	if (cmd->option && !only_n(cmd->option))
 		return (ft_echo_n(index_cmd));
 	else if (cmd->option)

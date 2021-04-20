@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:00:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:51:57 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ typedef struct s_info
 {
 	struct termios	termios_p;
 	struct termios	saved_term;
-	int				(*built_in[9])(int index_cmd);
+	int				(*built_in[10])(int index_cmd);
 	char			cur_path[PATH_MAX];
 	int				crashed;
 	int				cmd_status;
@@ -278,6 +278,7 @@ char		**count_args(t_cmd *cmd, int *count);
 char		**list_to_tab(t_list *begin_list);
 char		*get_folder_path(char *cmd, char **actu_cmd);
 int			ft_cd(int index_cmd);
+int			nothing(int index_cmd);
 
 // env_things
 int			ft_unset(int index_cmd);
@@ -295,16 +296,17 @@ int			export_remove_char(char **key_value);
 void		modify_export(char **key_value, int concat);
 
 // do_redir
-int			print_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
+void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
+int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
 int			redir(int index_cmd, char *line, int index, int separator);
 void		redir_something(char *line, int index, int index_cmd);
 
 // do_pipe
 int			pipe_for_exec(int index_cmd, char *line, int index, int piped);
-int			check_cpid_zero(int separator, int index_cmd, t_cmd *cmd, \
+int			child_process(int separator, int index_cmd, t_cmd *cmd, \
 				int *pipefd);
-void		check_pipe(int *pipefd, pid_t cpid);
-void		check_separator(int separator, char *line, int index, \
+void		get_child(int separator, pid_t cpid);
+void		check_pipe(int separator, char *line, int index, \
 				int index_cmd);
 
 /***********

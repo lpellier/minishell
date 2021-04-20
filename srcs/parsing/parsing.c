@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 15:01:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:50:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	read_cmd(char *line, int index, int index_cmd)
 		print_cmd_info(cmd);
 	if (cmd->cmd && cmd->bui == 9)
 		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
-	else if (!is_pipe(line[index]))
+	if (!is_pipe(line[index]))
 		pipe_for_exec(index_cmd, line, index, PIPE);
 	else if (!is_redir_l(line[index]))
 		redir(index_cmd, line, index, R_LEFT);

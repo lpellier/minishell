@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:26:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:32:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	init_built_in(void)
 	g_info.built_in[6] = ft_env;
 	g_info.built_in[7] = ft_cd;
 	g_info.built_in[8] = exec_binary;
+	g_info.built_in[9] = nothing;
 }
 
 int	init_env(char **envp)
@@ -87,5 +88,5 @@ void	reset_info(void)
 	g_info.bin_running = FALSE;
 	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
 	g_info.colon_nbr = 0;
-	g_info.status = 0;
+	g_info.status = -1;
 }
