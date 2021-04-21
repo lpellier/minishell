@@ -19,6 +19,7 @@
 int	ft_unset(int index_cmd)
 {
 	t_cmd	*cmd;
+	t_env	*data_ref;
 
 	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	if (cmd->option)
@@ -28,8 +29,10 @@ int	ft_unset(int index_cmd)
 	}
 	if (!g_info->env_head || !g_info->env_head->next)
 		return (FAILURE);
-	ft_list_remove_if(&g_info->env_head->next,
-		create_env_struct(cmd->input, NULL), cmp_env, free_env_struct);
+	data_ref = create_env_struct(cmd->input, NULL);
+	ft_list_remove_if(&g_info->env_head->next, data_ref, cmp_env, \
+		free_env_struct);
+	secure_free(data_ref);
 	return (SUCCESS);
 }
 

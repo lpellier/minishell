@@ -93,6 +93,7 @@ int	open_file(int separator, char *line, int *index)
 	char	*pwd;
 	char	*file_path;
 	char	*file_name;
+	char	*strjoin;
 	int		file_fd;
 	int		i;
 
@@ -113,7 +114,9 @@ int	open_file(int separator, char *line, int *index)
 	i -= *index;
 	file_name = ft_substr(line, *index, i);
 	*index += i;
-	file_path = ft_strjoin(ft_strjoin(pwd, "/"), file_name);
+	strjoin = ft_strjoin(pwd, "/");
+	file_path = ft_strjoin(strjoin, file_name);
+	secure_free(strjoin);
 	if (separator == R_RIGHT)
 		file_fd = open(file_path, O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	else if (separator == R_RIGHTD)
@@ -124,7 +127,8 @@ int	open_file(int separator, char *line, int *index)
 		if (file_fd == -1)
 			ft_printf("minisheh: %s: No such file or directory\n", file_name);
 	}
+	secure_free(pwd);
 	secure_free(file_name);
-	free(file_path);
+	secure_free(file_path);
 	return (file_fd);
 }

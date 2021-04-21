@@ -82,6 +82,7 @@ char	**list_to_tab(t_list *begin_list)
 	t_list	*next;
 	t_env	*env;
 	char	**ret;
+	char	*strjoin;
 	int		i;
 
 	i = 0;
@@ -91,7 +92,9 @@ char	**list_to_tab(t_list *begin_list)
 	while (next)
 	{
 		env = (t_env *)next->data;
-		ret[i] = ft_strjoin(ft_strjoin(env->key, "="), env->value);
+		strjoin = ft_strjoin(env->key, "=");
+		ret[i] = ft_strjoin(strjoin, env->value);
+		secure_free(strjoin);
 		next = next->next;
 		i++;
 	}

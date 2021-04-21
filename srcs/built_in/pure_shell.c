@@ -29,6 +29,7 @@ int	only_n(char *str)
 int	ft_echo(int index_cmd)
 {
 	t_cmd	*cmd;
+	char	*strjoin;
 	char	*tmp;
 
 	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
@@ -41,7 +42,9 @@ int	ft_echo(int index_cmd)
 		{
 			tmp = ft_strdup(cmd->input);
 			free(cmd->input);
-			cmd->input = ft_strjoin(ft_strjoin(cmd->option, " "), tmp);
+			strjoin = ft_strjoin(cmd->option, " ");
+			cmd->input = ft_strjoin(strjoin, tmp);
+			secure_free(strjoin);
 		}
 		else
 			cmd->input = ft_strdup(cmd->option);

@@ -31,11 +31,14 @@ int	directories(char *path, char *cmd)
 		while (dir != NULL)
 		{
 			if (!compare_size(cmd, dir->d_name))
+			{
+				closedir(d);
 				return (SUCCESS);
+			}
 			dir = readdir(d);
 		}
-		closedir(d);
 	}
+	closedir(d);
 	return (FAILURE);
 }
 

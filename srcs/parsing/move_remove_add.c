@@ -89,6 +89,7 @@ int	move_around(char *str, int *start)
 		}
 		i++;
 	}
+	free_tab(&words);
 	return (ret);
 }
 

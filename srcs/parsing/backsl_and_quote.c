@@ -71,7 +71,7 @@ int	dquote(char *line, int *index)
 	else if (line[*index] == DQUOTE)
 	{
 		remove_char(line, *index);
-		((t_block *)g_info->block_head->data)->end = *index;
+		((t_block*)g_info->block_head->data)->end = *index;
 		return (0);
 	}
 	return (1);

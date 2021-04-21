@@ -38,7 +38,7 @@ int	get_input(char *line, t_cmd *cmd, int index)
 	{
 		while (line[i] && ft_cinset(line[i], SEPARATOR))
 			i++;
-		while (line[i - 1] == 32)
+		while (i > 0 && line[i - 1] == 32)
 			i--;
 		if (i >= 1)
 			cmd->input = ft_strndup(line, i);

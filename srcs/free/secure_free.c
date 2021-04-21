@@ -27,6 +27,7 @@ void		free_blocks(t_list *block_head)
 	{
 		next = block_head;
 		block_head = block_head->next;
+		secure_free(next->data);
 		secure_free(next);
 	}
 	secure_free(block_head);

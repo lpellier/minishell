@@ -68,6 +68,7 @@ int	find_binary(t_cmd *cmd)
 {
 	char	*path;
 	char	*actu_cmd;
+	char	*strjoin;
 	int		i;
 
 	i = 0;
@@ -78,14 +79,16 @@ int	find_binary(t_cmd *cmd)
 		cmd->path = ft_strdup(cmd->cmd);
 		return (SUCCESS);
 	}
+	secure_free(actu_cmd);
 	if (!g_info->dir_paths)
 		return (FAILURE);
 	while (g_info->dir_paths[i])
 	{
 		if (!directories(g_info->dir_paths[i], cmd->cmd))
 		{
-			cmd->path = ft_strjoin(ft_strjoin(g_info->dir_paths[i], "/"), \
-				cmd->cmd);
+			strjoin = ft_strjoin(g_info->dir_paths[i], "/");
+			cmd->path = ft_strjoin(strjoin, cmd->cmd);
+			secure_free(strjoin);
 			return (SUCCESS);
 		}
 		i++;

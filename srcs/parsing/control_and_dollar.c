@@ -45,9 +45,13 @@ void	dollar_suite(char *line, char *var, int *index, int i)
 {
 	t_list	*var_list;
 	t_env	*var_key;
+	t_env	*data_ref;
 
+	data_ref = create_env_struct(var, NULL);
 	var_list = ft_list_find(g_info->env_head, \
-		create_env_struct(var, NULL), cmp_env);
+		data_ref, cmp_env);
+	secure_free(data_ref);
+	secure_free(var);
 	if (var_list)
 	{
 		var_key = (t_env *)var_list->data;

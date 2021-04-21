@@ -37,21 +37,11 @@ void	free_cmd_struct(void *data)
 
 	ptr = (t_cmd *)data;
 	ptr->bui = 9;
-	if (ptr->cmd)
-		free(ptr->cmd);
-	ptr->cmd = NULL;
-	if (ptr->input)
-		free(ptr->input);
-	ptr->input = NULL;
-	if (ptr->option)
-		free(ptr->option);
-	ptr->option = NULL;
-	if (ptr->path)
-		free(ptr->path);
-	ptr->path = NULL;
-	if (ptr)
-		free(ptr);
-	ptr = NULL;
+	secure_free(ptr->cmd);
+	secure_free(ptr->option);
+	secure_free(ptr->input);
+	secure_free(ptr->path);
+	secure_free(ptr);
 }
 
 void	free_env_struct(void *data)
