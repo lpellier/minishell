@@ -16,9 +16,12 @@ t_env	*get_env_custom(char *key)
 {
 	t_list	*var_list;
 	t_env	*var;
+	t_env	*data_ref;
 
+	data_ref = create_env_struct(key, NULL);
 	var_list = ft_list_find(g_info->env_head, \
-		create_env_struct(key, NULL), cmp_env);
+		data_ref, cmp_env);
+	secure_free(data_ref);
 	if (!var_list)
 		return (NULL);
 	var = (t_env *)var_list->data;

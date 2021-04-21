@@ -76,6 +76,7 @@ void	reset_info(void)
 	t_env	*env;
 
 	env = get_env_custom("PATH");
+	free_tab(&g_info->dir_paths);
 	if (g_info->dir_paths)
 		free(g_info->dir_paths);
 	if (env)
@@ -86,7 +87,10 @@ void	reset_info(void)
 	g_info->kill = FALSE;
 	g_info->sig_status = 0;
 	g_info->bin_running = FALSE;
+	free_blocks(g_info->block_head);
 	g_info->block_head = ft_create_elem(create_block_struct(-1, -1));
 	g_info->colon_nbr = 0;
 	g_info->status = -1;
+	ft_list_clear(g_info->cmd_head, free_cmd_struct);
+	ft_bzero(g_info->cur_path, ft_strlen(g_info->cur_path));
 }

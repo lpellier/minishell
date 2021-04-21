@@ -18,3 +18,16 @@ void	secure_free(void *ptr)
 		free(ptr);
 	ptr = NULL;
 }
+
+void		free_blocks(t_list *block_head)
+{
+	t_list *next;
+
+	while (block_head)
+	{
+		next = block_head;
+		block_head = block_head->next;
+		secure_free(next);
+	}
+	secure_free(block_head);
+}

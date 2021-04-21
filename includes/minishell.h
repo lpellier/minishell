@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include <sys/wait.h>
+# include <sys/types.h>
 # include <unistd.h>
 # include <dirent.h>
 # include <signal.h>
@@ -323,6 +324,7 @@ void		ft_sigterm(int sig);
 
 // secure_free
 void		secure_free(void *ptr);
+void		free_blocks(t_list *block_head);
 
 // free
 void		free_tab(char ***tab);

@@ -104,18 +104,18 @@ char		*get_folder_path(char *cmd, char **actu_cmd)
 	int		i;
 
 	i = ft_strlen(cmd);
+	ret = NULL;
 	if (i > 0)
 		i--;
-	while (cmd && cmd[i])
+	while (cmd && i > 0 && cmd[i])
 	{
 		if (cmd[i] == '/')
 			break ;
 		i--;
 	}
-	if (i <= 0)
-		return (NULL);
-	ret = ft_strndup(cmd, i);
-	*actu_cmd = ft_substr(cmd, i + 1, ft_strlen(cmd));
+	if (i > 0)
+		ret = ft_strndup(cmd, i - 1);
+	*actu_cmd = ft_substr(cmd, i, ft_strlen(cmd));
 	return (ret);
 }
 

@@ -78,12 +78,8 @@ void	free_history_struct(void *data)
 	ptr = (t_history *)data;
 	if (!ptr)
 		return ;
-	ft_bzero(ptr->line, ft_strlen(ptr->line));
-	if (ptr->line)
-		free(ptr->line);
-	if (ptr)
-		free(ptr);
-	ptr = NULL;
+	secure_free(ptr->line);
+	secure_free(ptr);
 }
 
 void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))

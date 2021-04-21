@@ -22,6 +22,8 @@ int	directories(char *path, char *cmd)
 	DIR				*d;
 	struct dirent	*dir;
 
+	if (!path)
+		return (FAILURE);
 	d = opendir(path);
 	if (d)
 	{

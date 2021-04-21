@@ -43,9 +43,12 @@ int	check_if_block(int index)
 {
 	t_list		*ptr;
 	t_block		*block;
+	t_block		*data_ref;
 
-	ptr = ft_list_find(g_info->block_head, create_block_struct(index, -1), \
+	data_ref = create_block_struct(index, -1);
+	ptr = ft_list_find(g_info->block_head, data_ref, \
 		cmp_block);
+	secure_free(data_ref);
 	if (!ptr)
 		return (-1);
 	block = ptr->data;

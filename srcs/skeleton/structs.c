@@ -40,8 +40,8 @@ t_env	*create_env_struct(char *key, char *value)
 
 	if (ft_calloc((void **)&env, 1, sizeof(t_env)))
 		return (NULL);
-	env->key = ft_strdup(key);
-	env->value = ft_strdup(value);
+	env->key = key;
+	env->value = value;
 	return (env);
 }
 

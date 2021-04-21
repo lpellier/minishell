@@ -61,18 +61,16 @@ int			shell_loop()
 		g_info->cmd_head = ft_create_elem(create_cmd_struct());
 		process_line(first);
 		first = 0;
-		secure_free(cur_dir);
-		ft_list_clear(g_info->cmd_head, free_cmd_struct);
-		ft_bzero(g_info->cur_path, ft_strlen(g_info->cur_path));
 		update_cmd_status();
 		reset_info();
 		remove_useless_history();
+		secure_free(cur_dir);
 	}
-	secure_free(g_info->line);
+	free_blocks(g_info->block_head);
 	free_tab(&g_info->dir_paths);
+	secure_free(g_info->line);
 	ft_list_clear(g_info->env_head, free_env_struct);
 	ft_list_clear(g_info->history_head, free_history_struct);
-	ft_list_clear(g_info->block_head, free);
 	secure_free(g_info);
 	return (SUCCESS);
 }
