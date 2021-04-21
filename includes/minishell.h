@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 16:55:31 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 17:29:13 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,36 +165,71 @@ enum				e_status_codes
 	OTHER
 };
 
-void		print_block(void *data);
+/*********
+** main **
+**********/
+
 int			rem_hist(void *data, void *data_ref);
+void		remove_useless_history(void);
 int			shell_loop(void);
 void		update_cmd_status(void);
-void		delete_char(char *line, char *str, int index);
+int			check_exec_options(int argc, char **argv);
 
-/************
-** termcap **
-************/
+/*************
+** built-in **
+*************/
 
-// termcap
-int			get_pos(int *x, int *y);
-void		init_termcap(void);
-void		use_pow(int i, char *buf, int *x, int *y);
+// binary_things
+int			exec_binary(int index_cmd);
+int			find_binary(t_cmd *cmd);
+void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
 
-// termcap_utils
-void		check_for_arrows(char *line);
-void		restore_term(void);
-void		print_last_cmd(char *line);
-void		print_prev_cmd(char *line);
+// built_in
+char		last_char(char *str);
+int			str_isalpha_withplus(char *str);
 
-// all_signal
-void		ft_sigint(int sig);
-void		ft_sigquit(int sig);
+// pure_shell
+int			ft_pwd(int index_cmd);
+int			ft_exit(int index_cmd);
+int			ft_echo_n(int index_cmd);
+int			ft_echo(int index_cmd);
+int			only_n(char *str);
+
+// built_in2
+char		**count_args(t_cmd *cmd, int *count);
+char		**list_to_tab(t_list *begin_list);
+char		*get_folder_path(char *cmd, char **actu_cmd);
+int			ft_cd(int index_cmd);
+int			nothing(int index_cmd);
+
+// env_things
+int			ft_unset(int index_cmd);
+int			print_declare_env(void);
+int			ft_env(int index_cmd);
+
+// cmp_size_and_cmp
+int			compare_size(char *s1, char *s2);
+void		compare_cmd(t_cmd *cmd);
+
+// do_export
+int			ft_export(int index_cmd);
+int			export_error(t_cmd *cmd);
+int			export_remove_char(char **key_value);
+void		modify_export(char **key_value, int concat);
 
 /*********
-** test **
+** free **
 *********/
 
-void		print_cmd_info(t_cmd *cmd);
+// secure_free
+void		secure_free(void *ptr);
+
+// free
+void		free_tab(char ***tab);
+void		free_history_struct(void *data);
+void		free_cmd_struct(void *data);
+void		free_env_struct(void *data);
+void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 
 /************
 ** parsing **
@@ -276,57 +311,9 @@ int			count_exceptions(int quote, int dquote);
 void		remove_colons(char *line, int i);
 void		do_colon_split(char	**colon_split, int i);
 
-/*********
-** init **
-*********/
-
-int			init_env(char **envp);
-void		reset_info(void);
-int			init_info(char **envp);
-void		init_termcap(void);
-void		init_built_in(void);
-
-/*************
-** built-in **
-*************/
-
-// binary_things
-int			exec_binary(int index_cmd);
-int			find_binary(t_cmd *cmd);
-void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
-
-// built_in
-char		last_char(char *str);
-int			str_isalpha_withplus(char *str);
-
-// pure_shell
-int			ft_pwd(int index_cmd);
-int			ft_exit(int index_cmd);
-int			ft_echo_n(int index_cmd);
-int			ft_echo(int index_cmd);
-int			only_n(char *str);
-
-// built_in2
-char		**count_args(t_cmd *cmd, int *count);
-char		**list_to_tab(t_list *begin_list);
-char		*get_folder_path(char *cmd, char **actu_cmd);
-int			ft_cd(int index_cmd);
-int			nothing(int index_cmd);
-
-// env_things
-int			ft_unset(int index_cmd);
-int			print_declare_env(void);
-int			ft_env(int index_cmd);
-
-// cmp_size_and_cmp
-int			compare_size(char *s1, char *s2);
-void		compare_cmd(t_cmd *cmd);
-
-// do_export
-int			ft_export(int index_cmd);
-int			export_error(t_cmd *cmd);
-int			export_remove_char(char **key_value);
-void		modify_export(char **key_value, int concat);
+/**********
+** redir **
+**********/
 
 // do_redir
 void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
@@ -342,39 +329,25 @@ void		get_child(int separator, pid_t cpid);
 void		check_pipe(int separator, char *line, int index, \
 				int index_cmd);
 
-/***********
-** signal **
-***********/
-
-void		ft_sigint(int sig);
-void		ft_sigquit(int sig);
-void		ft_sigterm(int sig);
-
-/*********
-** free **
-*********/
-
-// secure_free
-void		secure_free(void *ptr);
-
-// free
-void		free_tab(char ***tab);
-void		free_history_struct(void *data);
-void		free_cmd_struct(void *data);
-void		free_env_struct(void *data);
-void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
-
-/****************
-** redirection **
-****************/
-
+// redir_std
 char		*ft_strncpy(char *dest, char *src, unsigned int n);
-int			ft_isseparator(int c);
+char		*ft_strtrim(char const *s1, char const *set);
+int			open_file(int separator, char *line, int *index);
 int			ft_isspace(int c);
 int			ft_cinset(const char c, const char *set);
-char		*get_file(char *s);
-int			open_file(int separator, char *line, int *index);
-void		ft_symbol(t_cmd *cmd);
+int			ft_isseparator(int c);
+int			ft_checkc(char c, const char *set);
+
+/***************
+** shell_init **
+***************/
+
+// init
+int			init_env(char **envp);
+void		reset_info(void);
+int			init_info(char **envp);
+void		init_termcap(void);
+void		init_built_in(void);
 
 /*************
 ** skeleton **
@@ -408,5 +381,31 @@ int			cmp_env(void *data, void *data_ref);
 void		print_env_struct(void *data);
 void		print_history(void *data);
 void		print_env_declare(void *data);
+void		print_block(void *data);
+
+/************
+** termcap **
+************/
+
+// termcap
+int			get_pos(int *x, int *y);
+void		init_termcap(void);
+void		use_pow(int i, char *buf, int *x, int *y);
+
+// termcap_utils
+void		check_for_arrows(char *line);
+void		restore_term(void);
+void		print_last_cmd(char *line);
+void		print_prev_cmd(char *line);
+
+// all_signal
+void		ft_sigint(int sig);
+void		ft_sigquit(int sig);
+
+/*********
+** test **
+*********/
+
+void		print_cmd_info(t_cmd *cmd);
 
 #endif

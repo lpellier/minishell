@@ -6,11 +6,11 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 17:04:04 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 17:30:57 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 // ATTENTION, STRCHR CONTIENT UN TERNAIRE
 
