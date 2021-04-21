@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 12:38:39 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 15:22:25 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,4 +118,12 @@ char	*get_folder_path(char *cmd, char **actu_cmd)
 	ret = ft_strndup(cmd, i);
 	*actu_cmd = ft_substr(cmd, i + 1, ft_strlen(cmd));
 	return (ret);
+}
+
+int	nothing(int index_cmd)
+{
+	(void)index_cmd;
+	if (g_info->kill == FALSE)
+		g_info->kill = TRUE;
+	return (FAILURE);
 }

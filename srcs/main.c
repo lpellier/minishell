@@ -6,31 +6,32 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 12:42:51 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 17:15:12 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int			rem_hist(void *data, void *data_ref)
+int	rem_hist(void *data, void *data_ref)
 {
-	t_history *ptr;
-	(void)		data_ref;
+	t_history	*ptr;
 
+	(void) data_ref;
 	ptr = (t_history *)data;
 	if (!ptr || !ptr->line || (ptr->line && !ptr->line[0]))
 		return (SUCCESS);
 	return (FAILURE);
 }
 
-void		remove_useless_history()
+void	remove_useless_history(void)
 {
-	ft_list_remove_if(&g_info->history_head, NULL, rem_hist, free_history_struct);
+	ft_list_remove_if(&g_info->history_head, NULL, rem_hist, \
+		free_history_struct);
 }
 
-void		update_cmd_status()
+void	update_cmd_status(void)
 {
-	t_env *data;
+	t_env	*data;
 
 	data = (t_env *)g_info->env_head->data;
 	secure_free(data->value);
@@ -44,7 +45,7 @@ void		update_cmd_status()
 ** sole reason of first var is to create head of history linked list in read_line
 */
 
-int			shell_loop()
+int	shell_loop(void)
 {
 	int		first;
 	char	*cur_dir;
@@ -52,8 +53,9 @@ int			shell_loop()
 	first = 1;
 	ft_printf(RED "Welcome to Minisheh\n" RESET);
 	while (!g_info->crashed)
-    {
-		if (!(cur_dir = get_cur_dir()))
+	{
+		cur_dir = get_cur_dir();
+		if (!(cur_dir))
 			cur_dir = ft_strdup("/");
 		ft_printf(BLUE "~ %s > " RESET, cur_dir);
 		get_pos(&g_info->cursor.start_posx, &g_info->cursor.start_posy);
@@ -73,10 +75,11 @@ int			shell_loop()
 	ft_list_clear(g_info->env_head, free_env_struct);
 	ft_list_clear(g_info->history_head, free_history_struct);
 	ft_list_clear(g_info->block_head, free);
+	secure_free(g_info);
 	return (SUCCESS);
 }
 
-int			check_exec_options(int argc, char **argv)
+int	check_exec_options(int argc, char **argv)
 {
 	if (argc == 1)
 		g_info->debug_option = FALSE;
@@ -84,18 +87,20 @@ int			check_exec_options(int argc, char **argv)
 		g_info->debug_option = TRUE;
 	else if (argc >= 3)
 	{
-		ft_printf("Too many arguments. Minishell only supports one option (-d).\n");
+		ft_printf("Too many arguments. Minishell only ");
+		ft_printf("supports one option (-d).\n");
 		return (FAILURE);
 	}
 	else
 	{
-		ft_printf("Only one argument is currently supported : '-d'. It's there to help debugging.\n");
+		ft_printf("Only one argument is currently supported : ");
+		ft_printf("'-d'. It's there to help debugging.\n");
 		return (FAILURE);
 	}
 	return (SUCCESS);
 }
 
-int			main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	if (ft_calloc((void **)&g_info, 1, sizeof(t_info)))
 		exit(FAILURE);
@@ -107,13 +112,13 @@ int			main(int argc, char **argv, char **envp)
 	tcgetattr(STDOUT_FILENO, &g_info->termios_p);
 	tcgetattr(STDOUT_FILENO, &g_info->saved_term);
 	g_info->termios_p.c_lflag &= ~(ICANON | ECHO);
-    g_info->termios_p.c_cc[VTIME] = 0;
-    g_info->termios_p.c_cc[VMIN] = 1;
+	g_info->termios_p.c_cc[VTIME] = 0;
+	g_info->termios_p.c_cc[VMIN] = 1;
 	g_info->cursor.col = tgetnum("co");
 	g_info->cursor.lin = tgetnum("li");
 	tputs(tgetstr("cl", NULL), 1, ft_putchar);
 	if (init_info(envp))
 		exit(EXIT_FAILURE);
 	init_termcap();
-    exit(shell_loop());
+	exit(shell_loop());
 }

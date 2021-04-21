@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/20 17:07:34 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/21 16:57:01 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRCS = srcs/main.c \
 		srcs/parsing/control_and_dollar.c \
 		srcs/shell_init/init.c \
 		srcs/termcap/all_signal.c \
+		srcs/termcap/termcap.c \
 		srcs/termcap/termcap_utils.c \
 		srcs/test/testing_func.c \
 		srcs/redir_std.c

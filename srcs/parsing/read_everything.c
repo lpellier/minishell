@@ -1,19 +1,19 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   read_everything.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 12:38:44 by tefroiss         ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 read_everything.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: tefroiss <tefroiss@student.42.fr>			+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2021/03/24 11:17:51 by lpellier		   #+#	  #+#			  */
+/*	 Updated: 2021/04/21 15:16:07 by tefroiss		  ###	########.fr		  */
+/*																			  */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 // g_info->cursor.posx - g_info->prompt_len + 1 : this formula 
-//     lets me checkout where cursor is on string
+//	   lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
 int	read_keys(char key, t_history *cur)
@@ -102,7 +102,7 @@ void	modify_line_redir(void)
 				i++;
 			count = count_until_redir(&g_info->line[i]);
 			tmp = ft_substr(g_info->line, i, count);
-			i += move_around(tmp, start);
+			i += move_around(tmp, &start);
 			remove_words(i);
 			secure_free(tmp);
 		}
@@ -111,13 +111,13 @@ void	modify_line_redir(void)
 }
 
 /* 
-** reads line using gnl and feeds t_cmd linked lists 
-** i might modify our line in this function, as in removing 
-** any unnecessary backslashes,
-** quotes, double quotes etc..
-** the point is to process our line so that it is readable 
-** by our read_cmd function
-*/
+ ** reads line using gnl and feeds t_cmd linked lists 
+ ** i might modify our line in this function, as in removing 
+ ** any unnecessary backslashes,
+ ** quotes, double quotes etc..
+ ** the point is to process our line so that it is readable 
+ ** by our read_cmd function
+ */
 
 // currently building a way to know if blocks exist
 // colons won't work right now BECUASE OF THE SPLIT

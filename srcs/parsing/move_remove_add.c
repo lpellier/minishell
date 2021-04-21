@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 12:38:43 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 15:05:01 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,15 @@ int	add_word(char *word, int where)
 	return (count);
 }
 
-int	move_around(char *str, int start)
+int	move_around(char *str, int *start)
 {
 	int		i;
 	int		count;
+	int		ret;
 	char	**words;
 
 	i = 0;
+	ret = 0;
 	count = 0;
 	words = NULL;
 	words = ft_split(str, 32);
@@ -80,10 +82,14 @@ int	move_around(char *str, int start)
 	while (words[i])
 	{
 		if (i > 0)
-			count += add_word(words[i], start);
+		{
+			count = add_word(words[i], *start);
+			ret += count;
+			*start += count;
+		}
 		i++;
 	}
-	return (count);
+	return (ret);
 }
 
 int	remove_words(int i)

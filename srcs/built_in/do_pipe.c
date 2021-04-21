@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 12:38:40 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 14:31:43 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 ** restoring stdout and stdin to original fds
 */
 
-int	check_cpid_zero(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
+int	child_process(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
 {
 	close(pipefd[0]);
 	if (separator == PIPE)
@@ -39,11 +39,10 @@ int	check_cpid_zero(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
 	return (g_info->status);
 }
 
-void	check_pipe(int *pipefd, pid_t cpid)
+void	get_child(int separator, pid_t cpid)
 {
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	if (g_info->kill)
+	if (g_info->kill || g_info->status != -1 || \
+		(separator == PIPE && g_info->cmd_status == 127))
 	{
 		kill(cpid, SIGINT);
 		g_info->sig_status = 130;
@@ -54,7 +53,7 @@ void	check_pipe(int *pipefd, pid_t cpid)
 	g_info->cmd_status = g_info->status % 255;
 }
 
-void	check_separator(int separator, char *line, int index, int index_cmd)
+void	check_pipe(int separator, char *line, int index, int index_cmd)
 {
 	if (separator == PIPE)
 	{
@@ -75,20 +74,21 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 
 	g_info->bin_running = TRUE;
 	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
+	save_std(&saved_stdin, &saved_stdout);
 	restore_term();
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
 	cpid = fork();
 	if (cpid == -1)
 		exit(EXIT_FAILURE);
-	if (cpid == 0)
-		_exit(check_cpid_zero(separator, index_cmd, cmd, pipefd));
+	else if (cpid == 0)
+		_exit(child_process(separator, index_cmd, cmd, pipefd));
 	else
 	{
-		check_pipe(pipefd, cpid);
-		check_separator(separator, line, index, index_cmd);
-		return (print_std(saved_stdin, saved_stdout, pipefd[0]));
+		close(pipefd[1]);
+		dup2(pipefd[0], STDIN_FILENO);
+		check_pipe(separator, line, index, index_cmd);
+		get_child(separator, cpid);
+		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }

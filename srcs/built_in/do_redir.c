@@ -6,13 +6,19 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 12:38:41 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	print_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd)
+void	save_std(pid_t *saved_stdin, pid_t *saved_stdout)
+{
+	*saved_stdin = dup(STDIN_FILENO);
+	*saved_stdout = dup(STDOUT_FILENO);
+}
+
+int	restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd)
 {
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
@@ -43,8 +49,7 @@ int	redir(int index_cmd, char *line, int index, int separator)
 	if (file_fd == -1)
 		return (FAILURE);
 	index += spaces(&line[index], index);
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
+	save_std(&saved_stdin, &saved_stdout);
 	if (separator == R_LEFT)
 		dup2(file_fd, STDIN_FILENO);
 	else if (separator == R_RIGHT || separator == R_RIGHTD)
@@ -54,8 +59,8 @@ int	redir(int index_cmd, char *line, int index, int separator)
 	else if (cmd->bui == 8)
 		pipe_for_exec(index_cmd, line, index, NOTHING);
 	else if (cmd->bui == 9)
-		return (print_std(saved_stdin, saved_stdout, file_fd));
+		return (restore_std(saved_stdin, saved_stdout, file_fd));
 	else
 		g_info->built_in[cmd->bui](index_cmd);
-	return (print_std(saved_stdin, saved_stdout, file_fd));
+	return (restore_std(saved_stdin, saved_stdout, file_fd));
 }
