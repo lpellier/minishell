@@ -41,7 +41,8 @@ int	child_process(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
 
 void	get_child(int separator, pid_t cpid)
 {
-	if (g_info->kill || g_info->status != -1 || \
+	//  || g_info->status != -1 |
+	if (g_info->kill || \
 		(separator == PIPE && g_info->cmd_status == 127))
 	{
 		kill(cpid, SIGINT);
