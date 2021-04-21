@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:10:03 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:45 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
 
 void	init_built_in(void)
 {
-	g_info.built_in[0] = ft_echo;
-	g_info.built_in[1] = ft_echo_n;
-	g_info.built_in[2] = ft_exit;
-	g_info.built_in[3] = ft_pwd;
-	g_info.built_in[4] = ft_export;
-	g_info.built_in[5] = ft_unset;
-	g_info.built_in[6] = ft_env;
-	g_info.built_in[7] = ft_cd;
-	g_info.built_in[8] = exec_binary;
+	g_info->built_in[0] = ft_echo;
+	g_info->built_in[1] = ft_echo_n;
+	g_info->built_in[2] = ft_exit;
+	g_info->built_in[3] = ft_pwd;
+	g_info->built_in[4] = ft_export;
+	g_info->built_in[5] = ft_unset;
+	g_info->built_in[6] = ft_env;
+	g_info->built_in[7] = ft_cd;
+	g_info->built_in[8] = exec_binary;
 }
 
 int	init_env(char **envp)
@@ -38,7 +38,7 @@ int	init_env(char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], '=');
-	g_info.env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
+	g_info->env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
 		ft_strdup(key_value[1])));
 	free_tab(&key_value);
 	i++;
@@ -46,7 +46,7 @@ int	init_env(char **envp)
 	{
 		key_value = ft_split(envp[i], '=');
 		if (key_value && key_value[0] && key_value[1])
-			ft_list_push_back(&g_info.env_head, \
+			ft_list_push_back(&g_info->env_head, \
 				create_env_struct(ft_strdup(key_value[0]), \
 				ft_strdup(key_value[1])));
 		free_tab(&key_value);
@@ -57,15 +57,15 @@ int	init_env(char **envp)
 
 int	init_info(char **envp)
 {
-	if (ft_calloc((void **)&g_info.line, 4096, sizeof(char)))
+	if (ft_calloc((void **)&g_info->line, 4096, sizeof(char)))
 		return (FAILURE);
 	init_built_in();
-	g_info.echo_padding = 0;
-	g_info.crashed = FALSE;
-	g_info.cmd_status = 0;
+	g_info->echo_padding = 0;
+	g_info->crashed = FALSE;
+	g_info->cmd_status = 0;
 	init_env(envp);
-	ft_list_push_front(&g_info.env_head, create_env_struct(ft_strdup("?"), \
-		ft_itoa(g_info.cmd_status)));
+	ft_list_push_front(&g_info->env_head, create_env_struct(ft_strdup("?"), \
+		ft_itoa(g_info->cmd_status)));
 	reset_info();
 	return (SUCCESS);
 }
@@ -75,17 +75,17 @@ void	reset_info(void)
 	t_env	*env;
 
 	env = get_env_custom("PATH");
-	if (g_info.dir_paths)
-		free(g_info.dir_paths);
+	if (g_info->dir_paths)
+		free(g_info->dir_paths);
 	if (env)
-		g_info.dir_paths = ft_split(env->value, ':');
+		g_info->dir_paths = ft_split(env->value, ':');
 	else
-		g_info.dir_paths = NULL;
-	g_info.cur_in_history = 0;
-	g_info.kill = FALSE;
-	g_info.sig_status = 0;
-	g_info.bin_running = FALSE;
-	g_info.block_head = ft_create_elem(create_block_struct(-1, -1));
-	g_info.colon_nbr = 0;
-	g_info.status = 0;
+		g_info->dir_paths = NULL;
+	g_info->cur_in_history = 0;
+	g_info->kill = FALSE;
+	g_info->sig_status = 0;
+	g_info->bin_running = FALSE;
+	g_info->block_head = ft_create_elem(create_block_struct(-1, -1));
+	g_info->colon_nbr = 0;
+	g_info->status = 0;
 }

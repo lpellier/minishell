@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:55 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/20 17:04:20 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:41:30 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,31 @@ int	count_words_colon(char *line)
 	return (count);
 }
 
-char	**split_colon_suite(char *line, t_split split)
+char	**split_colon_suite(char *line, t_split *split)
 {
-	while (line[split.i])
+	while (line[split->i])
 	{
-		split.i = pass_q_and_dq(line, split.i);
-		if (line[split.i] && line[split.i] == COLON)
+		split->i = pass_q_and_dq(line, split->i);
+		if (line[split->i] && line[split->i] == COLON)
 		{
-			if (ft_calloc((void **)&split.ret[split.count], 4096, sizeof(char)))
+			if (ft_calloc((void **)&split->ret[split->count], 4096, sizeof(char)))
 				return (NULL);
-			ft_strcpy(split.ret[split.count], ft_substr(line, split.old, \
-				split.i - split.old));
-			split.old = split.i + 1;
-			split.count++;
+			ft_strcpy(split->ret[split->count], ft_substr(line, split->old, \
+				split->i - split->old));
+			split->old = split->i + 1;
+			split->count++;
 		}
-		else if (line[split.i] && split.count == (count_words_colon(line) - 1))
+		else if (line[split->i] && split->count == (count_words_colon(line) - 1))
 		{
-			if (ft_calloc((void **)&split.ret[split.count], 4096, sizeof(char)))
+			if (ft_calloc((void **)&split->ret[split->count], 4096, sizeof(char)))
 				return (NULL);
-			ft_strcpy(split.ret[split.count], ft_substr(line, split.old, \
-				ft_strlen(&line[split.old])));
-			split.count++;
+			ft_strcpy(split->ret[split->count], ft_substr(line, split->old, \
+				ft_strlen(&line[split->old])));
+			split->count++;
 		}
-		split.i++;
+		split->i++;
 	}
-	return (split.ret);
+	return (split->ret);
 }
 
 char	**ft_split_colon(char *line)
@@ -85,6 +85,6 @@ char	**ft_split_colon(char *line)
 		ft_strcpy(split.ret[0], line);
 		return (split.ret);
 	}
-	split.ret = split_colon_suite(line, split);
+	split.ret = split_colon_suite(line, &split);
 	return (split.ret);
 }

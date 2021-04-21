@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/20 17:05:32 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:43 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ int	add_word(char *word, int where)
 	count = 0;
 	while (word[i])
 	{
-		add_char(g_info.line, word[i], where);
+		add_char(g_info->line, word[i], where);
 		i++;
 		where++;
 		count++;
 	}
-	add_char(g_info.line, 32, where);
+	add_char(g_info->line, 32, where);
 	count++;
 	return (count);
 }
@@ -91,14 +91,14 @@ int	remove_words(int i)
 	int		count;
 
 	count = 0;
-	while (g_info.line[i] && g_info.line[i] == 32)
+	while (g_info->line[i] && g_info->line[i] == 32)
 		i++;
-	while (g_info.line[i] && g_info.line[i] != 32)
+	while (g_info->line[i] && g_info->line[i] != 32)
 		i++;
-	while (g_info.line[i] && g_info.line[i] != '<' && g_info.line[i] != '>')
+	while (g_info->line[i] && g_info->line[i] != '<' && g_info->line[i] != '>')
 	{
 		count++;
-		remove_char(g_info.line, i);
+		remove_char(g_info->line, i);
 	}
 	return (count);
 }

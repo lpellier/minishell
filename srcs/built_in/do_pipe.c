@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/19 14:10:53 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:40 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,23 @@ int	check_cpid_zero(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
 		dup2(pipefd[1], STDOUT_FILENO);
 	else
 		close(pipefd[1]);
-	g_info.status = (g_info.built_in[cmd->bui])(index_cmd);
-	return (g_info.status);
+	g_info->status = (g_info->built_in[cmd->bui])(index_cmd);
+	return (g_info->status);
 }
 
 void	check_pipe(int *pipefd, pid_t cpid)
 {
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
-	if (g_info.kill)
+	if (g_info->kill)
 	{
 		kill(cpid, SIGINT);
-		g_info.sig_status = 130;
+		g_info->sig_status = 130;
 	}
-	waitpid(cpid, &g_info.status, 0);
+	waitpid(cpid, &g_info->status, 0);
 	init_termcap();
-	g_info.bin_running = FALSE;
-	g_info.cmd_status = g_info.status % 255;
+	g_info->bin_running = FALSE;
+	g_info->cmd_status = g_info->status % 255;
 }
 
 void	check_separator(int separator, char *line, int index, int index_cmd)
@@ -60,7 +60,7 @@ void	check_separator(int separator, char *line, int index, int index_cmd)
 	{
 		while (!ft_cinset(line[index], SEPARATOR))
 			index++;
-		ft_list_push_back(&g_info.cmd_head, create_cmd_struct());
+		ft_list_push_back(&g_info->cmd_head, create_cmd_struct());
 		read_cmd(line, index, index_cmd + 1);
 	}
 }
@@ -73,8 +73,8 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
 
-	g_info.bin_running = TRUE;
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	g_info->bin_running = TRUE;
+	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
 	restore_term();

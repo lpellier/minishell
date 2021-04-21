@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/18 15:58:12 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:40 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	modify_export(char **key_value, int concat)
 
 	env_tmp = get_env_custom(key_value[0]);
 	if (!env_tmp)
-		ft_list_push_back(&g_info.env_head, \
+		ft_list_push_back(&g_info->env_head, \
 			create_env_struct(ft_strdup(key_value[0]), \
 			ft_strdup(key_value[1])));
 	else
@@ -58,7 +58,7 @@ int	ft_export(int index_cmd)
 	int		concat;
 	char	**key_value;
 
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	if (export_error(cmd) == FAILURE)
 		return (FAILURE);
 	if (!cmd->input)

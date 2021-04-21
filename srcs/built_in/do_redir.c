@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/19 15:17:21 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:41 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	redir(int index_cmd, char *line, int index, int separator)
 	pid_t	saved_stdout;
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	file_fd = open_file(separator, line, &index);
 	if (file_fd == -1)
 		return (FAILURE);
@@ -56,6 +56,6 @@ int	redir(int index_cmd, char *line, int index, int separator)
 	else if (cmd->bui == 9)
 		return (print_std(saved_stdin, saved_stdout, file_fd));
 	else
-		g_info.built_in[cmd->bui](index_cmd);
+		g_info->built_in[cmd->bui](index_cmd);
 	return (print_std(saved_stdin, saved_stdout, file_fd));
 }

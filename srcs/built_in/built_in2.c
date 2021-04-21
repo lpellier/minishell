@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:09:05 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:39 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_cd(int index_cmd)
 	char	*path;
 
 	path = NULL;
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);

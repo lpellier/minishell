@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 17:47:05 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/18 11:57:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:45 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_env	*get_env_custom(char *key)
 	t_list	*var_list;
 	t_env	*var;
 
-	var_list = ft_list_find(g_info.env_head, \
+	var_list = ft_list_find(g_info->env_head, \
 		create_env_struct(key, NULL), cmp_env);
 	if (!var_list)
 		return (NULL);

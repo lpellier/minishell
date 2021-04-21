@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:25:58 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:57:37 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:43 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ char	*get_cur_dir(void)
 	char	*res;
 
 	i = 0;
-	getcwd(g_info.cur_path, sizeof(g_info.cur_path));
-	if (!compare_size(g_info.cur_path, "/"))
+	getcwd(g_info->cur_path, sizeof(g_info->cur_path));
+	if (!compare_size(g_info->cur_path, "/"))
 	{
-		res = ft_strdup(g_info.cur_path);
+		res = ft_strdup(g_info->cur_path);
 		return (res);
 	}
-	split = ft_split(g_info.cur_path, '/');
+	split = ft_split(g_info->cur_path, '/');
 	while (split[i])
 		i++;
 	if (i == 0)

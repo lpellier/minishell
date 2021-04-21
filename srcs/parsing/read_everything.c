@@ -6,13 +6,13 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:17:51 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:06:07 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:44 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// g_info.cursor.posx - g_info.prompt_len + 1 : this formula 
+// g_info->cursor.posx - g_info->prompt_len + 1 : this formula 
 //     lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
@@ -20,13 +20,13 @@ int	read_keys(char key, t_history *cur)
 {
 	while (key != '\n')
 	{
-		get_pos(&g_info.cursor.posx, &g_info.cursor.posy);
+		get_pos(&g_info->cursor.posx, &g_info->cursor.posy);
 		if (read(STDIN_FILENO, &key, 1) == -1)
 			return (FAILURE);
-		if (g_info.kill)
+		if (g_info->kill)
 		{
-			g_info.kill = FALSE;
-			ft_bzero(g_info.line, ft_strlen(g_info.line));
+			g_info->kill = FALSE;
+			ft_bzero(g_info->line, ft_strlen(g_info->line));
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
 		if (key == 27 || key == 127)
@@ -37,8 +37,8 @@ int	read_keys(char key, t_history *cur)
 				break ;
 		}
 		else if (key != '\n' && ft_cinset(key, WHITESPACE))
-			add_key(g_info.line, key);
-		if (g_info.cur_in_history == 0 || key == '\n')
+			add_key(g_info->line, key);
+		if (g_info->cur_in_history == 0 || key == '\n')
 			update_history(cur);
 	}
 	return (SUCCESS);
@@ -50,16 +50,16 @@ int	read_line(void)
 	char		key;
 
 	key = 0;
-	ft_bzero(g_info.line, ft_strlen(g_info.line));
-	cur = (t_history *)g_info.history_head->data;
-	g_info.prompt_len += g_info.echo_padding;
+	ft_bzero(g_info->line, ft_strlen(g_info->line));
+	cur = (t_history *)g_info->history_head->data;
+	g_info->prompt_len += g_info->echo_padding;
 	if (read_keys(key, cur))
 	{
-		g_info.sig_status = 1;
+		g_info->sig_status = 1;
 		return (FAILURE);
 	}
-	if (g_info.echo_padding > 0)
-		g_info.echo_padding = 0;
+	if (g_info->echo_padding > 0)
+		g_info->echo_padding = 0;
 	return (SUCCESS);
 }
 
@@ -91,17 +91,17 @@ void	modify_line_redir(void)
 	i = 0;
 	start = 0;
 	tmp = NULL;
-	while (g_info.line[i])
+	while (g_info->line[i])
 	{
 		count = 0;
-		if (!is_redir_l(g_info.line[i]) || !is_redir_r(g_info.line[i]))
+		if (!is_redir_l(g_info->line[i]) || !is_redir_r(g_info->line[i]))
 		{
 			if (!start)
 				start = i;
-			while (g_info.line[i] && !ft_cinset(g_info.line[i], SEPARATOR))
+			while (g_info->line[i] && !ft_cinset(g_info->line[i], SEPARATOR))
 				i++;
-			count = count_until_redir(&g_info.line[i]);
-			tmp = ft_substr(g_info.line, i, count);
+			count = count_until_redir(&g_info->line[i]);
+			tmp = ft_substr(g_info->line, i, count);
 			i += move_around(tmp, start);
 			remove_words(i);
 			secure_free(tmp);
@@ -132,13 +132,13 @@ void	process_line(int first)
 	i = 0;
 	crashed = FALSE;
 	if (first)
-		g_info.history_head = ft_create_elem(create_history_struct());
+		g_info->history_head = ft_create_elem(create_history_struct());
 	else
-		ft_list_push_front(&g_info.history_head, create_history_struct());
+		ft_list_push_front(&g_info->history_head, create_history_struct());
 	read_line();
 	modify_line_redir();
-	remove_spaces(g_info.line);
-	colon_split = ft_split_colon(g_info.line);
+	remove_spaces(g_info->line);
+	colon_split = ft_split_colon(g_info->line);
 	ft_printf("\n");
 	do_colon_split(colon_split, i);
 	free_tab(&colon_split);

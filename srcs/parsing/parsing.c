@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/15 18:39:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:44 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	check_if_block(int index)
 	t_list		*ptr;
 	t_block		*block;
 
-	ptr = ft_list_find(g_info.block_head, create_block_struct(index, -1), \
+	ptr = ft_list_find(g_info->block_head, create_block_struct(index, -1), \
 		cmp_block);
 	if (!ptr)
 		return (-1);
@@ -75,10 +75,10 @@ void	read_cmd(char *line, int index, int index_cmd)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info.cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
 	index = ft_set_index(line, cmd, index);
 	compare_cmd(cmd);
-	if (g_info.debug_option)
+	if (g_info->debug_option)
 		print_cmd_info(cmd);
 	if (cmd->cmd && cmd->bui == 9)
 		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
@@ -96,5 +96,5 @@ void	read_cmd(char *line, int index, int index_cmd)
 	else if (!cmd->cmd)
 		return ;
 	else
-		g_info.cmd_status = g_info.built_in[cmd->bui](index_cmd);
+		g_info->cmd_status = g_info->built_in[cmd->bui](index_cmd);
 }

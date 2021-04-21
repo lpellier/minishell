@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:03:08 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:38:53 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ typedef struct s_info
 	int				status;
 }					t_info;
 
-t_info				g_info;
+t_info				*g_info;
 
 enum				e_separator
 {
@@ -224,7 +224,7 @@ int			ft_set_index(char *line, t_cmd *cmd, int index);
 void		read_cmd(char *line, int index, int index_cmd);
 
 // colon_count_split
-char		**split_colon_suite(char *line, t_split split);
+char		**split_colon_suite(char *line, t_split *split);
 char		**ft_split_colon(char *line);
 int			count_words_colon(char *line);
 
