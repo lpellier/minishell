@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/20 19:31:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 11:35:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,9 @@ int	child_process(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
 	return (g_info->status);
 }
 
-void	get_child(int separator, int index_cmd, pid_t cpid)
+void	get_child(int separator, pid_t cpid)
 {
-	t_cmd	*next;
-
-	next = NULL;
-	if (separator == PIPE)
-		next = ft_list_at(g_info->cmd_head, index_cmd + 1)->data;
-	if (g_info->kill || g_info->status != -1 || (next && next->bui != 8) || \
+	if (g_info->kill || g_info->status != -1 || \
 		(separator == PIPE && g_info->cmd_status == 127))
 	{
 		kill(cpid, SIGINT);
@@ -93,7 +88,7 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		check_pipe(separator, line, index, index_cmd);
-		get_child(separator, index_cmd, cpid);
+		get_child(separator, cpid);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }
