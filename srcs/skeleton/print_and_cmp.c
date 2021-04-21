@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_and_cmp.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/14 20:00:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:10:03 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	cmp_env(void *data, void *data_ref)
 		return (FAILURE);
 }
 
-void		print_env_declare(void *data)
+void	print_env_declare(void *data)
 {
 	t_env	*ptr;
 

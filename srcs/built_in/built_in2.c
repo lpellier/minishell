@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 18:52:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 15:22:25 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,13 @@ int	ft_cd(int index_cmd)
 	return (SUCCESS);
 }
 
-// // /*
-// // ** this is used to count different arguments for binaries
-// // ** this WILL be tricky as we'll need to account for ""  and ''
-// // ** as a single argument
-// // ** and there might be backslashes canceling quotes -> it's going to be tough
-// // */
+/*
+** this is used to count different arguments for binaries
+** this WILL be tricky as we'll need to account for ""  and ''
+** as a single argument
+** and there might be backslashes canceling quotes -> 
+** it's going to be tough
+*/
 
 char	**count_args(t_cmd *cmd, int *count)
 {
@@ -98,7 +99,7 @@ char	**list_to_tab(t_list *begin_list)
 	return (ret);
 }
 
-char		*get_folder_path(char *cmd, char **actu_cmd)
+char	*get_folder_path(char *cmd, char **actu_cmd)
 {
 	char	*ret;
 	int		i;
@@ -119,7 +120,7 @@ char		*get_folder_path(char *cmd, char **actu_cmd)
 	return (ret);
 }
 
-int			nothing(int index_cmd)
+int	nothing(int index_cmd)
 {
 	(void)index_cmd;
 	if (g_info->kill == FALSE)

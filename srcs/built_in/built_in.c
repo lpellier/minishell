@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:05:33 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/19 14:20:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:10:26 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int			str_isalpha_withplus(char *str)
+int	str_isalpha_withplus(char *str)
 {
 	int		i;
 
@@ -38,5 +38,5 @@ char	last_char(char *str)
 		c = str[i - 1];
 	else
 		c = '\0';
-	return(c);
+	return (c);
 }

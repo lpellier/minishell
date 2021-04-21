@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 11:36:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 17:29:13 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,15 @@ typedef struct s_cursor
 	int				lin;
 }					t_cursor;
 
+typedef struct s_split
+{
+	int				i;
+	int				old;
+	int				count;
+	int				words_len;
+	char			**ret;
+}					t_split;
+
 typedef struct s_info
 {
 	struct termios	termios_p;
@@ -157,102 +166,15 @@ enum				e_status_codes
 	OTHER
 };
 
-void		print_block(void *data);
-void		restore_term();
-int			print_declare_env();
-void		print_env_declare(void *data);
+/*********
+** main **
+**********/
 
 int			rem_hist(void *data, void *data_ref);
+void		remove_useless_history(void);
 int			shell_loop(void);
-int			get_pos(int *x, int *y);
-void		restore_term(void);
 void		update_cmd_status(void);
-void		print_last_cmd(char *line);
-void		print_prev_cmd(char *line);
-void		delete_char(char *line, char *str, int index);
-
-/************
-** termcap **
-************/
-
-void		check_for_arrows(char *line);
-
-/*********
-** test **
-*********/
-
-void		print_cmd_info(t_cmd *cmd);
-
-/************
-** parsing **
-************/
-
-// directories
-char		*get_cur_dir(void);
-int			directories(char *path, char *cmd);
-
-// parsing_utils
-int			is_pipe(char c);
-int			is_colon(char c);
-int			is_redir_l(char c);
-int			is_redir_r(char c);
-
-// parsing_space
-int			is_whitespace(char c);
-int			spaces(char *s, int index);
-
-// char_and_key
-void		add_char(char *dest, char key, int index);
-void		remove_char(char *line, int index);
-void		add_key(char *dest, char key);
-void		delete_key(char *dest);
-
-// get_something
-int			get_input(char *line, t_cmd *cmd, int index);
-int			get_cmd(char *line, t_cmd *cmd, int index);
-int			get_option(char *line, t_cmd *cmd, int index);
-
-// parsing
-int			str_isalpha_withminus(char *str);
-int			cmp_block(void *data, void *data_ref);
-int			check_if_block(int index);
-int			ft_set_index(char *line, t_cmd *cmd, int index);
-void		read_cmd(char *line, int index, int index_cmd);
-
-// read_everything
-int			read_line(void);
-int			read_keys(char key, t_history *cur);
-void		bzero_and_cpy(t_history *cur, char *line);
-void		special_keys(char key);
-void		process_line(int first);
-
-// backsl_and_quote
-int			backslash(char *line, int *index, int dquote);
-int			quote(char *line, int *index);
-int			dquote(char *line, int *index);
-int			transform_line(char *line, int index, int quote_nb, int dquote_nb);
-
-// control_and_dollar
-int			control_d();
-int			ft_isalpha_ordollar(int c);
-int			dollar(char *line, int *index);
-void		dollar_suite(char *line, char *var, int *index, int i);
-
-// colon_and_count
-int			is_there_colon_in_line(char *line);
-int			count_exceptions(int quote, int dquote);
-void		remove_colons(char *line, int i);
-void		do_colon_split(char	**colon_split, int i);
-
-/*********
-** init **
-*********/
-
-int			init_env(char **envp);
-void		reset_info(void);
-int			init_info(char **envp);
-void		init_termcap(void);
-void		init_built_in(void);
+int			check_exec_options(int argc, char **argv);
 
 /*************
 ** built-in **
@@ -296,6 +218,104 @@ int			export_error(t_cmd *cmd);
 int			export_remove_char(char **key_value);
 void		modify_export(char **key_value, int concat);
 
+/*********
+** free **
+*********/
+
+// secure_free
+void		secure_free(void *ptr);
+
+// free
+void		free_tab(char ***tab);
+void		free_history_struct(void *data);
+void		free_cmd_struct(void *data);
+void		free_env_struct(void *data);
+void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
+
+/************
+** parsing **
+************/
+
+// directories
+char		*get_cur_dir(void);
+int			directories(char *path, char *cmd);
+
+// parsing_utils
+int			is_pipe(char c);
+int			is_colon(char c);
+int			is_redir_l(char c);
+int			is_redir_r(char c);
+
+// parsing_space
+int			is_whitespace(char c);
+int			spaces(char *s, int index);
+
+// char_and_key
+void		add_char(char *dest, char key, int index);
+void		remove_char(char *line, int index);
+void		add_key(char *dest, char key);
+void		delete_key(char *dest);
+
+// get_something
+int			get_input(char *line, t_cmd *cmd, int index);
+int			get_cmd(char *line, t_cmd *cmd, int index);
+int			get_option(char *line, t_cmd *cmd, int index);
+
+// parsing
+int			str_isalpha_withminus(char *str);
+int			cmp_block(void *data, void *data_ref);
+int			check_if_block(int index);
+int			ft_set_index(char *line, t_cmd *cmd, int index);
+void		read_cmd(char *line, int index, int index_cmd);
+
+// colon_count_split
+char		**split_colon_suite(char *line, t_split *split);
+char		**ft_split_colon(char *line);
+int			count_words_colon(char *line);
+
+// move_remove_add
+int			prepare_remove(char *line, int q, int dq, int i);
+int			add_word(char *word, int where);
+int			move_around(char *str, int *start);
+int			remove_words(int i);
+void		remove_spaces(char *l);
+
+// read_everything
+int			read_line(void);
+int			read_keys(char key, t_history *cur);
+int			count_until_redir(char *str);
+void		process_line(int first);
+void		modify_line_redir(void);
+
+// read_everything_suite
+int			pass_q_and_dq(char *line, int i);
+void		update_history(t_history *cur);
+void		bzero_and_cpy(t_history *cur, char *line);
+void		special_keys(char key);
+void		toggle(int *bo, int *index);
+
+// backsl_and_quote
+int			backslash(char *line, int *index, int dquote);
+int			quote(char *line, int *index);
+int			dquote(char *line, int *index);
+int			transform_line(char *line, int index, int quote_nb, int dquote_nb);
+
+// control_and_dollar
+int			control_d(void);
+int			ft_isalpha_ordollar(int c);
+int			dollar(char *line, int *index);
+void		dollar_suite(char *line, char *var, int *index, int i);
+
+// colon_and_count
+int			is_there_colon_in_line(char *line);
+int			count_exceptions(int quote, int dquote);
+void		remove_colons(char *line, int i);
+void		do_colon_split(char	**colon_split, int i);
+
+/**********
+** redir **
+**********/
+
 // do_redir
 void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
@@ -309,14 +329,6 @@ int			child_process(int separator, int index_cmd, t_cmd *cmd, \
 void		get_child(int separator, pid_t cpid);
 void		check_pipe(int separator, char *line, int index, \
 				int index_cmd);
-
-/***********
-** signal **
-***********/
-
-void		ft_sigint(int sig);
-void		ft_sigquit(int sig);
-void		ft_sigterm(int sig);
 
 /*********
 ** free **
@@ -338,12 +350,23 @@ void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 ****************/
 
 char		*ft_strncpy(char *dest, char *src, unsigned int n);
-int			ft_isseparator(int c);
+char		*ft_strtrim(char const *s1, char const *set);
+int			open_file(int separator, char *line, int *index);
 int			ft_isspace(int c);
 int			ft_cinset(const char c, const char *set);
-char		*get_file(char *s);
-int			open_file(int separator, char *line, int *index);
-void		ft_symbol(t_cmd *cmd);
+int			ft_isseparator(int c);
+int			ft_checkc(char c, const char *set);
+
+/***************
+** shell_init **
+***************/
+
+// init
+int			init_env(char **envp);
+void		reset_info(void);
+int			init_info(char **envp);
+void		init_termcap(void);
+void		init_built_in(void);
 
 /*************
 ** skeleton **
@@ -377,5 +400,31 @@ int			cmp_env(void *data, void *data_ref);
 void		print_env_struct(void *data);
 void		print_history(void *data);
 void		print_env_declare(void *data);
+void		print_block(void *data);
+
+/************
+** termcap **
+************/
+
+// termcap
+int			get_pos(int *x, int *y);
+void		init_termcap(void);
+void		use_pow(int i, char *buf, int *x, int *y);
+
+// termcap_utils
+void		check_for_arrows(char *line);
+void		restore_term(void);
+void		print_last_cmd(char *line);
+void		print_prev_cmd(char *line);
+
+// all_signal
+void		ft_sigint(int sig);
+void		ft_sigquit(int sig);
+
+/*********
+** test **
+*********/
+
+void		print_cmd_info(t_cmd *cmd);
 
 #endif

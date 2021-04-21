@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 18:52:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	init_env(char **envp)
 	return (SUCCESS);
 }
 
-int		init_info(char **envp)
+int	init_info(char **envp)
 {
 	if (ft_calloc((void **)&g_info->line, 4096, sizeof(char)))
 		return (FAILURE);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
+#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/19 14:04:35 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/21 17:34:24 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,37 +19,41 @@ CFLAGS = -Wall -Werror -Wextra -pedantic -g3
 CC = clang
 
 SRCS = srcs/main.c \
+		srcs/built_in/binary_things.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
-		srcs/built_in/do_redir.c \
-		srcs/built_in/do_pipe.c \
-		srcs/built_in/do_export.c \
-		srcs/built_in/binary_things.c \
-		srcs/built_in/env_things.c \
 		srcs/built_in/cmp_size_and_cmd.c \
+		srcs/built_in/do_export.c \
+		srcs/built_in/env_things.c \
 		srcs/built_in/pure_shell.c \
 		srcs/free/free.c \
 		srcs/free/secure_free.c \
-		srcs/skeleton/linked_lists.c \
-		srcs/skeleton/create_and_push.c \
-		srcs/skeleton/print_and_cmp.c \
-		srcs/skeleton/structs.c \
-		srcs/skeleton/struct_env.c \
-		srcs/parsing/directories.c \
-		srcs/parsing/parsing_utils.c \
-		srcs/parsing/parsing_space.c \
-		srcs/parsing/parsing.c \
-		srcs/parsing/get_something.c \
-		srcs/parsing/read_everything.c \
+		srcs/parsing/backsl_and_quote.c \
 		srcs/parsing/char_and_key.c \
 		srcs/parsing/colon_and_count.c \
-		srcs/parsing/backsl_and_quote.c \
+		srcs/parsing/colon_count_split.c \
 		srcs/parsing/control_and_dollar.c \
+		srcs/parsing/directories.c \
+		srcs/parsing/get_something.c \
+		srcs/parsing/move_remove_add.c \
+		srcs/parsing/parsing_space.c \
+		srcs/parsing/parsing_utils.c \
+		srcs/parsing/parsing.c \
+		srcs/parsing/read_everything_suite.c \
+		srcs/parsing/read_everything.c \
+		srcs/redir/do_pipe.c \
+		srcs/redir/do_redir.c \
+		srcs/redir/redir_std.c \
 		srcs/shell_init/init.c \
+		srcs/skeleton/create_and_push.c \
+		srcs/skeleton/linked_lists.c \
+		srcs/skeleton/print_and_cmp.c \
+		srcs/skeleton/struct_env.c \
+		srcs/skeleton/structs.c \
 		srcs/termcap/all_signal.c \
 		srcs/termcap/termcap_utils.c \
+		srcs/termcap/termcap.c \
 		srcs/test/testing_func.c \
-		srcs/redir_std.c
 
 OBJS = $(SRCS:.c=.o)
 
