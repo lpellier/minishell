@@ -136,6 +136,8 @@ void	process_line(int first)
 	else
 		ft_list_push_front(&g_info->history_head, create_history_struct());
 	read_line();
+	if (check_syntax())
+		return ;
 	modify_line_redir();
 	remove_spaces(g_info->line);
 	colon_split = ft_split_colon(g_info->line);

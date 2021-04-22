@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 17:29:13 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/22 15:02:35 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,7 @@ char		*get_cur_dir(void);
 int			directories(char *path, char *cmd);
 
 // parsing_utils
+
 int			is_pipe(char c);
 int			is_colon(char c);
 int			is_redir_l(char c);
@@ -266,6 +267,11 @@ int			cmp_block(void *data, void *data_ref);
 int			check_if_block(int index);
 int			ft_set_index(char *line, t_cmd *cmd, int index);
 void		read_cmd(char *line, int index, int index_cmd);
+
+// error_handling
+int			check_syntax();
+int			pipe_error_syntax(int i);
+int			double_error_syntax(int i, char token);
 
 // colon_count_split
 char		**split_colon_suite(char *line, t_split *split);
