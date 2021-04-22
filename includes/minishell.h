@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 15:02:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/22 15:32:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ int			directories(char *path, char *cmd);
 
 // parsing_utils
 
+int			multiple_args(char *str);
 int			is_pipe(char c);
 int			is_colon(char c);
 int			is_redir_l(char c);

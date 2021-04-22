@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 15:22:25 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/22 15:32:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_cd(int index_cmd)
 		path = ft_strdup(get_env_custom("HOME")->value);
 	else
 		path = ft_strdup(cmd->input);
-	if (chdir(path))
+	if (multiple_args(path) || chdir(path))
 		ft_printf("Couldn't access folder, check directory listing\n");
 	secure_free(path);
 	pwd = get_env_custom("PWD");
@@ -50,7 +50,7 @@ int	ft_cd(int index_cmd)
 ** this is used to count different arguments for binaries
 ** this WILL be tricky as we'll need to account for ""  and ''
 ** as a single argument
-** and there might be backslashes canceling quotes -> 
+** and there might be backslashes canceling quotes ->
 ** it's going to be tough
 */
 
