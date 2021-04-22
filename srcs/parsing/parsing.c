@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/22 12:31:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ int	check_if_block(int index)
 
 int	ft_set_index(char *line, t_cmd *cmd, int index)
 {
-	index += spaces(&line[index], index);
 	index += get_cmd(&line[index], cmd, index);
-	index += spaces(&line[index], index);
+	index += 1;
 	index += get_option(&line[index], cmd, index);
-	index += spaces(&line[index], index);
+	if (cmd->option)
+		index += 1;
 	index += get_input(&line[index], cmd, index);
-	index += spaces(&line[index], index);
+	index += 1;
 	return (index);
 }
 
