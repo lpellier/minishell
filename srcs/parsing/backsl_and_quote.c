@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 12:27:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/22 16:24:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,7 @@ int	backslash(char *line, int *index, int dquote)
 	{
 		if (line[*index + 1] && (line[*index + 1] == BSLASH || \
 			line[*index + 1] == '$' || line[*index + 1] == DQUOTE))
-		{
 			remove_char(line, *index);
-			if (!line[*index + 1])
-				return (FAILURE);
-		}
 		*index += 1;
 	}
 	return (SUCCESS);
@@ -57,10 +53,7 @@ int	dquote(char *line, int *index)
 	while (line[*index] && line[*index] != DQUOTE)
 	{
 		if (line[*index] == BSLASH)
-		{
-			if (backslash(line, index, 1))
-				return (FAILURE);
-		}
+			backslash(line, index, 1);
 		else if (line[*index] == DOLLAR)
 			dollar(line, index);
 		else

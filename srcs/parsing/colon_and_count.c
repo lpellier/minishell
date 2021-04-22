@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colon_and_count.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/22 16:25:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	do_colon_split(char	**colon_split, int i)
 		if (transform_line(colon_split[i], 0, 0, 0))
 		{
 			g_info->cmd_status = 1;
-			ft_printf("\nminisheh: parsing error: number of quotes ");
+			ft_printf("minisheh: parsing error: number of quotes ");
 			ft_printf("should be even\n");
 			break ;
 		}

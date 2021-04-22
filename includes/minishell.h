@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 15:32:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/22 16:07:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ int			only_n(char *str);
 // built_in2
 char		**count_args(t_cmd *cmd, int *count);
 char		**list_to_tab(t_list *begin_list);
-char		*get_folder_path(char *cmd, char **actu_cmd);
+char		*get_actual_cmd(char *cmd, char **path);
 int			ft_cd(int index_cmd);
 int			nothing(int index_cmd);
 

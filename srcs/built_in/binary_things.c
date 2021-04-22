@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary_things.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/22 16:11:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,22 @@ int	exec_binary(int index_cmd)
 
 int	find_binary(t_cmd *cmd)
 {
-	char	*path;
 	char	*actu_cmd;
+	char	*path;
 	char	*strjoin;
 	int		i;
 
 	i = 0;
-	actu_cmd = NULL;
-	path = get_folder_path(cmd->cmd, &actu_cmd);
+	actu_cmd = get_actual_cmd(cmd->cmd, &path);
 	if (!directories(path, actu_cmd))
 	{
 		cmd->path = ft_strdup(cmd->cmd);
+		secure_free(actu_cmd);
+		secure_free(path);
 		return (SUCCESS);
 	}
 	secure_free(actu_cmd);
+	secure_free(path);
 	if (!g_info->dir_paths)
 		return (FAILURE);
 	while (g_info->dir_paths[i])

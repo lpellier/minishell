@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 15:32:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/22 16:16:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_cd(int index_cmd)
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
 		return (FAILURE);
 	}
-	if (!cmd->input)
+	if (!cmd->input || !compare_size(cmd->input, "~"))
 		path = ft_strdup(get_env_custom("HOME")->value);
 	else
 		path = ft_strdup(cmd->input);
@@ -102,24 +102,26 @@ char	**list_to_tab(t_list *begin_list)
 	return (ret);
 }
 
-char	*get_folder_path(char *cmd, char **actu_cmd)
+char	*get_actual_cmd(char *cmd, char **path)
 {
 	char	*ret;
+	char	**split;
 	int		i;
+	int		path_len;
 
-	i = ft_strlen(cmd);
-	ret = NULL;
+	i = 0;
+	split = ft_split(cmd, '/');
+	while (split[i])
+		i++;
 	if (i > 0)
 		i--;
-	while (cmd && i > 0 && cmd[i])
-	{
-		if (cmd[i] == '/')
-			break ;
-		i--;
-	}
-	if (i > 0)
-		ret = ft_strndup(cmd, i - 1);
-	*actu_cmd = ft_substr(cmd, i, ft_strlen(cmd));
+	ret = ft_strdup(split[i]);
+	path_len = ft_strlen(cmd) - ft_strlen(ret) - 1;
+	if (path_len > 0)
+		*path = ft_strndup(cmd, path_len);
+	else
+		*path = NULL;
+	free_tab(&split);
 	return (ret);
 }
 
