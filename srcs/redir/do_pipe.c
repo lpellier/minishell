@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 16:31:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/22 17:46:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 		exit(EXIT_FAILURE);
 	cpid = fork();
 	if (cpid == -1)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	else if (cpid == 0)
 		_exit(child_process(separator, index_cmd, cmd, pipefd));
 	else

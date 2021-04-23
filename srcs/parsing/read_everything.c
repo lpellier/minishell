@@ -20,7 +20,6 @@ int	read_keys(char key, t_history *cur)
 {
 	while (key != '\n')
 	{
-		get_pos(&g_info->cursor.posx, &g_info->cursor.posy);
 		if (read(STDIN_FILENO, &key, 1) == -1)
 			return (FAILURE);
 		if (g_info->kill)

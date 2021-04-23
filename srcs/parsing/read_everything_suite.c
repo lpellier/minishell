@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_everything_suite.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:24 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:44:34 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/23 19:15:52 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	bzero_and_cpy(t_history *cur, char *line)
 void	update_history(t_history *cur)
 {
 	ft_bzero(cur->line, ft_strlen(cur->line));
+	cur->posx = g_info->cursor.posx;
+	cur->posy = g_info->cursor.posy;
 	ft_strcpy(cur->line, g_info->line);
 }
 

@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/22 14:56:40 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/22 17:38:24 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ SRCS = srcs/main.c \
 		srcs/termcap/all_signal.c \
 		srcs/termcap/termcap_utils.c \
 		srcs/termcap/termcap.c \
-		srcs/test/testing_func.c \
+		srcs/test/testing_func.c
 
 OBJS = $(SRCS:.c=.o)
 

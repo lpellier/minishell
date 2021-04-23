@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control_and_dollar.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/23 18:23:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,11 @@ int	control_d(void)
 {
 	int		cursor;
 
-	cursor = g_info->cursor.posx - g_info->prompt_len + 1;
+	cursor = g_info->cursor.posx + g_info->cursor.posy * g_info->cursor.col - g_info->prompt_len;
 	if (g_info->line && g_info->line[cursor])
 	{
 		remove_char(g_info->line, cursor);
-		tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.posx, \
-			g_info->cursor.posy), 1, ft_putchar);
+		tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
 	else if (!g_info->line || !g_info->line[0])

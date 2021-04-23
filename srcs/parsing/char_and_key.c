@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   char_and_key.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/23 19:23:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,53 @@ void	remove_char(char *line, int index)
 	}
 }
 
+void	move_right(char *dest)
+{
+	if (g_info->cursor.posy * tgetnum("co") + g_info->cursor.posx < (ft_strlen(dest) + g_info->prompt_len))
+	{
+		(g_info->cursor.posx)++;
+		if (g_info->cursor.posx >= tgetnum("co"))
+		{
+			(g_info->cursor.posy)++;
+			g_info->cursor.posx = 0;
+			tputs(tgetstr("do", NULL), 1, ft_putchar);
+		}
+	}
+	tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
+}
+
+void	move_left()
+{
+	g_info->cursor.posx -= 1;
+	if (g_info->cursor.posy)
+	{
+		if (g_info->cursor.posx < 0)
+		{
+			(g_info->cursor.posx) = tgetnum("co") - 1;
+			(g_info->cursor.posy)--;
+			tputs(tgetstr("up", NULL), 1, ft_putchar);
+		}
+	}
+	else if (g_info->cursor.posx < g_info->prompt_len)
+			(g_info->cursor.posx)++;
+	tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
+}
+
 void	add_key(char *dest, char key)
 {
 	int		cursor;
+	int		count;
 
-	cursor = g_info->cursor.posx - g_info->prompt_len + 1;
+	cursor = g_info->cursor.posx + g_info->cursor.posy * g_info->cursor.col - g_info->prompt_len;
 	add_char(dest, key, cursor);
-	tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.start_posx, \
-		g_info->cursor.posy), 1, ft_putchar);
+	tputs(tgoto(tgetstr("ch", NULL), 1, g_info->prompt_len), 1, ft_putchar);
+	count = g_info->cursor.posy;
+	while (count-- > 0)
+		tputs(tgetstr("up", NULL), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 	ft_putstr_fd(dest, 1);
-	tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.posx + 1, \
-		g_info->cursor.posy), 1, ft_putchar);
+	move_right(dest);
+	// tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
 }
 
 void	delete_key(char *dest)
@@ -56,18 +91,16 @@ void	delete_key(char *dest)
 	int		cursor;
 
 	i = 0;
-	cursor = g_info->cursor.posx - g_info->prompt_len + 1;
-	if (g_info->cursor.posx >= g_info->prompt_len)
+	cursor = g_info->cursor.posx + g_info->cursor.posy * g_info->cursor.col - g_info->prompt_len;
+	if (g_info->cursor.posx >= g_info->prompt_len || g_info->cursor.posy > 0)
 	{
 		while (dest[i] && i < cursor)
 			i++;
 		if (dest && dest[i - 1])
 			i--;
 		remove_char(dest, i);
-		if (g_info->cursor.posx >= g_info->prompt_len)
-			g_info->cursor.posx--;
-		tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.posx, \
-			g_info->cursor.posy), 1, ft_putchar);
+		move_left();
+		// tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
 }

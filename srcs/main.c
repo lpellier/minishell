@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 14:50:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/23 20:17:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,25 @@ void	update_cmd_status(void)
 		data->value = ft_itoa(g_info->cmd_status);
 }
 
+void	print_prompt()
+{
+	char	*cur_dir;
+	char	*strjoin;
+	char	*prompt;
+
+	cur_dir = get_cur_dir();
+	if (!(cur_dir))
+		cur_dir = ft_strdup("/");
+	strjoin = ft_strjoin("\033[34m~ ", cur_dir);
+	prompt = ft_strjoin(strjoin, " > \x1b[0m");
+	secure_free(strjoin);
+	ft_putstr_fd(prompt, STDERR_FILENO);
+	secure_free(prompt);
+	g_info->prompt_len = ft_strlen(cur_dir) + 5;
+	g_info->cursor.posx = g_info->prompt_len;
+	secure_free(cur_dir);
+}
+
 /*
 ** sole reason of first var is to create head of history linked list in read_line
 */
@@ -48,25 +67,18 @@ void	update_cmd_status(void)
 int	shell_loop(void)
 {
 	int		first;
-	char	*cur_dir;
 
 	first = 1;
-	ft_printf(RED "Welcome to Minisheh\n" RESET);
+	ft_putstr_fd("\033[31mWelcome to Minisheh\n\x1b[0m", STDERR_FILENO);
 	while (!g_info->crashed)
 	{
-		cur_dir = get_cur_dir();
-		if (!(cur_dir))
-			cur_dir = ft_strdup("/");
-		ft_printf(BLUE "~ %s > " RESET, cur_dir);
-		get_pos(&g_info->cursor.start_posx, &g_info->cursor.start_posy);
-		g_info->prompt_len = ft_strlen(cur_dir) + 6;
+		print_prompt();	
 		g_info->cmd_head = ft_create_elem(create_cmd_struct());
 		process_line(first);
 		first = 0;
 		update_cmd_status();
 		reset_info();
 		remove_useless_history();
-		secure_free(cur_dir);
 	}
 	free_blocks(g_info->block_head);
 	free_tab(&g_info->dir_paths);
@@ -86,13 +98,13 @@ int	check_exec_options(int argc, char **argv)
 	else if (argc >= 3)
 	{
 		ft_printf("Too many arguments. Minishell only ");
-		ft_printf("supports one option (-d).\n");
+		ft_printf("supports two options (-d or -t).\n");
 		return (FAILURE);
 	}
 	else
 	{
-		ft_printf("Only one argument is currently supported : ");
-		ft_printf("'-d'. It's there to help debugging.\n");
+		ft_printf("Only two arguments are currently supported : ");
+		ft_printf("'-d' to help debug and '-t' to test this bad boy out.\n");
 		return (FAILURE);
 	}
 	return (SUCCESS);

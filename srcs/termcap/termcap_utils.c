@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   termcap_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/21 16:56:34 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/23 20:15:32 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,31 @@
 void	restore_term(void)
 {
 	tcsetattr(STDOUT_FILENO, TCSANOW, &g_info->saved_term);
+}
+
+void	clear_line(char *line)
+{
+	int		count;
+
+	(void)line;
+	count = g_info->cursor.posy;
+	while (count > 0)
+	{
+		tputs(tgetstr("cr", NULL), 1, ft_putchar);
+		tputs(tgetstr("ce", NULL), 1, ft_putchar);
+		tputs(tgetstr("up", NULL), 1, ft_putchar);
+		count--;
+	}
+	tputs(tgetstr("cr", NULL), 1, ft_putchar);
+	count = 0;
+	g_info->cursor.posx = 0;
+	while (count < g_info->prompt_len)
+	{
+		g_info->cursor.posx += 1;
+		tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
+		count++;
+	}
+	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 }
 
 void	print_last_cmd(char *line)
@@ -30,11 +55,10 @@ void	print_last_cmd(char *line)
 	if (g_info->cur_in_history < list_len)
 		g_info->cur_in_history++;
 	hist = (t_history *)cur->data;
-	tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.start_posx, \
-		g_info->cursor.posy), 1, ft_putchar);
-	tputs(tgetstr("ce", NULL), 1, ft_putchar);
-	tputs(hist->line, 1, ft_putchar);
-	g_info->cursor.posx = g_info->cursor.start_posx + ft_strlen(hist->line);
+	clear_line(line);
+	g_info->cursor.posx = g_info->prompt_len + ft_strlen(hist->line);
+	g_info->cursor.posy = hist->posy;
+	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
 }
@@ -50,11 +74,10 @@ void	print_prev_cmd(char *line)
 	if (g_info->cur_in_history > 0)
 		g_info->cur_in_history--;
 	hist = (t_history *)cur->data;
-	tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.start_posx, \
-		g_info->cursor.posy), 1, ft_putchar);
-	tputs(tgetstr("ce", NULL), 1, ft_putchar);
-	tputs(hist->line, 1, ft_putchar);
-	g_info->cursor.posx = g_info->cursor.start_posx + ft_strlen(hist->line);
+	clear_line(line);
+	g_info->cursor.posx = g_info->prompt_len + ft_strlen(hist->line);
+	g_info->cursor.posy = hist->posy;
+	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
 }
@@ -69,7 +92,7 @@ void	check_for_arrows(char *line)
 	char	key;
 	int		cursor;
 
-	cursor = g_info->cursor.posx - g_info->prompt_len + 1;
+	cursor = g_info->cursor.posx + g_info->cursor.posy * g_info->cursor.col - g_info->prompt_len;
 	if (read(0, &key, 1) == -1)
 		return ;
 	if (key == 91)
@@ -81,12 +104,9 @@ void	check_for_arrows(char *line)
 		if (key == 66)
 			print_prev_cmd(line);
 		if (key == 67)
-			if (cursor < ft_strlen(line))
-				g_info->cursor.posx += 1;
+			move_right(line);
 		if (key == 68)
-			if (cursor > 0)
-				g_info->cursor.posx -= 1;
-		tputs(tgoto(tgetstr("cm", NULL), g_info->cursor.posx, \
-			g_info->cursor.posy), 1, ft_putchar);
+			move_left();
+		// tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
 	}
 }

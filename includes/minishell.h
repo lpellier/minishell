@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 16:07:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/23 20:18:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ typedef struct s_env
 typedef struct s_history
 {
 	char			*line;
+	int				posy;
+	int				posx;
 }					t_history;
 
 typedef struct s_block
@@ -91,8 +93,6 @@ typedef struct s_cursor
 {
 	int				posx;
 	int				posy;
-	int				start_posx;
-	int				start_posy;
 	int				col;
 	int				lin;
 }					t_cursor;
@@ -169,6 +169,9 @@ enum				e_status_codes
 ** main **
 **********/
 
+void		move_right(char *dest);
+void		move_left();
+void		print_prompt();
 int			rem_hist(void *data, void *data_ref);
 void		remove_useless_history(void);
 int			shell_loop(void);
@@ -413,9 +416,7 @@ void		print_block(void *data);
 ************/
 
 // termcap
-int			get_pos(int *x, int *y);
 void		init_termcap(void);
-void		use_pow(int i, char *buf, int *x, int *y);
 
 // termcap_utils
 void		check_for_arrows(char *line);
