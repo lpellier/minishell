@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/24 17:11:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,19 @@
 ** need to figure out return codes for built in
 */
 
-void	modify_export(char **key_value, int concat)
+void	modify_export(char *key, char *value, int concat)
 {
 	t_env	*env_tmp;
 
-	env_tmp = get_env_custom(key_value[0]);
+	env_tmp = get_env_custom(key);
 	if (!env_tmp)
 		ft_list_push_back(&g_info->env_head, \
-			create_env_struct(ft_strdup(key_value[0]), \
-			ft_strdup(key_value[1])));
+			create_env_struct(ft_strdup(key), \
+			ft_strdup(value)));
 	else
-		modify_env(key_value[0], key_value[1], concat);
-	free_tab(&key_value);
+		modify_env(key, value, concat);
+	secure_free(key);
+	secure_free(value);
 }
 
 int	export_remove_char(char **key_value)
@@ -56,6 +57,8 @@ int	ft_export(int index_cmd)
 {
 	t_cmd	*cmd;
 	int		concat;
+	char	*key;
+	char	*value;
 	char	**key_value;
 
 	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
@@ -67,14 +70,20 @@ int	ft_export(int index_cmd)
 		return (FAILURE);
 	key_value = ft_split(cmd->input, '=');
 	concat = export_remove_char(key_value);
+	key = ft_strdup(key_value[0]);
 	if (!key_value[1])
-		return (FAILURE);
-	if (str_isalpha_withplus(key_value[0]) || key_value[0][0] == '+')
+		value = ft_strdup("");
+	else
+		value = ft_strdup(key_value[1]);
+	free_tab(&key_value);
+	if (str_isalpha_withplus(key) || key[0] == '+')
 	{
 		ft_printf("minisheh: export: '%s': not a valid identifier\n", \
 			cmd->input);
+		secure_free(key);
+		secure_free(value);
 		return (FAILURE);
 	}
-	modify_export(key_value, concat);
+	modify_export(key, value, concat);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 16:16:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/24 17:29:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,53 @@
 // ** to check for right bui and right input
 // */
 
+int	nothing_in_str(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (is_whitespace(str[i]))
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
+}
+
 int	ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
 	t_env	*pwd;
+	t_env	*old_pwd;
+	t_env	*home;
 	char	cwd[PATH_MAX];
 	char	*path;
 
 	path = NULL;
 	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
-	if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
-	if (!cmd->input || !compare_size(cmd->input, "~"))
-		path = ft_strdup(get_env_custom("HOME")->value);
+	// if (cmd->option)
+	// {
+	// 	ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+	// 	return (FAILURE);
+	// }
+	home = get_env_custom("HOME");
+	old_pwd = get_env_custom("OLDPWD");
+	if (home && (!cmd->input || !compare_size(cmd->input, "~")) && nothing_in_str(home->value))
+		path = ft_strdup(home->value);
+	else if (home && (!cmd->input || !compare_size(cmd->input, "~")) && !nothing_in_str(home->value))
+		path = ft_strdup(".");
+	// else if (old_pwd && !compare_size(cmd->input, "-"))
+	// {
+	// 	path = ft_strdup(old_pwd->value);
+	// 	ft_printf("%s\n", path);
+	// }
 	else
 		path = ft_strdup(cmd->input);
-	if (multiple_args(path) || chdir(path))
-		ft_printf("Couldn't access folder, check directory listing\n");
+	if (multiple_args(path))
+		ft_printf("minisheh: cd: too many arguments.\n");
+	if (chdir(path))
+		ft_printf("minisheh: cd: couldn't access folder, check directory listing.\n");
 	secure_free(path);
 	pwd = get_env_custom("PWD");
 	if (!pwd)

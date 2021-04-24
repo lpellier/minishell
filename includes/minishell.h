@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/23 20:18:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/24 17:03:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ void		compare_cmd(t_cmd *cmd);
 int			ft_export(int index_cmd);
 int			export_error(t_cmd *cmd);
 int			export_remove_char(char **key_value);
-void		modify_export(char **key_value, int concat);
+void		modify_export(char *key, char *value, int concat);
 
 /*********
 ** free **
