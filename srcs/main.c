@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/24 15:57:59 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/24 20:05:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	print_prompt()
 	ft_putstr_fd(prompt, STDERR_FILENO);
 	secure_free(prompt);
 	g_info->prompt_len = ft_strlen(cur_dir) + 5;
-	g_info->cursor.posx = g_info->prompt_len;
+	g_info->cursor.posx = g_info->prompt_len + g_info->echo_padding;
 	secure_free(cur_dir);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/24 17:29:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/24 20:32:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,36 +34,54 @@ int	nothing_in_str(char *str)
 int	ft_cd(int index_cmd)
 {
 	t_cmd	*cmd;
-	t_env	*pwd;
 	t_env	*old_pwd;
+	t_env	*pwd;
+	t_env	*cd_path;
 	t_env	*home;
 	char	cwd[PATH_MAX];
 	char	*path;
+	char	*tmp;
+	char	*strjoin;
 
 	path = NULL;
 	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
-	// if (cmd->option)
-	// {
-	// 	ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-	// 	return (FAILURE);
-	// }
 	home = get_env_custom("HOME");
 	old_pwd = get_env_custom("OLDPWD");
-	if (home && (!cmd->input || !compare_size(cmd->input, "~")) && nothing_in_str(home->value))
+	cd_path = get_env_custom("CDPATH");
+	if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && nothing_in_str(home->value))
 		path = ft_strdup(home->value);
-	else if (home && (!cmd->input || !compare_size(cmd->input, "~")) && !nothing_in_str(home->value))
+	else if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && !nothing_in_str(home->value))
 		path = ft_strdup(".");
-	// else if (old_pwd && !compare_size(cmd->input, "-"))
-	// {
-	// 	path = ft_strdup(old_pwd->value);
-	// 	ft_printf("%s\n", path);
-	// }
+	else if (old_pwd && !compare_size(cmd->input, "-"))
+	{
+		path = ft_strdup(old_pwd->value);
+		ft_printf("%s\n", path);
+	}
+	else if (cmd->option)
+	{
+		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+		return (FAILURE);
+	}
 	else
 		path = ft_strdup(cmd->input);
+	if (cd_path)
+	{
+		tmp = ft_strdup(path);
+		secure_free(path);
+		if (!compare_size(cd_path->value, "/"))
+			path = ft_strjoin(cd_path->value, tmp);
+		else
+		{
+			strjoin = ft_strjoin(cd_path->value, "/");
+			path = ft_strjoin(strjoin, tmp);
+			secure_free(strjoin);
+		}
+		secure_free(tmp);
+	}
 	if (multiple_args(path))
 		ft_printf("minisheh: cd: too many arguments.\n");
 	if (chdir(path))
-		ft_printf("minisheh: cd: couldn't access folder, check directory listing.\n");
+		ft_printf("minisheh: cd: no such file or directory: %s\n", path);
 	secure_free(path);
 	pwd = get_env_custom("PWD");
 	if (!pwd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_something.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/19 15:09:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/24 19:08:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	get_option(char *line, t_cmd *cmd, int index)
 	else
 	{
 		words = ft_split(line, 32);
-		if (words && words[0] && words[0][0] == '-')
+		if (words && words[0] && words[0][0] == '-' && words[0][1])
 			if (!str_isalpha_withminus(words[0]))
 				cmd->option = ft_strdup(words[0]);
 		free_tab(&words);
