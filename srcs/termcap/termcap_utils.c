@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/23 20:15:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/24 16:19:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,11 @@ void	print_last_cmd(char *line)
 		g_info->cur_in_history++;
 	hist = (t_history *)cur->data;
 	clear_line(line);
-	g_info->cursor.posx = g_info->prompt_len + ft_strlen(hist->line);
 	g_info->cursor.posy = hist->posy;
+	if (g_info->cursor.posy)
+		g_info->cursor.posx = (ft_strlen(hist->line) + g_info->prompt_len) % g_info->cursor.col;
+	else
+		g_info->cursor.posx = ft_strlen(hist->line) + g_info->prompt_len;
 	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
@@ -75,8 +78,11 @@ void	print_prev_cmd(char *line)
 		g_info->cur_in_history--;
 	hist = (t_history *)cur->data;
 	clear_line(line);
-	g_info->cursor.posx = g_info->prompt_len + ft_strlen(hist->line);
 	g_info->cursor.posy = hist->posy;
+	if (g_info->cursor.posy)
+		g_info->cursor.posx = (ft_strlen(hist->line) + g_info->prompt_len) % g_info->cursor.col;
+	else
+		g_info->cursor.posx = ft_strlen(hist->line) + g_info->prompt_len;
 	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
@@ -107,6 +113,5 @@ void	check_for_arrows(char *line)
 			move_right(line);
 		if (key == 68)
 			move_left();
-		// tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
 	}
 }

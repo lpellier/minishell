@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/23 20:17:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/24 15:57:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int	main(int argc, char **argv, char **envp)
 	g_info->termios_p.c_cc[VMIN] = 1;
 	g_info->cursor.col = tgetnum("co");
 	g_info->cursor.lin = tgetnum("li");
-	tputs(tgetstr("cl", NULL), 1, ft_putchar);
+	// tputs(tgetstr("cl", NULL), 1, ft_putchar);
 	if (init_info(envp))
 		exit(EXIT_FAILURE);
 	init_termcap();
