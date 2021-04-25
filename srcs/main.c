@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 13:24:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:54:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	update_cmd_status(void)
 		data->value = ft_itoa(g_info->sig_status);
 	else
 		data->value = ft_itoa(g_info->cmd_status);
+	g_info->cmd_status = 0;
+	g_info->sig_status = 0;
 }
 
 void	print_prompt()

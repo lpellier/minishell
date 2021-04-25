@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 12:53:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:01:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,15 @@ int	ft_cd()
 		secure_free(tmp);
 	}
 	if (multiple_args(path))
+	{
 		ft_printf("minisheh: cd: too many arguments.\n");
-	if (chdir(path))
+		return (FAILURE);
+	}
+	else if (chdir(path))
+	{
 		ft_printf("minisheh: cd: no such file or directory: %s\n", path);
+		return (FAILURE);
+	}
 	secure_free(path);
 	pwd = get_env_custom("PWD");
 	if (!pwd)
