@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 20:20:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:37:49 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int	get_input(char *line, t_cmd *cmd, int index)
 	}
 	else
 	{
-		while (line[i] && !ft_cinset(line[i], SEPARATOR))
-			i++;
+		// while (line[i] && ft_cinset(line[i], SEPARATOR))
+		// 	i++;
 		// while (i > 0 && line[i - 1] == 32)
 		// 	i--;
 		cmd->input = process_input(&line[i]);
