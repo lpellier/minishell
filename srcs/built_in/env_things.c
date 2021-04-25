@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 12:52:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:18:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ int	ft_unset()
 
 	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
+		return (print_error_option(cmd));
 	if (!g_info->env_head || !g_info->env_head->next)
 		return (FAILURE);
 	data_ref = create_env_struct(cmd->input, NULL);
@@ -54,10 +51,7 @@ int	ft_env()
 
 	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
+		return (print_error_option(cmd));
 	if (!g_info->env_head || !g_info->env_head->next)
 		return (FAILURE);
 	ft_list_foreach(g_info->env_head->next, print_env_struct);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 12:52:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 15:37:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,11 @@ int	exec_binary()
 	argv[0] = ft_strdup(cmd->cmd);
 	exec_binary_check(cmd, argv, split);
 	if (execve(cmd->path, argv, env) == -1)
-		return (FAILURE);
+		return (errno);
 	free_tab(&split);
 	free_tab(&argv);
 	free_tab(&env);
+	
 	return (SUCCESS);
 }
 

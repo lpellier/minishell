@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 13:54:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 15:59:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	init_info(char **envp)
 	g_info->echo_padding = 0;
 	g_info->crashed = FALSE;
 	g_info->cmd_status = 0;
+	g_info->sig_status = 0;
 	init_env(envp);
 	ft_list_push_front(&g_info->env_head, create_env_struct(ft_strdup("?"), \
 		ft_itoa(g_info->cmd_status)));

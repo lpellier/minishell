@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 12:52:20 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:15:54 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,7 @@ int	export_remove_char(char **key_value)
 int	export_error(t_cmd *cmd)
 {
 	if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", \
-			cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
+		return (print_error_option(cmd));
 	return (SUCCESS);
 }
 

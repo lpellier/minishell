@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 13:42:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:18:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,10 +126,7 @@ int	ft_pwd()
 
 	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
+		return (print_error_option(cmd));
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		ft_printf("%s\n", cwd);
 	return (SUCCESS);

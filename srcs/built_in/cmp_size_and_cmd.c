@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmp_size_and_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:29:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 16:02:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ void	compare_cmd(t_cmd *cmd)
 	{
 		cmd->bui = NONEXISTENT;
 		g_info->cmd_status = 127;
+		update_cmd_status();
 	}
 }

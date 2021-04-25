@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 12:49:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 15:57:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,19 @@ int	child_process(int separator, t_cmd *cmd, int *pipefd)
 	return (g_info->status);
 }
 
+void	interpret_errors()
+{
+	t_cmd *cmd;
+
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
+	if (g_info->cmd_status == EACCES)
+	{
+		g_info->cmd_status = 126;
+		ft_printf("minisheh: %s: permission denied\n", cmd->cmd);
+	}
+	update_cmd_status();
+}
+
 void	get_child(int separator, pid_t cpid)
 {
 	//  || g_info->status != -1 ||
@@ -52,6 +65,7 @@ void	get_child(int separator, pid_t cpid)
 	init_termcap();
 	g_info->bin_running = FALSE;
 	g_info->cmd_status = g_info->status % 255;
+	interpret_errors();
 }
 
 void	check_pipe(int separator, char *line, int index)

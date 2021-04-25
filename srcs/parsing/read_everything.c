@@ -55,6 +55,7 @@ int	read_line(void)
 	if (read_keys(key, cur))
 	{
 		g_info->sig_status = 1;
+		update_cmd_status();
 		return (FAILURE);
 	}
 	if (g_info->echo_padding > 0)

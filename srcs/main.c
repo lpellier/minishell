@@ -6,11 +6,23 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 13:54:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:15:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	print_error_option(t_cmd *cmd)
+{
+	ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+	return (FAILURE);
+}
+
+int	print_error(char *error)
+{
+	ft_printf("%s\n", error);
+	return (FAILURE);
+}
 
 int	rem_hist(void *data, void *data_ref)
 {
@@ -77,7 +89,6 @@ int	shell_loop(void)
 		print_prompt();
 		process_line(first);
 		first = FALSE;
-		update_cmd_status();
 		reset_info();
 		remove_useless_history();
 	}

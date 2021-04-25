@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 13:40:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 15:33:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <dirent.h>
 # include <signal.h>
+# include <errno.h>
 # include <termcap.h>
 # include <sys/ioctl.h>
 # include <termios.h>
@@ -170,6 +171,8 @@ enum				e_status_codes
 ** main **
 **********/
 
+int			print_error_option(t_cmd *cmd);
+int			print_error(char *error);
 void		move_right(char *dest);
 void		move_left();
 void		print_prompt();

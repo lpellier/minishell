@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 18:14:36 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:22:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	open_file(int separator, char *line, int *index)
 	{
 		file_fd = open(file_path, O_RDONLY, 00644);
 		if (file_fd == -1)
-			ft_printf("minisheh: %s: No such file or directory\n", file_name);
+			ft_printf("minisheh: %s: no such file or directory\n", file_name);
 	}
 	secure_free(pwd);
 	secure_free(file_name);

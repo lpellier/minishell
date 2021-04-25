@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 13:59:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 15:46:54 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,8 @@ void	read_cmd(char *line, int index)
 	else if (!cmd->cmd)
 		return ;
 	else
+	{
 		g_info->cmd_status = g_info->built_in[cmd->bui]();
+		update_cmd_status();
+	}
 }

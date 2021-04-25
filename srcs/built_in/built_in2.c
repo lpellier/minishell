@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 14:01:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:19:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,7 @@ int	ft_cd()
 		ft_printf("%s\n", path);
 	}
 	else if (cmd->option)
-	{
-		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-		return (FAILURE);
-	}
+		return (print_error_option(cmd));
 	else
 		path = ft_strdup(cmd->input);
 	if (cd_path)
@@ -79,13 +76,10 @@ int	ft_cd()
 		secure_free(tmp);
 	}
 	if (multiple_args(path))
-	{
-		ft_printf("minisheh: cd: too many arguments.\n");
-		return (FAILURE);
-	}
+		return (print_error("minisheh: cd: too many arguments"));
 	else if (chdir(path))
 	{
-		ft_printf("minisheh: cd: no such file or directory: %s\n", path);
+		ft_printf("minisheh: cd: %s: no such file or directory\n", path);
 		return (FAILURE);
 	}
 	secure_free(path);
