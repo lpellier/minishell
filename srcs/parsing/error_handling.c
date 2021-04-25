@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 14:56:04 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 20:32:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 21:37:24 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	pipe_error_syntax(int i)
 			count++;
 		}
 		ft_printf("\nminisheh: syntax error near unexpected token `|'\n");
+		g_info->cmd_status = 2;
+		update_cmd_status();
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -39,6 +41,8 @@ int	double_error_syntax(int i, char token)
 	{
 		ft_printf("\nminisheh: syntax error near");
 		ft_printf(" unexpected token `%c%c'\n", token, token);
+		g_info->cmd_status = 2;
+		update_cmd_status();
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -58,6 +62,8 @@ int	check_syntax(void)
 	{
 		ft_printf("\nminisheh: syntax error near");
 		ft_printf(" unexpected token `%c'\n", g_info->line[i]);
+		g_info->cmd_status = 2;
+		update_cmd_status();
 		return (FAILURE);
 	}
 	while (g_info->line[i])
