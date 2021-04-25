@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 17:46:13 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:49:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@
 ** restoring stdout and stdin to original fds
 */
 
-int	child_process(int separator, int index_cmd, t_cmd *cmd, int *pipefd)
+int	child_process(int separator, t_cmd *cmd, int *pipefd)
 {
 	close(pipefd[0]);
 	if (separator == PIPE)
 		dup2(pipefd[1], STDOUT_FILENO);
 	else
 		close(pipefd[1]);
-	g_info->status = (g_info->built_in[cmd->bui])(index_cmd);
+	g_info->status = (g_info->built_in[cmd->bui])();
 	return (g_info->status);
 }
 
@@ -54,18 +54,19 @@ void	get_child(int separator, pid_t cpid)
 	g_info->cmd_status = g_info->status % 255;
 }
 
-void	check_pipe(int separator, char *line, int index, int index_cmd)
+void	check_pipe(int separator, char *line, int index)
 {
 	if (separator == PIPE)
 	{
 		while (!ft_cinset(line[index], SEPARATOR))
 			index++;
 		ft_list_push_back(&g_info->cmd_head, create_cmd_struct());
-		read_cmd(line, index, index_cmd + 1);
+		g_info->index_cmd += 1;
+		read_cmd(line, index);
 	}
 }
 
-int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
+int	pipe_for_exec(char *line, int index, int separator)
 {
 	int		pipefd[2];
 	pid_t	cpid;
@@ -74,7 +75,7 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	pid_t	saved_stdout;
 
 	g_info->bin_running = TRUE;
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	save_std(&saved_stdin, &saved_stdout);
 	restore_term();
 	if (pipe(pipefd) == -1)
@@ -83,12 +84,12 @@ int	pipe_for_exec(int index_cmd, char *line, int index, int separator)
 	if (cpid == -1)
 		return (EXIT_FAILURE);
 	else if (cpid == 0)
-		_exit(child_process(separator, index_cmd, cmd, pipefd));
+		_exit(child_process(separator, cmd, pipefd));
 	else
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		check_pipe(separator, line, index, index_cmd);
+		check_pipe(separator, line, index);
 		get_child(separator, cpid);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}

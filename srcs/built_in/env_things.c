@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_things.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:52:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 **destroys a environment variable from memory
 */
 
-int	ft_unset(int index_cmd)
+int	ft_unset()
 {
 	t_cmd	*cmd;
 	t_env	*data_ref;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
@@ -48,11 +48,11 @@ int	print_declare_env(void)
 ** outputs all environment variables
 */
 
-int	ft_env(int index_cmd)
+int	ft_env()
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);

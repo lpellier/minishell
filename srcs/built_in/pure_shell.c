@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 16:28:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:42:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ int	only_n(char *str)
 	return (SUCCESS);
 }
 
-int	ft_echo(int index_cmd)
+int	ft_echo()
 {
 	t_cmd	*cmd;
 	char	*strjoin;
 	char	*tmp;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option && !only_n(cmd->option))
-		return (ft_echo_n(index_cmd));
+		return (ft_echo_n());
 	else if (cmd->option)
 	{
 		if (cmd->input)
@@ -52,6 +52,7 @@ int	ft_echo(int index_cmd)
 		ft_printf("\n");
 	else
 		ft_printf("%s\n", cmd->input);
+	g_info->echo_padding = 0;
 	return (SUCCESS);
 }
 
@@ -59,14 +60,47 @@ int	ft_echo(int index_cmd)
 ** outputs input without \n
 */
 
-int	ft_echo_n(int index_cmd)
+char	*adjust_input_repeated_options(char *input)
+{
+	int		i;
+	char	*ret;
+	char	*strjoin;
+	char	**split;
+	
+	i = 0;
+	ret = NULL;
+	split = ft_split(input, 32);
+	while (split[i])
+	{
+		if (only_n(split[i]))
+			break;
+		i++;
+	}
+	while (split[i])
+	{
+		if (!ret)
+			ret = ft_strdup(split[i]);
+		else
+		{
+			strjoin = ft_strjoin(ret, " ");
+			ret = ft_strjoin(strjoin, split[i]);
+			secure_free(strjoin);
+		}
+		i++;
+	}
+	return (ret);
+}
+
+int	ft_echo_n()
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->input)
-		ft_printf("%s\033[47m\033[30m%%\033[39m\033[49m", cmd->input);
-	g_info->echo_padding = ft_strlen(cmd->input) + 1;
+		cmd->input = adjust_input_repeated_options(cmd->input);
+	if (cmd->input)
+		ft_printf("%s", cmd->input);
+	g_info->echo_padding = ft_strlen(cmd->input);
 	return (SUCCESS);
 }
 
@@ -74,9 +108,8 @@ int	ft_echo_n(int index_cmd)
 ** exits terminal
 */
 
-int	ft_exit(int index_cmd)
+int	ft_exit()
 {
-	(void)index_cmd;
 	g_info->crashed = TRUE;
 	ft_printf("exit\n");
 	return (SUCCESS);
@@ -86,12 +119,12 @@ int	ft_exit(int index_cmd)
 ** outputs current path
 */
 
-int	ft_pwd(int index_cmd)
+int	ft_pwd()
 {
 	char	cwd[PATH_MAX];
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (cmd->option)
 	{
 		ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:50:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,25 @@ int	restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd)
 	return (SUCCESS);
 }
 
-void	redir_something(char *line, int index, int index_cmd)
+void	redir_something(char *line, int index)
 {
 	if (line[index] && !is_redir_l(line[index]))
-		redir(index_cmd, line, index, R_LEFT);
+		redir(line, index, R_LEFT);
 	else if (line[index] && !is_redir_r(line[index]) && line[index + 1] && \
 		!is_redir_r(line[index + 1]))
-		redir(index_cmd, line, index, R_RIGHTD);
+		redir(line, index, R_RIGHTD);
 	else if (line[index] && !is_redir_r(line[index]))
-		redir(index_cmd, line, index, R_RIGHT);
+		redir(line, index, R_RIGHT);
 }
 
-int	redir(int index_cmd, char *line, int index, int separator)
+int	redir(char *line, int index, int separator)
 {
 	int		file_fd;
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	file_fd = open_file(separator, line, &index);
 	if (file_fd == -1)
 		return (FAILURE);
@@ -55,12 +55,12 @@ int	redir(int index_cmd, char *line, int index, int separator)
 	else if (separator == R_RIGHT || separator == R_RIGHTD)
 		dup2(file_fd, STDOUT_FILENO);
 	if (line[index])
-		redir_something(line, index, index_cmd);
+		redir_something(line, index);
 	else if (cmd->bui == 8)
-		pipe_for_exec(index_cmd, line, index, NOTHING);
+		pipe_for_exec(line, index, NOTHING);
 	else if (cmd->bui == 9)
 		return (restore_std(saved_stdin, saved_stdout, file_fd));
 	else
-		g_info->built_in[cmd->bui](index_cmd);
+		g_info->built_in[cmd->bui]();
 	return (restore_std(saved_stdin, saved_stdout, file_fd));
 }

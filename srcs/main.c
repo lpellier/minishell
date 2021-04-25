@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/24 20:05:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:24:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,13 @@ int	shell_loop(void)
 {
 	int		first;
 
-	first = 1;
+	first = TRUE;
 	ft_putstr_fd("\033[31mWelcome to Minisheh\n\x1b[0m", STDERR_FILENO);
 	while (!g_info->crashed)
 	{
-		print_prompt();	
-		g_info->cmd_head = ft_create_elem(create_cmd_struct());
+		print_prompt();
 		process_line(first);
-		first = 0;
+		first = FALSE;
 		update_cmd_status();
 		reset_info();
 		remove_useless_history();
@@ -97,14 +96,14 @@ int	check_exec_options(int argc, char **argv)
 		g_info->debug_option = TRUE;
 	else if (argc >= 3)
 	{
-		ft_printf("Too many arguments. Minishell only ");
-		ft_printf("supports two options (-d or -t).\n");
+		ft_printf("Too many arguments. Minisheh only ");
+		ft_printf("supports one option (-d).\n");
 		return (FAILURE);
 	}
 	else
 	{
-		ft_printf("Only two arguments are currently supported : ");
-		ft_printf("'-d' to help debug and '-t' to test this bad boy out.\n");
+		ft_printf("Only one arguments is currently supported : ");
+		ft_printf("'-d' to help debug.\n");
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -126,7 +125,6 @@ int	main(int argc, char **argv, char **envp)
 	g_info->termios_p.c_cc[VMIN] = 1;
 	g_info->cursor.col = tgetnum("co");
 	g_info->cursor.lin = tgetnum("li");
-	// tputs(tgetstr("cl", NULL), 1, ft_putchar);
 	if (init_info(envp))
 		exit(EXIT_FAILURE);
 	init_termcap();

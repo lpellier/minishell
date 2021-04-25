@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/24 19:58:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:40:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,11 @@ typedef struct s_info
 {
 	struct termios	termios_p;
 	struct termios	saved_term;
-	int				(*built_in[10])(int index_cmd);
+	int				(*built_in[10])();
 	char			cur_path[PATH_MAX];
 	int				crashed;
 	int				cmd_status;
+	int				index_cmd;
 	int				cur_in_history;
 	int				prompt_len;
 	int				echo_padding;
@@ -183,7 +184,7 @@ int			check_exec_options(int argc, char **argv);
 *************/
 
 // binary_things
-int			exec_binary(int index_cmd);
+int			exec_binary();
 int			find_binary(t_cmd *cmd);
 void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
 
@@ -192,30 +193,30 @@ char		last_char(char *str);
 int			str_isalpha_withplus(char *str);
 
 // pure_shell
-int			ft_pwd(int index_cmd);
-int			ft_exit(int index_cmd);
-int			ft_echo_n(int index_cmd);
-int			ft_echo(int index_cmd);
+int			ft_pwd();
+int			ft_exit();
+int			ft_echo_n();
+int			ft_echo();
 int			only_n(char *str);
 
 // built_in2
 char		**count_args(t_cmd *cmd, int *count);
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
-int			ft_cd(int index_cmd);
-int			nothing(int index_cmd);
+int			ft_cd();
+int			nothing();
 
 // env_things
-int			ft_unset(int index_cmd);
+int			ft_unset();
 int			print_declare_env(void);
-int			ft_env(int index_cmd);
+int			ft_env();
 
 // cmp_size_and_cmp
 int			compare_size(char *s1, char *s2);
 void		compare_cmd(t_cmd *cmd);
 
 // do_export
-int			ft_export(int index_cmd);
+int			ft_export();
 int			export_error(t_cmd *cmd);
 int			export_remove_char(char **key_value);
 void		modify_export(char *key, char *value, int concat);
@@ -270,7 +271,7 @@ int			str_isalpha_withminus(char *str);
 int			cmp_block(void *data, void *data_ref);
 int			check_if_block(int index);
 int			ft_set_index(char *line, t_cmd *cmd, int index);
-void		read_cmd(char *line, int index, int index_cmd);
+void		read_cmd(char *line, int index);
 
 // error_handling
 int			check_syntax();
@@ -328,16 +329,15 @@ void		do_colon_split(char	**colon_split, int i);
 // do_redir
 void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
-int			redir(int index_cmd, char *line, int index, int separator);
-void		redir_something(char *line, int index, int index_cmd);
+int			redir(char *line, int index, int separator);
+void		redir_something(char *line, int index);
 
 // do_pipe
-int			pipe_for_exec(int index_cmd, char *line, int index, int piped);
-int			child_process(int separator, int index_cmd, t_cmd *cmd, \
+int			pipe_for_exec(char *line, int index, int piped);
+int			child_process(int separator, t_cmd *cmd, \
 				int *pipefd);
 void		get_child(int separator, pid_t cpid);
-void		check_pipe(int separator, char *line, int index, \
-				int index_cmd);
+void		check_pipe(int separator, char *line, int index);
 
 /*********
 ** free **

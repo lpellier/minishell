@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 16:11:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:52:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	exec_binary_check(t_cmd *cmd, char **argv, char **split)
 	argv[j] = NULL;
 }
 
-int	exec_binary(int index_cmd)
+int	exec_binary()
 {
 	t_cmd	*cmd;
 	int		count;
@@ -49,7 +49,7 @@ int	exec_binary(int index_cmd)
 	char	**split;
 	char	**env;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	env = list_to_tab(g_info->env_head);
 	split = count_args(cmd, &count);
 	if (ft_calloc((void **)&argv, count + 1, sizeof(char *)))

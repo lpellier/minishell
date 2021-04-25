@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 16:25:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:39:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ void	remove_colons(char *line, int i)
 
 void	do_colon_split(char	**colon_split, int i)
 {
+	int first;
+
+	first = TRUE;
 	while (colon_split && colon_split[i])
 	{
 		if (transform_line(colon_split[i], 0, 0, 0))
@@ -73,7 +76,13 @@ void	do_colon_split(char	**colon_split, int i)
 			ft_printf("should be even\n");
 			break ;
 		}
-		read_cmd(colon_split[i], 0, 0);
+		if (first)
+			g_info->cmd_head = ft_create_elem(create_cmd_struct());
+		else
+			ft_list_push_back(&g_info->cmd_head, create_cmd_struct());
+		first = FALSE;
+		g_info->index_cmd += 1;
+		read_cmd(colon_split[i], 0);
 		i++;
 	}
 }

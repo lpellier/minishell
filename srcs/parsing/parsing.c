@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 16:37:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:37:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	check_if_block(int index)
 
 int	ft_set_index(char *line, t_cmd *cmd, int index)
 {
+	index += spaces(&line[index], index);
 	index += get_cmd(&line[index], cmd, index);
 	if (cmd->cmd)
 		index += 1;
@@ -76,11 +77,11 @@ int	ft_set_index(char *line, t_cmd *cmd, int index)
 	return (index);
 }
 
-void	read_cmd(char *line, int index, int index_cmd)
+void	read_cmd(char *line, int index)
 {
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	index = ft_set_index(line, cmd, index);
 	compare_cmd(cmd);
 	if (g_info->debug_option)
@@ -88,18 +89,18 @@ void	read_cmd(char *line, int index, int index_cmd)
 	if (cmd->cmd && cmd->bui == 9)
 		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
 	if (!is_pipe(line[index]))
-		pipe_for_exec(index_cmd, line, index, PIPE);
+		pipe_for_exec(line, index, PIPE);
 	else if (!is_redir_l(line[index]))
-		redir(index_cmd, line, index, R_LEFT);
+		redir(line, index, R_LEFT);
 	else if (!is_redir_r(line[index]) && line[index + 1] && \
 		!is_redir_r(line[index + 1]))
-		redir(index_cmd, line, index, R_RIGHTD);
+		redir(line, index, R_RIGHTD);
 	else if (!is_redir_r(line[index]))
-		redir(index_cmd, line, index, R_RIGHT);
+		redir(line, index, R_RIGHT);
 	else if (cmd->bui == 8)
-		pipe_for_exec(index_cmd, line, index, NOTHING);
+		pipe_for_exec(line, index, NOTHING);
 	else if (!cmd->cmd)
 		return ;
 	else
-		g_info->cmd_status = g_info->built_in[cmd->bui](index_cmd);
+		g_info->cmd_status = g_info->built_in[cmd->bui]();
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/24 19:58:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:52:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	export_error(t_cmd *cmd)
 	return (SUCCESS);
 }
 
-int	ft_export(int index_cmd)
+int	ft_export()
 {
 	t_cmd	*cmd;
 	int		concat;
@@ -61,7 +61,7 @@ int	ft_export(int index_cmd)
 	char	*value;
 	char	**key_value;
 
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	if (export_error(cmd) == FAILURE)
 		return (FAILURE);
 	if (!cmd->input)

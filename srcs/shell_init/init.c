@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/23 17:59:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:47:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	reset_info(void)
 	g_info->cur_in_history = 0;
 	g_info->kill = FALSE;
 	g_info->cursor.posy = 0;
+	g_info->index_cmd = -1;
 	g_info->sig_status = 0;
 	g_info->bin_running = FALSE;
 	free_blocks(g_info->block_head);

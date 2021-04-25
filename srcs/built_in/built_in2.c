@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/24 20:32:36 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:53:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	nothing_in_str(char *str)
 	return (SUCCESS);
 }
 
-int	ft_cd(int index_cmd)
+int	ft_cd()
 {
 	t_cmd	*cmd;
 	t_env	*old_pwd;
@@ -44,7 +44,7 @@ int	ft_cd(int index_cmd)
 	char	*strjoin;
 
 	path = NULL;
-	cmd = ft_list_at(g_info->cmd_head, index_cmd)->data;
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
 	home = get_env_custom("HOME");
 	old_pwd = get_env_custom("OLDPWD");
 	cd_path = get_env_custom("CDPATH");
@@ -170,9 +170,8 @@ char	*get_actual_cmd(char *cmd, char **path)
 	return (ret);
 }
 
-int	nothing(int index_cmd)
+int	nothing()
 {
-	(void)index_cmd;
 	if (g_info->kill == FALSE)
 		g_info->kill = TRUE;
 	return (FAILURE);
