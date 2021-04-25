@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 14:56:04 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/22 15:12:58 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:32:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	check_syntax(void)
 	}
 	while (g_info->line[i])
 	{
+		if (g_info->line[i] == BSLASH)
+			i += 2;
 		if (double_error_syntax(i, COLON) || double_error_syntax(i, 124) || \
 			pipe_error_syntax(i))
 			return (FAILURE);
