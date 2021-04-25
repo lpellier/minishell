@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 15:37:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:44:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ int	find_binary(t_cmd *cmd)
 	int		i;
 
 	i = 0;
+	if (!compare_size(cmd->cmd, ".") || !compare_size(cmd->cmd, ".."))
+		return (FAILURE);
 	actu_cmd = get_actual_cmd(cmd->cmd, &path);
 	if (!directories(path, actu_cmd))
 	{

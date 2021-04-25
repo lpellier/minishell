@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 15:46:54 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:46:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,9 @@ void	read_cmd(char *line, int index)
 	compare_cmd(cmd);
 	if (g_info->debug_option)
 		print_cmd_info(cmd);
-	if (cmd->cmd && cmd->bui == 9)
+	if (cmd->cmd && !compare_size(cmd->cmd, ".") && cmd->bui == 9)
+		ft_printf("minisheh: .: usage: . filename [arguments]\n");
+	else if (cmd->cmd && cmd->bui == 9)
 		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
 	else if (!is_pipe(line[index]))
 		pipe_for_exec(line, index, PIPE);
