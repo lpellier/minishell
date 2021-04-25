@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/20 17:09:28 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 17:17:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	free_cmd_struct(void *data)
 	t_cmd	*ptr;
 
 	ptr = (t_cmd *)data;
+	if (!data || !ptr)
+		return ;
 	ptr->bui = 9;
 	secure_free(ptr->cmd);
 	secure_free(ptr->option);

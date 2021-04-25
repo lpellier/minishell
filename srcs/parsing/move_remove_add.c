@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move_remove_add.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 15:05:01 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 19:02:58 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	remove_spaces(char *l)
 	}
 }
 
-int	add_word(char *word, int where)
+int	add_word(char *str, char *word, int where)
 {
 	int		i;
 	int		count;
@@ -55,17 +55,17 @@ int	add_word(char *word, int where)
 	count = 0;
 	while (word[i])
 	{
-		add_char(g_info->line, word[i], where);
+		add_char(str, word[i], where);
 		i++;
 		where++;
 		count++;
 	}
-	add_char(g_info->line, 32, where);
+	add_char(str, 32, where);
 	count++;
 	return (count);
 }
 
-int	move_around(char *str, int *start)
+int	move_around(char *line, char *str, int *start)
 {
 	int		i;
 	int		count;
@@ -83,7 +83,7 @@ int	move_around(char *str, int *start)
 	{
 		if (i > 0)
 		{
-			count = add_word(words[i], *start);
+			count = add_word(line, words[i], *start);
 			ret += count;
 			*start += count;
 		}
@@ -93,19 +93,19 @@ int	move_around(char *str, int *start)
 	return (ret);
 }
 
-int	remove_words(int i)
+int	remove_words(char *str, int i)
 {
 	int		count;
 
 	count = 0;
-	while (g_info->line[i] && g_info->line[i] == 32)
+	while (str[i] && str[i] == 32)
 		i++;
-	while (g_info->line[i] && g_info->line[i] != 32)
+	while (str[i] && str[i] != 32)
 		i++;
-	while (g_info->line[i] && g_info->line[i] != '<' && g_info->line[i] != '>')
+	while (str[i] && str[i] != '<' && str[i] != '>')
 	{
 		count++;
-		remove_char(g_info->line, i);
+		remove_char(str, i);
 	}
 	return (count);
 }

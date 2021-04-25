@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 15:33:53 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 19:03:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define DQUOTE 34
 # define DOLLAR 36
 # define COLON 59
+# define TILDE 126
 # define LINE_MAX 4096
 # define RED "\033[31m"
 # define BLUE "\033[34m"
@@ -171,6 +172,7 @@ enum				e_status_codes
 ** main **
 **********/
 
+int			init_terminal();
 int			print_error_option(t_cmd *cmd);
 int			print_error(char *error);
 void		move_right(char *dest);
@@ -288,9 +290,9 @@ int			count_words_colon(char *line);
 
 // move_remove_add
 int			prepare_remove(char *line, int q, int dq, int i);
-int			add_word(char *word, int where);
-int			move_around(char *str, int *start);
-int			remove_words(int i);
+int			add_word(char *str, char *word, int where);
+int			move_around(char *line, char *str, int *start);
+int			remove_words(char *str, int i);
 void		remove_spaces(char *l);
 
 // read_everything
@@ -298,7 +300,7 @@ int			read_line(void);
 int			read_keys(char key, t_history *cur);
 int			count_until_redir(char *str);
 void		process_line(int first);
-void		modify_line_redir(void);
+void		modify_line_redir(char *str);
 
 // read_everything_suite
 int			pass_q_and_dq(char *line, int i);

@@ -3,16 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
+#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/06 14:29:46 by tefroiss          #+#    #+#              #
-#    Updated: 2021/04/07 13:39:25 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/04/25 16:55:02 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=		libft.a
 
 SRCS	=		./ft_isalpha.c \
+				./ft_atoi.c \
 				./ft_itoa.c \
 				./ft_checkc.c \
 				./ft_isalnum.c \

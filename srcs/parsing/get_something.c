@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:57:47 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/24 20:48:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:20:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,25 @@ int	complete_portion(char *line, int index, int block_end)
 	while (line[i] && is_whitespace(line[i]))
 		i++;
 	return (i);
+}
+
+char	*process_input(char *line)
+{
+	char *ret;
+	int		i;
+
+	i = 0;
+	while (line[i] && ft_cinset(line[i], SEPARATOR))
+	{
+		if (line[i] == BSLASH)
+			remove_char(line, i);
+		i++;
+	}
+	if (i > 0)
+		ret = ft_strndup(line, i);
+	else
+		ret = NULL;
+	return (ret);
 }
 
 int	get_input(char *line, t_cmd *cmd, int index)
@@ -36,14 +55,11 @@ int	get_input(char *line, t_cmd *cmd, int index)
 	}
 	else
 	{
-		while (line[i] && ft_cinset(line[i], SEPARATOR))
+		while (line[i] && !ft_cinset(line[i], SEPARATOR))
 			i++;
-		while (i > 0 && line[i - 1] == 32)
-			i--;
-		if (i >= 1)
-			cmd->input = ft_strndup(line, i);
-		else
-			cmd->input = NULL;
+		// while (i > 0 && line[i - 1] == 32)
+		// 	i--;
+		cmd->input = process_input(&line[i]);
 	}
 	return (ft_strlen(cmd->input));
 }
@@ -91,6 +107,8 @@ int	get_cmd(char *line, t_cmd *cmd, int index)
 	{
 		if (line && line[i] && !ft_cinset(line[i], SEPARATOR))
 			return (0);
+		if (line && line[i] == BSLASH)
+			i++;
 		words = ft_split(line, 32);
 		while (words && words[0][i])
 		{

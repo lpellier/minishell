@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 14:15:30 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 17:06:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,16 @@ int	check_exec_options(int argc, char **argv)
 	return (SUCCESS);
 }
 
-int	main(int argc, char **argv, char **envp)
+int	init_terminal()
 {
-	if (ft_calloc((void **)&g_info, 1, sizeof(t_info)))
-		exit(FAILURE);
-	if (check_exec_options(argc, argv))
-		exit(FAILURE);
+	t_env	*term;
+
+	term = get_env_custom("TERM");
+	if (!term || !term->value)
+		return (print_error("TERM environment variable not set.\nBye.\n"));
 	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
-	tgetent(NULL, getenv("TERM"));
+	tgetent(NULL, term->value);
 	tcgetattr(STDOUT_FILENO, &g_info->termios_p);
 	tcgetattr(STDOUT_FILENO, &g_info->saved_term);
 	g_info->termios_p.c_lflag &= ~(ICANON | ECHO);
@@ -138,8 +139,17 @@ int	main(int argc, char **argv, char **envp)
 	g_info->termios_p.c_cc[VMIN] = 1;
 	g_info->cursor.col = tgetnum("co");
 	g_info->cursor.lin = tgetnum("li");
-	if (init_info(envp))
-		exit(EXIT_FAILURE);
 	init_termcap();
+	return (SUCCESS);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	if (ft_calloc((void **)&g_info, 1, sizeof(t_info)))
+		exit(FAILURE);
+	if (check_exec_options(argc, argv))
+		exit(FAILURE);
+	if (init_info(envp))
+		exit(FAILURE);
 	exit(shell_loop());
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:24 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/23 19:15:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:04:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	pass_q_and_dq(char *line, int i)
 		while (line[i] && line[i] != QUOTE)
 			i++;
 	}
+	if (line[i] && line[i] == BSLASH)
+		i += 2;
 	if (line[i] && line[i] == DQUOTE)
 	{
 		i++;

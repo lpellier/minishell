@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 15:59:31 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 17:05:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ int	init_env(char **envp)
 
 int	init_info(char **envp)
 {
+	t_env	*shlvl;
+	
+	init_env(envp);
+	if (init_terminal())
+		return (FAILURE);
 	if (ft_calloc((void **)&g_info->line, 4096, sizeof(char)))
 		return (FAILURE);
 	init_built_in();
@@ -65,7 +70,9 @@ int	init_info(char **envp)
 	g_info->crashed = FALSE;
 	g_info->cmd_status = 0;
 	g_info->sig_status = 0;
-	init_env(envp);
+	shlvl = get_env_custom("SHLVL");
+	if (shlvl)
+		shlvl->value = ft_itoa(ft_atoi(shlvl->value) + 1);
 	ft_list_push_front(&g_info->env_head, create_env_struct(ft_strdup("?"), \
 		ft_itoa(g_info->cmd_status)));
 	reset_info();

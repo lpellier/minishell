@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 14:15:54 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 16:36:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,16 @@ int	export_error(t_cmd *cmd)
 	return (SUCCESS);
 }
 
-int	ft_export()
+int	export_content(char *str)
 {
-	t_cmd	*cmd;
-	int		concat;
 	char	*key;
 	char	*value;
 	char	**key_value;
+	int		concat;
 
-	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
-	if (export_error(cmd) == FAILURE)
+	if (!ft_strchr(str, '='))
 		return (FAILURE);
-	if (!cmd->input)
-		return (print_declare_env());
-	if (!ft_strchr(cmd->input, '='))
-		return (FAILURE);
-	key_value = ft_split(cmd->input, '=');
+	key_value = ft_split(str, '=');
 	concat = export_remove_char(key_value);
 	key = ft_strdup(key_value[0]);
 	if (!key_value[1])
@@ -72,14 +66,39 @@ int	ft_export()
 	else
 		value = ft_strdup(key_value[1]);
 	free_tab(&key_value);
-	if (str_isalpha_withplus(key) || key[0] == '+')
+	if (str_isalpha_withplus(key) || key[0] == '+' || str[0] == '=')
 	{
-		ft_printf("minisheh: export: '%s': not a valid identifier\n", \
-			cmd->input);
+		ft_printf("minisheh: export: `%s': not a valid identifier\n", \
+			str);
 		secure_free(key);
 		secure_free(value);
 		return (FAILURE);
 	}
 	modify_export(key, value, concat);
+	return (SUCCESS);
+}
+
+int	ft_export()
+{
+	t_cmd	*cmd;
+	int		i;
+	int		error;
+	char	**split;
+
+	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
+	if (export_error(cmd))
+		return (FAILURE);
+	if (!cmd->input)
+		return (print_declare_env());
+	i = 0;
+	error = 0;
+	split = ft_split(cmd->input, 32);
+	while (split[i])
+	{
+		error += export_content(split[i]);
+		i++;
+	}
+	if (error > 0)
+		return (FAILURE);
 	return (SUCCESS);
 }

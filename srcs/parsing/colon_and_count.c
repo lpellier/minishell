@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 15:46:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 19:09:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	do_colon_split(char	**colon_split, int i)
 	first = TRUE;
 	while (colon_split && colon_split[i])
 	{
+		modify_line_redir(colon_split[i]);
 		if (transform_line(colon_split[i], 0, 0, 0))
 		{
 			g_info->cmd_status = 1;

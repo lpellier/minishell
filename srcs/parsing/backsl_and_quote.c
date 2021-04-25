@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/22 16:24:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/25 19:40:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,16 @@ int	backslash(char *line, int *index, int dquote)
 {
 	if (!dquote)
 	{
-		remove_char(line, *index);
+		if (line[*index + 1] && !ft_cinset(line[*index + 1], SEPARATOR))
+			*index += 1;
+		else
+			remove_char(line, *index);
 		*index += 1;
 	}
 	else if (dquote)
 	{
 		if (line[*index + 1] && (line[*index + 1] == BSLASH || \
-			line[*index + 1] == '$' || line[*index + 1] == DQUOTE))
+			line[*index + 1] == DOLLAR || line[*index + 1] == DQUOTE))
 			remove_char(line, *index);
 		*index += 1;
 	}

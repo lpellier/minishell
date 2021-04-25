@@ -81,7 +81,7 @@ int	count_until_redir(char *str)
 	return (i);
 }
 
-void	modify_line_redir(void)
+void		modify_line_redir(char *str)
 {
 	int		i;
 	int		start;
@@ -91,19 +91,21 @@ void	modify_line_redir(void)
 	i = 0;
 	start = 0;
 	tmp = NULL;
-	while (g_info->line[i])
+	while (str[i])
 	{
 		count = 0;
-		if (!is_redir_l(g_info->line[i]) || !is_redir_r(g_info->line[i]))
+		if (str[i] == BSLASH)
+			i++;
+		if (!is_redir_l(str[i]) || !is_redir_r(str[i]))
 		{
 			if (!start)
 				start = i;
-			while (g_info->line[i] && !ft_cinset(g_info->line[i], SEPARATOR))
+			while (str[i] && !ft_cinset(str[i], SEPARATOR))
 				i++;
-			count = count_until_redir(&g_info->line[i]);
-			tmp = ft_substr(g_info->line, i, count);
-			i += move_around(tmp, &start);
-			remove_words(i);
+			count = count_until_redir(&str[i]);
+			tmp = ft_substr(str, i, count);
+			i += move_around(str, tmp, &start);
+			remove_words(str, i);
 			secure_free(tmp);
 		}
 		i++;
@@ -128,7 +130,7 @@ void	process_line(int first)
 	int		crashed;
 	int		i;
 
-	colon_split = NULL;
+  	colon_split = NULL;
 	i = 0;
 	crashed = FALSE;
 	if (first)
@@ -138,7 +140,6 @@ void	process_line(int first)
 	read_line();
 	if (check_syntax())
 		return ;
-	modify_line_redir();
 	remove_spaces(g_info->line);
 	colon_split = ft_split_colon(g_info->line);
 	ft_printf("\n");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colon_count_split.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:55 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 15:06:08 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 20:07:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	count_words_colon(char *line)
 			while (line[i] && line[i] != DQUOTE)
 				i++;
 		}
+		if (line[i] && line[i] == BSLASH)
+			i += 2;
 		if (line[i] && line[i] == COLON)
 			count++;
 		i++;

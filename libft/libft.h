@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 15:15:06 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 13:59:11 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/25 16:56:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char				**ft_split(const char *s, char c);
 int					ft_calloc(void **ptr, size_t count, size_t size);
 int					ft_putchar(int c);
 int					ft_intlen(long n);
+int					ft_atoi(const char *str);
 int					ft_uintlen(unsigned long n);
 int					ft_checkc(char c, const char *set);
 int					ft_isalpha(int c);
