@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_output_other.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:34:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 13:32:32 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/26 10:38:23 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void	output_string(t_printf *printf, va_list ap)
 	printf->outputlen += printf->len;
 	if (printf->padding == 2)
 	{
-		ft_putnstr_fd(res, printf->len, 1);
+		ft_putnstr_fd(res, printf->len, STDERR_FILENO);
 		output_flags(printf);
 	}
 	else
 	{
 		output_flags(printf);
-		ft_putnstr_fd(res, printf->len, 1);
+		ft_putnstr_fd(res, printf->len, STDERR_FILENO);
 	}
 }
 
@@ -60,7 +60,7 @@ void	output_uint(t_printf *printf, va_list ap)
 	{
 		output_flags(printf);
 		put_zeros(printf);
-		ft_putunbr_fd(res, 1);
+		ft_putunbr_fd(res, STDERR_FILENO);
 	}
 }
 

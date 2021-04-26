@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/24 20:03:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 10:41:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	add_key(char *dest, char key)
 	while (count-- > 0)
 		tputs(tgetstr("up", NULL), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
-	ft_putstr_fd(dest, 1);
+	ft_putstr_fd(dest, STDOUT_FILENO);
 	move_right(dest);
 	// tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
 }

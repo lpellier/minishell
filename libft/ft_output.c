@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_output.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 11:52:38 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/06 17:17:10 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/26 10:35:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ void	output_char(t_printf *printf, va_list ap)
 	printf->len = 1;
 	if (printf->padding == 2)
 	{
-		ft_putchar_fd(res, 1);
+		ft_putchar_fd(res, STDERR_FILENO);
 		output_flags(printf);
 	}
 	else
 	{
 		output_flags(printf);
-		ft_putchar_fd(res, 1);
+		ft_putchar_fd(res, STDERR_FILENO);
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_functions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:36:54 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 13:33:18 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/26 10:36:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ int	output_sign(t_printf *printf, int res)
 {
 	if (printf->minus)
 	{
-		ft_putchar_fd('-', 1);
+		ft_putchar_fd('-', STDERR_FILENO);
 		res *= -1;
 	}
 	else if (printf->plus)
-		ft_putchar_fd('+', 1);
+		ft_putchar_fd('+', STDERR_FILENO);
 	else if (printf->space)
 	{
-		ft_putchar_fd(' ', 1);
+		ft_putchar_fd(' ', STDERR_FILENO);
 		printf->outputlen += 1;
 	}
 	return (res);
@@ -38,7 +38,7 @@ void	put_zeros(t_printf *printf)
 		new = printf->precision - printf->len;
 		while (new--)
 		{
-			ft_putchar_fd('0', 1);
+			ft_putchar_fd('0', STDERR_FILENO);
 			printf->outputlen++;
 		}
 	}
@@ -78,14 +78,6 @@ void	output_flags(t_printf *printf)
 		printf->padding = 3;
 	manque_de_place(printf, padlength);
 }
-
-	// if (printf->padding != 1 || (printf->number == 1 &&
-	// 	printf->precision != -1))
-	// 	while (padlength--)
-	// 		ft_putchar_fd(' ', 1);
-	// else
-	// 	while (padlength--)
-	// 		ft_putchar_fd('0', 1);
 
 void	check_padding_case_hex(t_printf *printf, void *ret)
 {
