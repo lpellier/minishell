@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 20:46:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:46:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,34 +26,82 @@ int	str_isalpha_withminus(char *str)
 	return (SUCCESS);
 }
 
-int	cmp_block(void *data, void *data_ref)
+int		count_args(t_info *info, char *line, int *lint)
 {
-	t_block		*ptr;
-	t_block		*ptr_ref;
+	int		count;
+	int		i;
 
-	ptr = (t_block *)data;
-	ptr_ref = (t_block *)data_ref;
-	if (ptr->start == ptr_ref->start && ptr->end - ptr->start > 0)
-		return (SUCCESS);
-	else
-		return (FAILURE);
+	i = 0;
+	count = 0;
+	while (line[i] && lint[i + info->lint_index] != -1)
+	{
+		while (line[i] && lint[i + info->lint_index] == _EMPTY)
+			i++;
+		if (line[i] && lint[i + info->lint_index] != _EMPTY && \
+			lint[i + info->lint_index] != -1)
+		{
+			count++;
+			while (line[i] && lint[i + info->lint_index] != _EMPTY && \
+				lint[i + info->lint_index] != -1)
+				i++;
+		}
+		i++;
+	}
+	return (count);
 }
 
-int	check_if_block(int index)
+char	**split_by_empty(t_info *info, char *line, int arg_nbr)
 {
-	t_list		*ptr;
-	t_block		*block;
-	t_block		*data_ref;
+	char	**split;
+	int		line_index;
+	int		word_index;
+	int		word_count;
 
-	data_ref = create_block_struct(index, -1);
-	ptr = ft_list_find(g_info->block_head, data_ref, \
-		cmp_block);
-	secure_free(data_ref);
-	if (!ptr)
-		return (-1);
-	block = ptr->data;
-	return (block->end);
+	line_index = 0;
+	word_count = 0;
+	if (ft_calloc((void **)&split, arg_nbr + 1, sizeof(char *)))
+		return (NULL);
+	while (line[line_index] && info->lint[line_index + info->lint_index] != -1)
+	{
+		if (info->lint[line_index + info->lint_index] == _EMPTY_CHAR && \
+			!is_empty_or_void(info->lint[line_index + info->lint_index + 1]))
+		{
+			split[word_count] = ft_strdup("");
+			word_count++;
+			line_index++;
+			while (info->lint[line_index + info->lint_index] == _EMPTY_CHAR)
+				line_index++;
+		}
+		word_index = line_index;
+		while (line[word_index] && info->lint[word_index + info->lint_index] != -1 && \
+			info->lint[word_index + info->lint_index] != _EMPTY)
+			word_index++;
+		if (word_index - line_index > 0)
+		{
+			split[word_count] = ft_substr(line, line_index, word_index - line_index);
+			line_index += word_index - line_index;
+			word_count++;
+		}
+		line_index++;
+	}
+	info->lint_index += line_index + 1;
+	info->line_index = line_index;
+	split[word_count] = NULL;
+	return (split);
 }
+
+// int		separator_in_args(char **args)
+// {
+// 	int		ret;
+// 	int		i;
+
+// 	ret = -1;
+// 	i = 0;
+// 	while (args && args[i])
+// 	{
+		
+// 	}
+// }
 
 /*
 ** recursive function that allows creating as many
@@ -62,50 +110,35 @@ int	check_if_block(int index)
 ** or a semi-colon for now;
 */
 
-int	ft_set_index(char *line, t_cmd *cmd, int index)
+void	read_cmd(t_info *info, char *cmd_line)
 {
-	index += spaces(&line[index], index);
-	index += get_cmd(&line[index], cmd, index);
-	if (cmd->cmd)
-		index += 1;
-	index += get_option(&line[index], cmd, index);
-	if (cmd->option)
-		index += 1;
-	index += get_input(&line[index], cmd, index);
-	if (cmd->input)
-		index += 1;
-	return (index);
-}
-
-void	read_cmd(char *line, int index)
-{
+	// int		sep_arg;
 	t_cmd	*cmd;
 
-	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
-	index = ft_set_index(line, cmd, index);
-	compare_cmd(cmd);
-	if (g_info->debug_option)
+	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
+	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
+	cmd->args = split_by_empty(info, cmd_line, cmd->arg_nbr);
+	// sep_arg = separator_in_args(cmd->args);
+	compare_cmd(info, cmd);
+	if (info->debug_option)
 		print_cmd_info(cmd);
-	if (cmd->cmd && !compare_size(cmd->cmd, ".") && cmd->bui == 9)
+	if (cmd->args && cmd->args[0] && !compare_size(cmd->args[0], ".") && cmd->bui == 9)
 		ft_printf("minisheh: .: usage: . filename [arguments]\n");
-	else if (cmd->cmd && cmd->bui == 9)
-		ft_printf("minisheh: %s: command not found\n", cmd->cmd);
-	else if (!is_pipe(line[index]))
-		pipe_for_exec(line, index, PIPE);
-	else if (!is_redir_l(line[index]))
-		redir(line, index, R_LEFT);
-	else if (!is_redir_r(line[index]) && line[index + 1] && \
-		!is_redir_r(line[index + 1]))
-		redir(line, index, R_RIGHTD);
-	else if (!is_redir_r(line[index]))
-		redir(line, index, R_RIGHT);
-	else if (cmd->bui == 8)
-		pipe_for_exec(line, index, NOTHING);
-	else if (!cmd->cmd)
-		return ;
-	else
-	{
-		g_info->cmd_status = g_info->built_in[cmd->bui]();
-		update_cmd_status();
-	}
+	else if (cmd->args && cmd->args[0] && cmd->bui == 9)
+		ft_printf("minisheh: %s: command not found\n", cmd->args[0]);
+	// else if (cmd_line[info->line_index] == 124 && info->lint[info->lint_index] == _TOKEN)
+	// 	pipe_for_exec(info, index, PIPE);
+	// else if (!is_redir_l(line[index]))
+	// 	redir(line, index, R_LEFT);
+	// else if (!is_redir_r(line[index]) && line[index + 1] && \
+	// 	!is_redir_r(line[index + 1]))
+	// 	redir(line, index, R_RIGHTD);
+	// else if (!is_redir_r(line[index]))
+	// 	redir(line, index, R_RIGHT);
+	// else if (cmd->bui == 8)
+	// 	pipe_for_exec(line, index, NOTHING);
+	// else if (!cmd->cmd)
+	// 	return ;
+	// else
+	// 	update_cmd_status(info, info->built_in[cmd->bui]());
 }

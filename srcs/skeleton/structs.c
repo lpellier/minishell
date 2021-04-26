@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 17:47:31 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:41:16 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ t_cmd	*create_cmd_struct(void)
 	if (ft_calloc((void **)&cmd, 1, sizeof(t_cmd)))
 		return (NULL);
 	cmd->bui = 9;
-	cmd->cmd = NULL;
-	cmd->input = NULL;
-	cmd->option = NULL;
+	cmd->arg_nbr = 0;
+	cmd->args = NULL;
 	cmd->path = NULL;
 	return (cmd);
 }
@@ -56,13 +55,3 @@ t_history	*create_history_struct(void)
 	return (history);
 }
 
-t_block	*create_block_struct(int a, int b)
-{
-	t_block	*block;
-
-	if (ft_calloc((void **)&block, 1, sizeof(t_block)))
-		return (NULL);
-	block->start = a;
-	block->end = b;
-	return (block);
-}

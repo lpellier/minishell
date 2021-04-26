@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 14:22:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:40:16 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	ft_isspace(int c)
 	return (ft_cinset(c, "\t\n\r\v\f "));
 }
 
-int	open_file(int separator, char *line, int *index)
+int	open_file(t_info *info, int separator, char *line, int *index)
 {
 	t_env	*env;
 	char	*pwd;
@@ -98,7 +98,7 @@ int	open_file(int separator, char *line, int *index)
 	int		i;
 
 	i = 0;
-	env = get_env_custom("PWD");
+	env = get_env_custom(info, "PWD");
 	if (!env)
 		pwd = ft_strdup("./");
 	else
@@ -106,7 +106,6 @@ int	open_file(int separator, char *line, int *index)
 	file_fd = -1;
 	while (!ft_cinset(line[*index], SEPARATOR))
 		*index += 1;
-	*index += spaces(&line[*index], *index);
 	i = *index;
 	while (line[i] && ft_isprint(line[i]) && line[i] != 32 && \
 		ft_cinset(line[i], "<>"))

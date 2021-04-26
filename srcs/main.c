@@ -6,17 +6,18 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/26 11:11:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:38:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	print_error_option(t_cmd *cmd)
-{
-	ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-	return (FAILURE);
-}
+// int	print_error_option(t_cmd *cmd)
+// {
+// 	(void)cmd;
+// 	// ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
+// 	return (FAILURE);
+// }
 
 int	print_error(char *error)
 {
@@ -24,38 +25,27 @@ int	print_error(char *error)
 	return (FAILURE);
 }
 
-int	rem_hist(void *data, void *data_ref)
+int	delete_empty_history(void *data, void *data_ref)
 {
 	t_history	*ptr;
 
-	(void) data_ref;
+	(void)data_ref;
 	ptr = (t_history *)data;
 	if (!ptr || !ptr->line || (ptr->line && !ptr->line[0]))
 		return (SUCCESS);
 	return (FAILURE);
 }
 
-void	remove_useless_history(void)
-{
-	ft_list_remove_if(&g_info->history_head, NULL, rem_hist, \
-		free_history_struct);
-}
-
-void	update_cmd_status(void)
+void	update_cmd_status(t_info *info, int new_code)
 {
 	t_env	*data;
 
-	data = (t_env *)g_info->env_head->data;
+	data = (t_env *)info->env_head->data;
 	secure_free(data->value);
-	if (g_info->sig_status)
-		data->value = ft_itoa(g_info->sig_status);
-	else
-		data->value = ft_itoa(g_info->cmd_status);
-	g_info->cmd_status = 0;
-	g_info->sig_status = 0;
+	data->value = ft_itoa(new_code);
 }
 
-void	print_prompt()
+void	print_prompt(t_info *info)
 {
 	char	*cur_dir;
 	char	*strjoin;
@@ -69,8 +59,9 @@ void	print_prompt()
 	secure_free(strjoin);
 	ft_putstr_fd(prompt, STDERR_FILENO);
 	secure_free(prompt);
-	g_info->prompt_len = ft_strlen(cur_dir) + 5;
-	g_info->cursor.posx = g_info->prompt_len + g_info->echo_padding;
+	info->terminfo.prompt_len = ft_strlen(cur_dir) + 5;
+	info->cursor.posx = info->terminfo.prompt_len + info->terminfo.echo_padding;
+	info->cursor.posy = 0;
 	secure_free(cur_dir);
 }
 
@@ -78,35 +69,35 @@ void	print_prompt()
 ** sole reason of first var is to create head of history linked list in read_line
 */
 
-int	shell_loop(void)
+int	shell_loop(t_info *info)
 {
 	int		first;
 
 	first = TRUE;
 	ft_putstr_fd("\033[31mWelcome to Minisheh\n\x1b[0m", STDERR_FILENO);
-	while (!g_info->crashed)
+	while (!info->crashed)
 	{
-		print_prompt();
-		process_line(first);
+		print_prompt(info);
+		process_line(info, first);
 		first = FALSE;
-		reset_info();
-		remove_useless_history();
+		reset_info(info);
+		ft_list_remove_if(&info->history_head, NULL, delete_empty_history, \
+		free_history_struct);
 	}
-	free_blocks(g_info->block_head);
-	free_tab(&g_info->dir_paths);
-	secure_free(g_info->line);
-	ft_list_clear(g_info->env_head, free_env_struct);
-	ft_list_clear(g_info->history_head, free_history_struct);
-	secure_free(g_info);
+	free_tab(&info->dir_paths);
+	secure_free(info->line);
+	ft_list_clear(info->env_head, free_env_struct);
+	ft_list_clear(info->history_head, free_history_struct);
+	secure_free(info);
 	return (SUCCESS);
 }
 
-int	check_exec_options(int argc, char **argv)
+int	check_exec_options(t_info *info, int argc, char **argv)
 {
 	if (argc == 1)
-		g_info->debug_option = FALSE;
+		info->debug_option = FALSE;
 	else if (argc == 2 && !compare_size(argv[1], "-d"))
-		g_info->debug_option = TRUE;
+		info->debug_option = TRUE;
 	else if (argc >= 3)
 	{
 		ft_printf("Too many arguments. Minisheh only ");
@@ -122,34 +113,25 @@ int	check_exec_options(int argc, char **argv)
 	return (SUCCESS);
 }
 
-int	init_terminal()
-{
-	t_env	*term;
-
-	term = get_env_custom("TERM");
-	if (!term || !term->value)
-		return (print_error("TERM environment variable not set.\nBye.\n"));
-	signal(SIGINT, ft_sigint);
-	signal(SIGQUIT, ft_sigquit);
-	tgetent(NULL, term->value);
-	tcgetattr(STDOUT_FILENO, &g_info->termios_p);
-	tcgetattr(STDOUT_FILENO, &g_info->saved_term);
-	g_info->termios_p.c_lflag &= ~(ICANON | ECHO);
-	g_info->termios_p.c_cc[VTIME] = 0;
-	g_info->termios_p.c_cc[VMIN] = 1;
-	g_info->cursor.col = tgetnum("co");
-	g_info->cursor.lin = tgetnum("li");
-	init_termcap();
-	return (SUCCESS);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
-	if (ft_calloc((void **)&g_info, 1, sizeof(t_info)))
+	t_info		*info;
+
+	if (ft_calloc((void **)&g_signal, 1, sizeof(t_signal)))
 		exit(FAILURE);
-	if (check_exec_options(argc, argv))
+	g_signal->kill = FALSE;
+	g_signal->bin_running = FALSE;
+	if (ft_calloc((void **)&info, 1, sizeof(t_info)))
 		exit(FAILURE);
-	if (init_info(envp))
+	if (check_exec_options(info, argc, argv))
+	{
+		secure_free(info);
 		exit(FAILURE);
-	exit(shell_loop());
+	}
+	if (init_info(info, envp))
+	{
+		secure_free(info);
+		exit(FAILURE);
+	}
+	exit(shell_loop(info));
 }

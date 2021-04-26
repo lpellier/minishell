@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 16:36:54 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/26 10:36:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 12:51:35 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,19 @@ void	check_padding_case_hex(t_printf *printf, void *ret)
 	if (printf->padding == 2)
 	{
 		put_zeros(printf);
-		ft_putnstr_fd(ret, printf->len, 1);
+		ft_putnstr_fd(ret, printf->len, STDERR_FILENO);
 		output_flags(printf);
 	}
 	else if (printf->padding == 1)
 	{
 		output_flags(printf);
 		put_zeros(printf);
-		ft_putnstr_fd(ret, printf->len, 1);
+		ft_putnstr_fd(ret, printf->len, STDERR_FILENO);
 	}
 	else
 	{
 		output_flags(printf);
 		put_zeros(printf);
-		ft_putnstr_fd(ret, printf->len, 1);
+		ft_putnstr_fd(ret, printf->len, STDERR_FILENO);
 	}
 }

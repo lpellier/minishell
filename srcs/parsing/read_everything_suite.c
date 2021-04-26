@@ -6,18 +6,18 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:24 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 20:04:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:19:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	special_keys(char key)
+void	special_keys(t_info *info, char key)
 {
 	if (key == 27)
-		check_for_arrows(g_info->line);
+		check_for_arrows(info, info->line);
 	else if (key == 127)
-		delete_key(g_info->line);
+		delete_key(info, info->line);
 }
 
 void	bzero_and_cpy(t_history *cur, char *line)
@@ -26,12 +26,12 @@ void	bzero_and_cpy(t_history *cur, char *line)
 	ft_strcpy(cur->line, line);
 }
 
-void	update_history(t_history *cur)
+void	update_history(t_info *info, t_history *cur)
 {
 	ft_bzero(cur->line, ft_strlen(cur->line));
-	cur->posx = g_info->cursor.posx;
-	cur->posy = g_info->cursor.posy;
-	ft_strcpy(cur->line, g_info->line);
+	cur->posx = info->cursor.posx;
+	cur->posy = info->cursor.posy;
+	ft_strcpy(cur->line, info->line);
 }
 
 int	pass_q_and_dq(char *line, int i)

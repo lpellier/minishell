@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:29:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 16:02:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:07:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,29 @@ int	compare_size(char *s1, char *s2)
 		return (FAILURE);
 }
 
-void	compare_cmd(t_cmd *cmd)
+void	compare_cmd(t_info *info, t_cmd *cmd)
 {
-	if (!cmd->cmd)
+	if (!cmd->args || !cmd->args[0])
 		cmd->bui = NONEXISTENT;
-	else if (!compare_size(cmd->cmd, "echo"))
+	else if (!compare_size(cmd->args[0], "echo"))
 		cmd->bui = ECHOO;
-	else if (!compare_size(cmd->cmd, "exit"))
+	else if (!compare_size(cmd->args[0], "exit"))
 		cmd->bui = EXIT;
-	else if (!compare_size(cmd->cmd, "pwd"))
+	else if (!compare_size(cmd->args[0], "pwd"))
 		cmd->bui = PWD;
-	else if (!compare_size(cmd->cmd, "export"))
+	else if (!compare_size(cmd->args[0], "export"))
 		cmd->bui = EXPORT;
-	else if (!compare_size(cmd->cmd, "unset"))
+	else if (!compare_size(cmd->args[0], "unset"))
 		cmd->bui = UNSET;
-	else if (!compare_size(cmd->cmd, "env"))
+	else if (!compare_size(cmd->args[0], "env"))
 		cmd->bui = ENV;
-	else if (!compare_size(cmd->cmd, "cd"))
+	else if (!compare_size(cmd->args[0], "cd"))
 		cmd->bui = CD;
-	else if (!find_binary(cmd))
+	else if (!find_binary(info, cmd))
 		cmd->bui = BINARY;
 	else
 	{
 		cmd->bui = NONEXISTENT;
-		g_info->cmd_status = 127;
-		update_cmd_status();
+		update_cmd_status(info, 127);
 	}
 }

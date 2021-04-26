@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 19:03:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:29:54 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,10 @@
 
 typedef struct s_cmd
 {
-	char			*cmd;
-	char			*input;
-	int				bui;
-	char			*option;
+	char			**args;
 	char			*path;
+	int				bui;
+	int				arg_nbr;
 }					t_cmd;
 
 /*
@@ -74,69 +73,54 @@ typedef struct s_history
 	int				posx;
 }					t_history;
 
-typedef struct s_block
-{
-	int				start;
-	int				end;
-}					t_block;
-
 /*
 ** pointer on next struct of linked list
 ** pointer on data, usually data is a struct
 */
 
-typedef struct s_list
+typedef struct s_signal
 {
-	struct s_list	*next;
-	void			*data;
-}					t_list;
+	int				kill;
+	int				bin_running;
+}					t_signal;
 
 typedef struct s_cursor
 {
 	int				posx;
 	int				posy;
-	int				col;
-	int				lin;
 }					t_cursor;
 
-typedef struct s_split
+typedef struct s_terminfo
 {
-	int				i;
-	int				old;
-	int				count;
-	int				words_len;
-	char			**ret;
-}					t_split;
+	int				echo_padding;
+	int				prompt_len;
+	int				col;
+	int				lin;
+}					t_terminfo;
 
 typedef struct s_info
 {
 	struct termios	termios_p;
 	struct termios	saved_term;
-	int				(*built_in[10])();
-	char			cur_path[PATH_MAX];
-	int				crashed;
-	int				cmd_status;
-	int				index_cmd;
-	int				cur_in_history;
-	int				prompt_len;
-	int				echo_padding;
-	int				kill;
-	int				sig_status;
-	int				colon_nbr;
-	int				bin_running;
-	int				debug_option;
 	t_cursor		cursor;
+	t_terminfo		terminfo;
 	t_list			*cmd_head;
 	t_list			*env_head;
-	t_list			*block_head;
 	t_list			*history_head;
 	char			**envp;
 	char			**dir_paths;
 	char			*line;
-	int				status;
+	int				*lint;
+	int				lint_index;
+	int				line_index;
+	int				index_cmd;
+	int				cur_in_history;
+	int				crashed;
+	int				debug_option;
+	int				(*built_in[10])();
 }					t_info;
 
-t_info				*g_info;
+t_signal			*g_signal;
 
 enum				e_separator
 {
@@ -145,6 +129,16 @@ enum				e_separator
 	R_LEFT,
 	R_RIGHT,
 	R_RIGHTD
+};
+
+enum				e_line_indicators
+{
+	_EMPTY,
+	_CHAR,
+	_TOKEN,
+	_QUOTED,
+	_DQUOTED,
+	_EMPTY_CHAR
 };
 
 enum				e_built_in_index
@@ -172,25 +166,28 @@ enum				e_status_codes
 ** main **
 **********/
 
+void		clear_line(t_info *info);
+int			is_empty_or_void(int lint);
+int			count_args(t_info *info, char *line, int *lint);
+void		set_lint(t_info *info, int *lint);
 int			init_terminal();
 int			print_error_option(t_cmd *cmd);
 int			print_error(char *error);
-void		move_right(char *dest);
-void		move_left();
-void		print_prompt();
-int			rem_hist(void *data, void *data_ref);
-void		remove_useless_history(void);
-int			shell_loop(void);
-void		update_cmd_status(void);
-int			check_exec_options(int argc, char **argv);
+void		move_right(t_info *info, char *dest);
+void		move_left(t_info *info);
+void		print_prompt(t_info *info);
+int			delete_empty_history(void *data, void *data_ref);
+int			shell_loop(t_info *info);
+void		update_cmd_status(t_info *info, int new_code);
+int			check_exec_options(t_info *info, int argc, char **argv);
 
 /*************
 ** built-in **
 *************/
 
 // binary_things
-int			exec_binary();
-int			find_binary(t_cmd *cmd);
+int			exec_binary(t_info *info);
+int			find_binary(t_info *info, t_cmd *cmd);
 void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
 
 // built_in
@@ -205,7 +202,6 @@ int			ft_echo();
 int			only_n(char *str);
 
 // built_in2
-char		**count_args(t_cmd *cmd, int *count);
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
 int			ft_cd();
@@ -218,7 +214,7 @@ int			ft_env();
 
 // cmp_size_and_cmp
 int			compare_size(char *s1, char *s2);
-void		compare_cmd(t_cmd *cmd);
+void		compare_cmd(t_info *info, t_cmd *cmd);
 
 // do_export
 int			ft_export();
@@ -238,7 +234,6 @@ void		free_tab(char ***tab);
 void		free_history_struct(void *data);
 void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);
-void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 
 /************
 ** parsing **
@@ -248,84 +243,56 @@ void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 char		*get_cur_dir(void);
 int			directories(char *path, char *cmd);
 
-// parsing_utils
-
-int			multiple_args(char *str);
-int			is_pipe(char c);
-int			is_colon(char c);
-int			is_redir_l(char c);
-int			is_redir_r(char c);
-
 // parsing_space
 int			is_whitespace(char c);
-int			spaces(char *s, int index);
 
 // char_and_key
 void		add_char(char *dest, char key, int index);
 void		remove_char(char *line, int index);
-void		add_key(char *dest, char key);
-void		delete_key(char *dest);
-
-// get_something
-int			get_input(char *line, t_cmd *cmd, int index);
-int			get_cmd(char *line, t_cmd *cmd, int index);
-int			get_option(char *line, t_cmd *cmd, int index);
+void		add_key(t_info *info, char *dest, char key);
+void		delete_key(t_info *info, char *dest);
 
 // parsing
 int			str_isalpha_withminus(char *str);
-int			cmp_block(void *data, void *data_ref);
-int			check_if_block(int index);
-int			ft_set_index(char *line, t_cmd *cmd, int index);
-void		read_cmd(char *line, int index);
+void		read_cmd(t_info *info, char *line);
 
 // error_handling
-int			check_syntax();
-int			pipe_error_syntax(int i);
-int			double_error_syntax(int i, char token);
+int			check_syntax(t_info *info);
+int			pipe_error_syntax(t_info *info, int i);
+int			double_error_syntax(t_info *info, int i, char token);
 
 // colon_count_split
-char		**split_colon_suite(char *line, t_split *split);
-char		**ft_split_colon(char *line);
-int			count_words_colon(char *line);
-
-// move_remove_add
-int			prepare_remove(char *line, int q, int dq, int i);
-int			add_word(char *str, char *word, int where);
-int			move_around(char *line, char *str, int *start);
-int			remove_words(char *str, int i);
-void		remove_spaces(char *l);
+void		create_cmd_list(t_info *info, int nbr);
+int			count_cmd(char *line, int *lint);
+char		**split_by_colon(t_info *info, char *line, int *lint);
 
 // read_everything
-int			read_line(void);
-int			read_keys(char key, t_history *cur);
-int			count_until_redir(char *str);
-void		process_line(int first);
+int			read_line(t_info *info);
+int			read_keys(t_info *info, char key, t_history *cur);
+void		process_line(t_info *info, int first);
 void		modify_line_redir(char *str);
 
 // read_everything_suite
 int			pass_q_and_dq(char *line, int i);
-void		update_history(t_history *cur);
+void		update_history(t_info *info, t_history *cur);
 void		bzero_and_cpy(t_history *cur, char *line);
-void		special_keys(char key);
+void		special_keys(t_info *info, char key);
 void		toggle(int *bo, int *index);
 
 // backsl_and_quote
-int			backslash(char *line, int *index, int dquote);
-int			quote(char *line, int *index);
-int			dquote(char *line, int *index);
-int			transform_line(char *line, int index, int quote_nb, int dquote_nb);
+int			backslash(t_info *info, int *index, int dquote);
+int			quote(t_info *info, int *index);
+int			dquote(t_info *info, int *index);
+int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
 
 // control_and_dollar
-int			control_d(void);
+int			control_d(t_info *info);
 int			ft_isalpha_ordollar(int c);
-int			dollar(char *line, int *index);
-void		dollar_suite(char *line, char *var, int *index, int i);
+int			dollar(t_info *info, int *index, int quote);
+void		dollar_suite(t_info *info, char *var, int *index, int i, int quote);
 
 // colon_and_count
-int			is_there_colon_in_line(char *line);
 int			count_exceptions(int quote, int dquote);
-void		remove_colons(char *line, int i);
-void		do_colon_split(char	**colon_split, int i);
 
 /**********
 ** redir **
@@ -334,15 +301,15 @@ void		do_colon_split(char	**colon_split, int i);
 // do_redir
 void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
-int			redir(char *line, int index, int separator);
-void		redir_something(char *line, int index);
+int			redir(t_info *info, char *line, int index, int separator);
+void		redir_something(t_info *info, char *line, int index);
 
 // do_pipe
-int			pipe_for_exec(char *line, int index, int piped);
-int			child_process(int separator, t_cmd *cmd, \
+int			pipe_for_exec(t_info *info, char *line, int separator);
+int			child_process(t_info *info, int separator, t_cmd *cmd, \
 				int *pipefd);
-void		get_child(int separator, pid_t cpid);
-void		check_pipe(int separator, char *line, int index);
+void		get_child(t_info *info, int separator, pid_t cpid);
+void		check_pipe(t_info *info, int separator);
 
 /*********
 ** free **
@@ -350,14 +317,12 @@ void		check_pipe(int separator, char *line, int index);
 
 // secure_free
 void		secure_free(void *ptr);
-void		free_blocks(t_list *block_head);
 
 // free
 void		free_tab(char ***tab);
 void		free_history_struct(void *data);
 void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);
-void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 
 /****************
 ** redirection **
@@ -365,7 +330,7 @@ void		ft_list_clear(t_list *begin_list, void (*free_fct)(void *));
 
 char		*ft_strncpy(char *dest, char *src, unsigned int n);
 char		*ft_strtrim(char const *s1, char const *set);
-int			open_file(int separator, char *line, int *index);
+int			open_file(t_info *info, int separator, char *line, int *index);
 int			ft_isspace(int c);
 int			ft_cinset(const char c, const char *set);
 int			ft_isseparator(int c);
@@ -376,58 +341,43 @@ int			ft_checkc(char c, const char *set);
 ***************/
 
 // init
-int			init_env(char **envp);
-void		reset_info(void);
-int			init_info(char **envp);
-void		init_termcap(void);
-void		init_built_in(void);
+int			init_env(t_info *info, char **envp);
+void		reset_info(t_info *info);
+int			init_info(t_info *info, char **envp);
+void		init_built_in(t_info *info);
 
 /*************
 ** skeleton **
 *************/
 
 // struc_env
-t_env		*get_env_custom(char *key);
-int			modify_env(char *key, char *new_value, int concat);
+t_env		*get_env_custom(t_info *info, char *key);
+int			modify_env(t_info *info, char *key, char *new_value, int concat);
 
 // structs
 t_cmd		*create_cmd_struct(void);
 t_env		*create_env_struct(char *key, char *value);
 t_history	*create_history_struct(void);
-t_block		*create_block_struct(int a, int b);
 
-// create_and_push
-t_list		*ft_create_elem(void *data);
-void		ft_list_push_front(t_list **begin_list, void *data);
-void		ft_list_push_back(t_list **begin_list, void *data);
-
-// linked_lists
-int			ft_list_size(t_list *list);
-void		ft_list_foreach(t_list *begin_list, void (*f)(void *));
-void		ft_list_remove_if(t_list **begin_list, void *data_ref,
-				int (*cmp)(), void (*free_fct)(void *));
-t_list		*ft_list_at(t_list *begin_list, unsigned int nbr);
-t_list		*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)());
 
 // print_and_cmp
 int			cmp_env(void *data, void *data_ref);
 void		print_env_struct(void *data);
 void		print_history(void *data);
 void		print_env_declare(void *data);
-void		print_block(void *data);
 
 /************
 ** termcap **
 ************/
 
 // termcap
-void		init_termcap(void);
+void		init_termcap(t_info *info);
 
 // termcap_utils
-void		check_for_arrows(char *line);
-void		restore_term(void);
-void		print_last_cmd(char *line);
-void		print_prev_cmd(char *line);
+void		check_for_arrows(t_info *info, char *line);
+void		restore_term(t_info *info);
+void		print_last_cmd(t_info *info, char *line);
+void		print_prev_cmd(t_info *info, char *line);
 
 // all_signal
 void		ft_sigint(int sig);

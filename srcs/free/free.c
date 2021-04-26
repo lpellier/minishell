@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 17:17:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:46:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,8 @@ void	free_cmd_struct(void *data)
 	if (!data || !ptr)
 		return ;
 	ptr->bui = 9;
-	secure_free(ptr->cmd);
-	secure_free(ptr->option);
-	secure_free(ptr->input);
+	ptr->arg_nbr = 0;
+	free_tab(&ptr->args);
 	secure_free(ptr->path);
 	secure_free(ptr);
 }

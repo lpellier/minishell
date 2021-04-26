@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 15:57:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:30:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,83 +28,92 @@
 ** restoring stdout and stdin to original fds
 */
 
-int	child_process(int separator, t_cmd *cmd, int *pipefd)
+int	child_process(t_info *info, int separator, t_cmd *cmd, int *pipefd)
 {
 	close(pipefd[0]);
 	if (separator == PIPE)
 		dup2(pipefd[1], STDOUT_FILENO);
 	else
 		close(pipefd[1]);
-	g_info->status = (g_info->built_in[cmd->bui])();
-	return (g_info->status);
+	return ((info->built_in[cmd->bui])());
 }
 
-void	interpret_errors()
+void	interpret_errors(t_info *info)
 {
-	t_cmd *cmd;
+	t_env	*code_env;
+	t_cmd	*cmd;
+	int		code;
 
-	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
-	if (g_info->cmd_status == EACCES)
+	code_env = info->env_head->data;
+	if (code_env)
 	{
-		g_info->cmd_status = 126;
-		ft_printf("minisheh: %s: permission denied\n", cmd->cmd);
+		code = ft_atoi(code_env->value);
+		cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
+		if (code == EACCES)
+		{
+			ft_printf("minisheh: %s: permission denied\n", cmd->args[0]);
+			update_cmd_status(info, 126);
+		}
 	}
-	update_cmd_status();
 }
 
-void	get_child(int separator, pid_t cpid)
+void	get_child(t_info *info, int separator, pid_t cpid)
 {
-	//  || g_info->status != -1 ||
-	if (g_info->kill || \
-		(separator == PIPE && g_info->cmd_status == 127))
+	int	c_status;
+
+	if (g_signal->kill || separator == PIPE)
 	{
 		kill(cpid, SIGINT);
-		g_info->sig_status = 130;
+		update_cmd_status(info, 130);
+		c_status = 130;
 	}
-	waitpid(cpid, &g_info->status, 0);
-	init_termcap();
-	g_info->bin_running = FALSE;
-	g_info->cmd_status = g_info->status % 255;
-	interpret_errors();
+	waitpid(cpid, &c_status, 0);
+	init_termcap(info);
+	g_signal->bin_running = FALSE;
+	update_cmd_status(info, c_status % 255);
+	interpret_errors(info);
 }
 
-void	check_pipe(int separator, char *line, int index)
+void	check_pipe(t_info *info, int separator)
 {
-	if (separator == PIPE)
-	{
-		while (!ft_cinset(line[index], SEPARATOR))
-			index++;
-		ft_list_push_back(&g_info->cmd_head, create_cmd_struct());
-		g_info->index_cmd += 1;
-		read_cmd(line, index);
-	}
+	(void)info;
+	(void)separator;
+	// if (separator == PIPE)
+	// {
+	// 	while (!ft_cinset(line[index], SEPARATOR))
+	// 		index++;
+	// 	ft_list_push_back(&info->cmd_head, create_cmd_struct());
+	// 	info->index_cmd += 1;
+	// 	// read_cmd(line, index);
+	// }
 }
 
-int	pipe_for_exec(char *line, int index, int separator)
+int	pipe_for_exec(t_info *info, char *line, int separator)
 {
+	(void)line;
 	int		pipefd[2];
 	pid_t	cpid;
 	t_cmd	*cmd;
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
 
-	g_info->bin_running = TRUE;
-	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
+	g_signal->bin_running = TRUE;
+	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	save_std(&saved_stdin, &saved_stdout);
-	restore_term();
+	restore_term(info);
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
 	cpid = fork();
 	if (cpid == -1)
 		return (EXIT_FAILURE);
 	else if (cpid == 0)
-		_exit(child_process(separator, cmd, pipefd));
+		_exit(child_process(info, separator, cmd, pipefd));
 	else
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		check_pipe(separator, line, index);
-		get_child(separator, cpid);
+		check_pipe(info, separator);
+		get_child(info, separator, cpid);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }

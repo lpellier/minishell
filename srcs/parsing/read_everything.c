@@ -12,54 +12,53 @@
 
 #include "../../includes/minishell.h"
 
-// g_info->cursor.posx - g_info->prompt_len + 1 : this formula 
+// info->cursor.posx - info->terminfo.prompt_len + 1 : this formula 
 //	   lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
-int	read_keys(char key, t_history *cur)
+int	read_keys(t_info *info, char key, t_history *cur)
 {
 	while (key != '\n')
 	{
 		if (read(STDIN_FILENO, &key, 1) == -1)
 			return (FAILURE);
-		if (g_info->kill)
+		if (g_signal->kill)
 		{
-			g_info->kill = FALSE;
-			ft_bzero(g_info->line, ft_strlen(g_info->line));
+			g_signal->kill = FALSE;
+			ft_bzero(info->line, ft_strlen(info->line));
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
 		if (key == 27 || key == 127)
-			special_keys(key);
+			special_keys(info, key);
 		else if (key == 4)
 		{
-			if (control_d())
+			if (control_d(info))
 				break ;
 		}
 		else if (key != '\n' && ft_cinset(key, WHITESPACE))
-			add_key(g_info->line, key);
-		if (g_info->cur_in_history == 0 || key == '\n')
-			update_history(cur);
+			add_key(info, info->line, key);
+		if (info->cur_in_history == 0 || key == '\n')
+			update_history(info, cur);
 	}
 	return (SUCCESS);
 }
 
-int	read_line(void)
+int	read_line(t_info *info)
 {
 	t_history	*cur;
 	char		key;
 
 	key = 0;
-	ft_bzero(g_info->line, ft_strlen(g_info->line));
-	cur = (t_history *)g_info->history_head->data;
-	g_info->prompt_len += g_info->echo_padding;
-	if (read_keys(key, cur))
+	ft_bzero(info->line, ft_strlen(info->line));
+	cur = (t_history *)info->history_head->data;
+	info->terminfo.prompt_len += info->terminfo.echo_padding;
+	if (read_keys(info, key, cur))
 	{
-		g_info->sig_status = 1;
-		update_cmd_status();
+		update_cmd_status(info, 1);
 		return (FAILURE);
 	}
-	if (g_info->echo_padding > 0)
-		g_info->echo_padding = 0;
+	if (info->terminfo.echo_padding > 0)
+		info->terminfo.echo_padding = 0;
 	return (SUCCESS);
 }
 
@@ -71,45 +70,64 @@ int	read_line(void)
 //	command in line under current one. 
 // should i implement this ?
 
-int	count_until_redir(char *str)
-{
-	int		i;
-
-	i = 0;
-	while (str[i] && is_redir_l(str[i]) && is_redir_r(str[i]))
-		i++;
-	return (i);
-}
 
 void		modify_line_redir(char *str)
 {
-	int		i;
-	int		start;
-	int		count;
-	char	*tmp;
+	(void)str;
+	// int		i;
+	// int		start;
+	// int		count;
+	// char	*tmp;
+
+	// i = 0;
+	// start = 0;
+	// tmp = NULL;
+	// while (str[i])
+	// {
+	// 	count = 0;
+	// 	if (str[i] == BSLASH)
+	// 		i++;
+	// 	if (!is_redir_l(str[i]) || !is_redir_r(str[i]))
+	// 	{
+	// 		if (!start)
+	// 			start = i;
+	// 		while (str[i] && !ft_cinset(str[i], SEPARATOR))
+	// 			i++;
+	// 		count = count_until_redir(&str[i]);
+	// 		tmp = ft_substr(str, i, count);
+	// 		i += move_around(str, tmp, &start);
+	// 		remove_words(str, i);
+	// 		secure_free(tmp);
+	// 	}
+	// 	i++;
+	// }
+}
+
+void	print_lint(t_info *info, int *lint)
+{
+	int	i;
 
 	i = 0;
-	start = 0;
-	tmp = NULL;
-	while (str[i])
+	ft_printf("\n--- LINT --- \n");
+	while (i < LINE_MAX && lint[i] != -1)
 	{
-		count = 0;
-		if (str[i] == BSLASH)
-			i++;
-		if (!is_redir_l(str[i]) || !is_redir_r(str[i]))
-		{
-			if (!start)
-				start = i;
-			while (str[i] && !ft_cinset(str[i], SEPARATOR))
-				i++;
-			count = count_until_redir(&str[i]);
-			tmp = ft_substr(str, i, count);
-			i += move_around(str, tmp, &start);
-			remove_words(str, i);
-			secure_free(tmp);
-		}
+		if (lint[i] != _EMPTY)
+			ft_printf("%d", lint[i]);
+		else
+			ft_printf(" ");
 		i++;
 	}
+	ft_printf("\n");
+	i = 0;
+	while (info->line[i])
+	{
+		if (lint[i] != _EMPTY)
+			ft_printf("%c", info->line[i]);
+		else
+			ft_printf(" ");
+		i++;
+	}
+	ft_printf("\n------------ \n");
 }
 
 /* 
@@ -124,25 +142,37 @@ void		modify_line_redir(char *str)
 // currently building a way to know if blocks exist
 // colons won't work right now BECUASE OF THE SPLIT
 
-void	process_line(int first)
+void	process_line(t_info *info, int first)
 {
-	char	**colon_split;
+	char	**cmd_tab;
 	int		crashed;
-	int		i;
 
-  	colon_split = NULL;
-	i = 0;
+  	cmd_tab = NULL;
 	crashed = FALSE;
 	if (first)
-		g_info->history_head = ft_create_elem(create_history_struct());
+		info->history_head = ft_create_elem(create_history_struct());
 	else
-		ft_list_push_front(&g_info->history_head, create_history_struct());
-	read_line();
-	if (check_syntax())
-		return ;
-	remove_spaces(g_info->line);
-	colon_split = ft_split_colon(g_info->line);
+		ft_list_push_front(&info->history_head, create_history_struct());
+	read_line(info);
+	set_lint(info, info->lint);
 	ft_printf("\n");
-	do_colon_split(colon_split, i);
-	free_tab(&colon_split);
+	if (transform_line(info, 0, 0, 0))
+	{
+		update_cmd_status(info, 1);
+		print_error("minisheh: parsing error: number of quotes should be even\n");
+		return ;
+	}
+	print_lint(info, info->lint);
+	if (check_syntax(info))
+		return ;
+	cmd_tab = split_by_colon(info, info->line, info->lint);
+	info->index_cmd = 0;
+	while (cmd_tab && cmd_tab[info->index_cmd])
+	{
+		modify_line_redir(cmd_tab[info->index_cmd]);
+		read_cmd(info, cmd_tab[info->index_cmd]);
+		info->index_cmd += 1;
+	}
+	ft_list_clear(info->cmd_head, free_cmd_struct);
+	free_tab(&cmd_tab);
 }

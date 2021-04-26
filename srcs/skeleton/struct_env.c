@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   struct_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/09 17:47:05 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/21 14:30:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:31:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_env	*get_env_custom(char *key)
+t_env	*get_env_custom(t_info *info, char *key)
 {
 	t_list	*var_list;
 	t_env	*var;
 	t_env	*data_ref;
 
 	data_ref = create_env_struct(key, NULL);
-	var_list = ft_list_find(g_info->env_head, \
+	var_list = ft_list_find(info->env_head, \
 		data_ref, cmp_env);
 	secure_free(data_ref);
 	if (!var_list)
@@ -28,12 +28,12 @@ t_env	*get_env_custom(char *key)
 	return (var);
 }
 
-int	modify_env(char *key, char *new_value, int concat)
+int	modify_env(t_info *info, char *key, char *new_value, int concat)
 {
 	t_env	*var;
 	char	*tmp_value;
 
-	var = get_env_custom(key);
+	var = get_env_custom(info, key);
 	if (!var)
 		return (FAILURE);
 	tmp_value = ft_strdup(var->value);

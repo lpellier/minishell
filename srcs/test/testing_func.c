@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   testing_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:45:07 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/09 14:35:44 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:35:49 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,16 @@
 
 void	print_cmd_info(t_cmd *cmd)
 {
-	ft_printf(CYAN "'%s'" RESET, cmd->cmd);
-	ft_printf(RED " | " RESET);
-	ft_printf(CYAN "'%s'" RESET, cmd->option);
-	ft_printf(RED " | " RESET);
-	ft_printf(CYAN "'%s'" RESET, cmd->input);
+	int		i;
+	
+	i = 0;
+	while (cmd->args && cmd->args[i])
+	{
+		ft_printf(CYAN "'%s'" RESET, cmd->args[i]);
+		if (i < cmd->arg_nbr - 1)
+			ft_printf(RED " | " RESET);
+		i++;
+	}
 	ft_printf(RED " | bui -> " RESET);
 	ft_printf(CYAN "%d\n" RESET, cmd->bui);
 }

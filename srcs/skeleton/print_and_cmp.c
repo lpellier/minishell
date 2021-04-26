@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_and_cmp.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/20 17:10:03 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:40:59 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,6 @@ void	print_history(void *data)
 
 	ptr = (t_history *)data;
 	ft_printf("%s\n", ptr->line);
-}
-
-void	print_block(void *data)
-{
-	t_block	*ptr;
-
-	ptr = (t_block *)data;
-	ft_printf("\n|start : %d||end : %d|\n", ptr->start, ptr->end);
 }
 
 int	cmp_env(void *data, void *data_ref)

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/25 14:19:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:46:00 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,61 +33,61 @@ int	nothing_in_str(char *str)
 
 int	ft_cd()
 {
-	t_cmd	*cmd;
-	t_env	*old_pwd;
-	t_env	*pwd;
-	t_env	*cd_path;
-	t_env	*home;
-	char	cwd[PATH_MAX];
-	char	*path;
-	char	*tmp;
-	char	*strjoin;
+	// t_cmd	*cmd;
+	// t_env	*old_pwd;
+	// t_env	*pwd;
+	// t_env	*cd_path;
+	// t_env	*home;
+	// char	cwd[PATH_MAX];
+	// char	*path;
+	// char	*tmp;
+	// char	*strjoin;
 
-	path = NULL;
-	cmd = ft_list_at(g_info->cmd_head, g_info->index_cmd)->data;
-	home = get_env_custom("HOME");
-	old_pwd = get_env_custom("OLDPWD");
-	cd_path = get_env_custom("CDPATH");
-	if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && nothing_in_str(home->value))
-		path = ft_strdup(home->value);
-	else if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && !nothing_in_str(home->value))
-		path = ft_strdup(".");
-	else if (old_pwd && !compare_size(cmd->input, "-"))
-	{
-		path = ft_strdup(old_pwd->value);
-		ft_printf("%s\n", path);
-	}
-	else if (cmd->option)
-		return (print_error_option(cmd));
-	else
-		path = ft_strdup(cmd->input);
-	if (cd_path)
-	{
-		tmp = ft_strdup(path);
-		secure_free(path);
-		if (!compare_size(cd_path->value, "/"))
-			path = ft_strjoin(cd_path->value, tmp);
-		else
-		{
-			strjoin = ft_strjoin(cd_path->value, "/");
-			path = ft_strjoin(strjoin, tmp);
-			secure_free(strjoin);
-		}
-		secure_free(tmp);
-	}
-	if (multiple_args(path))
-		return (print_error("minisheh: cd: too many arguments"));
-	else if (chdir(path))
-	{
-		ft_printf("minisheh: cd: %s: no such file or directory\n", path);
-		return (FAILURE);
-	}
-	secure_free(path);
-	pwd = get_env_custom("PWD");
-	if (!pwd)
-		return (FAILURE);
-	modify_env("OLDPWD", pwd->value, 0);
-	modify_env("PWD", getcwd(cwd, sizeof(cwd)), 0);
+	// path = NULL;
+	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
+	// home = get_env_custom(info, "HOME");
+	// old_pwd = get_env_custom(info, "OLDPWD");
+	// cd_path = get_env_custom(info, "CDPATH");
+	// if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && nothing_in_str(home->value))
+	// 	path = ft_strdup(home->value);
+	// else if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && !nothing_in_str(home->value))
+	// 	path = ft_strdup(".");
+	// else if (old_pwd && !compare_size(cmd->input, "-"))
+	// {
+	// 	path = ft_strdup(old_pwd->value);
+	// 	ft_printf("%s\n", path);
+	// }
+	// else if (cmd->option)
+	// 	return (print_error_option(cmd));
+	// else
+	// 	path = ft_strdup(cmd->input);
+	// if (cd_path)
+	// {
+	// 	tmp = ft_strdup(path);
+	// 	secure_free(path);
+	// 	if (!compare_size(cd_path->value, "/"))
+	// 		path = ft_strjoin(cd_path->value, tmp);
+	// 	else
+	// 	{
+	// 		strjoin = ft_strjoin(cd_path->value, "/");
+	// 		path = ft_strjoin(strjoin, tmp);
+	// 		secure_free(strjoin);
+	// 	}
+	// 	secure_free(tmp);
+	// }
+	// if (multiple_args(path))
+	// 	return (print_error("minisheh: cd: too many arguments"));
+	// else if (chdir(path))
+	// {
+	// 	ft_printf("minisheh: cd: %s: no such file or directory\n", path);
+	// 	return (FAILURE);
+	// }
+	// secure_free(path);
+	// pwd = get_env_custom(info, "PWD");
+	// if (!pwd)
+	// 	return (FAILURE);
+	// modify_env(info, "OLDPWD", pwd->value, 0);
+	// modify_env(info, "PWD", getcwd(cwd, sizeof(cwd)), 0);
 	return (SUCCESS);
 }
 
@@ -99,28 +99,28 @@ int	ft_cd()
 ** it's going to be tough
 */
 
-char	**count_args(t_cmd *cmd, int *count)
-{
-	char	**split;
-	int		i;
+// char	**count_args(t_cmd *cmd, int *count)
+// {
+// 	char	**split;
+// 	int		i;
 
-	*count = 0;
-	i = 0;
-	if (cmd->input)
-	{
-		split = ft_split(cmd->input, ' ');
-		while (split[i])
-			i++;
-		*count += i;
-	}
-	else
-		split = NULL;
-	if (cmd->cmd)
-		*count += 1;
-	if (cmd->option)
-		*count += 1;
-	return (split);
-}
+// 	*count = 0;
+// 	i = 0;
+// 	if (cmd->input)
+// 	{
+// 		split = ft_split(cmd->input, ' ');
+// 		while (split[i])
+// 			i++;
+// 		*count += i;
+// 	}
+// 	else
+// 		split = NULL;
+// 	if (cmd->cmd)
+// 		*count += 1;
+// 	if (cmd->option)
+// 		*count += 1;
+// 	return (split);
+// }
 
 char	**list_to_tab(t_list *begin_list)
 {
@@ -172,7 +172,7 @@ char	*get_actual_cmd(char *cmd, char **path)
 
 int	nothing()
 {
-	if (g_info->kill == FALSE)
-		g_info->kill = TRUE;
+	if (g_signal->kill == FALSE)
+		g_signal->kill = TRUE;
 	return (FAILURE);
 }

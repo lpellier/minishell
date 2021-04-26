@@ -6,27 +6,27 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 16:49:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 23:16:14 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	control_d(void)
+int	control_d(t_info *info)
 {
 	int		cursor;
 
-	cursor = g_info->cursor.posx + g_info->cursor.posy * g_info->cursor.col - g_info->prompt_len;
-	if (g_info->line && g_info->line[cursor])
+	cursor = info->cursor.posx + info->cursor.posy * info->terminfo.col - info->terminfo.prompt_len;
+	if (info->line && info->line[cursor])
 	{
-		remove_char(g_info->line, cursor);
-		tputs(tgoto(tgetstr("ch", NULL), 1, g_info->cursor.posx), 1, ft_putchar);
+		remove_char(info->line, cursor);
+		tputs(tgoto(tgetstr("ch", NULL), 1, info->cursor.posx), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 	}
-	else if (!g_info->line || !g_info->line[0])
+	else if (!info->line || !info->line[0])
 	{
 		ft_printf("exit");
-		g_info->crashed = TRUE;
+		info->crashed = TRUE;
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -40,14 +40,14 @@ int	ft_isalpha_ordollar(int c)
 		return (0);
 }
 
-void	dollar_suite(char *line, char *var, int *index, int i)
+void	dollar_suite(t_info *info, char *var, int *index, int i, int quote)
 {
 	t_list	*var_list;
 	t_env	*var_key;
 	t_env	*data_ref;
 
 	data_ref = create_env_struct(var, NULL);
-	var_list = ft_list_find(g_info->env_head, \
+	var_list = ft_list_find(info->env_head, \
 		data_ref, cmp_env);
 	secure_free(data_ref);
 	secure_free(var);
@@ -57,35 +57,39 @@ void	dollar_suite(char *line, char *var, int *index, int i)
 		i = 0;
 		while (var_key->value[i])
 		{
-			add_char(line, var_key->value[i], *index);
+			add_char(info->line, var_key->value[i], *index);
+			if (quote)
+				info->lint[*index] = _DQUOTED;
+			else
+				info->lint[*index] = _CHAR;
 			*index += 1;
 			i++;
 		}
 	}
 }
 
-int	dollar(char *line, int *index)
+int	dollar(t_info *info, int *index, int quote)
 {
 	char	*var;
 	int		i;
 
 	i = 0;
-	if (!line[*index] || !line[*index + 1] || (line[*index + 1] && \
-		!ft_isalpha_ordollar(line[*index + 1])))
+	if (!info->line[*index] || !info->line[*index + 1] || (info->line[*index + 1] && \
+		!ft_isalpha_ordollar(info->line[*index + 1])))
 	{
 		*index += 1;
 		return (FAILURE);
 	}
 	if (ft_calloc((void **)&var, 256, sizeof(char)))
 		return (FAILURE);
-	while (line[*index] && (ft_isalpha(line[*index]) || (line[*index] == \
-		DOLLAR && i == 0) || (line[*index] == '?')))
+	while (info->line[*index] && (ft_isalpha(info->line[*index]) || (info->line[*index] == \
+		DOLLAR && i == 0) || (info->line[*index] == '?')))
 	{
 		if (i > 0)
-			var[i - 1] = line[*index];
-		remove_char(line, *index);
+			var[i - 1] = info->line[*index];
+		remove_char(info->line, *index);
 		i++;
 	}
-	dollar_suite(line, var, index, i);
+	dollar_suite(info, var, index, i, quote);
 	return (SUCCESS);
 }

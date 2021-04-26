@@ -46,8 +46,6 @@ SRCS = srcs/main.c \
 		srcs/redir/do_redir.c \
 		srcs/redir/redir_std.c \
 		srcs/shell_init/init.c \
-		srcs/skeleton/create_and_push.c \
-		srcs/skeleton/linked_lists.c \
 		srcs/skeleton/print_and_cmp.c \
 		srcs/skeleton/struct_env.c \
 		srcs/skeleton/structs.c \

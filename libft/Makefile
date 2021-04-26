@@ -56,6 +56,8 @@ SRCS	=		./ft_isalpha.c \
 				./ft_utils_fonctions_other.c \
 				./ft_printf_utils.c \
 				./ft_fill_struct.c \
+				./ft_list_one.c \
+				./ft_list_two.c \
 				./get_next_line.c \
 				./get_next_line_utils.c 
 

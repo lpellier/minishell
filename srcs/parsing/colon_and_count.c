@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/25 19:09:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:23:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,31 +60,4 @@ void	remove_colons(char *line, int i)
 	}
 	if (line[i])
 		remove_colons(line, i + 1);
-}
-
-void	do_colon_split(char	**colon_split, int i)
-{
-	int first;
-
-	first = TRUE;
-	while (colon_split && colon_split[i])
-	{
-		modify_line_redir(colon_split[i]);
-		if (transform_line(colon_split[i], 0, 0, 0))
-		{
-			g_info->cmd_status = 1;
-			update_cmd_status();
-			ft_printf("minisheh: parsing error: number of quotes ");
-			ft_printf("should be even\n");
-			break ;
-		}
-		if (first)
-			g_info->cmd_head = ft_create_elem(create_cmd_struct());
-		else
-			ft_list_push_back(&g_info->cmd_head, create_cmd_struct());
-		first = FALSE;
-		g_info->index_cmd += 1;
-		read_cmd(colon_split[i], 0);
-		i++;
-	}
 }
