@@ -28,12 +28,15 @@ char	*process_input(char *line)
 	int		i;
 
 	i = 0;
+	ret = NULL;
 	while (line[i] && ft_cinset(line[i], SEPARATOR))
 	{
 		if (line[i] == BSLASH)
 			remove_char(line, i);
 		i++;
 	}
+	while (i > 0 && line[i - 1] == 32)
+	 	i--;
 	if (i > 0)
 		ret = ft_strndup(line, i);
 	else
