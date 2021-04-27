@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 00:46:30 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 11:01:28 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,18 +90,72 @@ char	**split_by_empty(t_info *info, char *line, int arg_nbr)
 	return (split);
 }
 
-// int		separator_in_args(char **args)
-// {
-// 	int		ret;
-// 	int		i;
+int		separator_in_args(char **args)
+{
+	int		ret;
+	int		i;
 
-// 	ret = -1;
+	ret = -1;
+	i = 0;
+	while (args && args[i])
+	{
+		if (!compare_size(args[i], "|"))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+void	remove_int(int *lint, int index)
+{
+	while (lint[index])
+	{
+		lint[index] = lint[index + 1];
+		index++;
+	}
+}
+
+// void	print_lint_two(t_info *info, int *lint)
+// {
+// 	int	i;
+// 	int	lint_count;
+// 	int	j;
+
 // 	i = 0;
-// 	while (args && args[i])
+// 	ft_printf("\n--- LINT --- \n");
+// 	while (info->args && info->args[i])
 // 	{
-		
+// 		j = 0;
+// 		while (info->args[i][j])
+// 		{
+// 			ft_printf("%d", info->args[i][j]);
+// 			j++;
+// 		}
+// 		ft_printf(" ");
+// 		i++;
 // 	}
+// 	ft_printf("\n------------ \n");
 // }
+
+void	erase_spaces(t_info *info)
+{
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (info->lint[i] != -1 && i + count < info->line_index)
+	{
+		if (info->lint[i] == 0)
+		{
+			count++;
+			remove_int(info->lint, i);
+		}
+		else
+			i++;
+	}
+	// print_lint_two(info, info->lint);
+}
 
 /*
 ** recursive function that allows creating as many
@@ -112,13 +166,14 @@ char	**split_by_empty(t_info *info, char *line, int arg_nbr)
 
 void	read_cmd(t_info *info, char *cmd_line)
 {
-	// int		sep_arg;
+	int		sep_arg;
 	t_cmd	*cmd;
 
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
 	cmd->args = split_by_empty(info, cmd_line, cmd->arg_nbr);
-	// sep_arg = separator_in_args(cmd->args);
+	// erase_spaces(info);
+	sep_arg = separator_in_args(cmd->args);
 	compare_cmd(info, cmd);
 	if (info->debug_option)
 		print_cmd_info(cmd);

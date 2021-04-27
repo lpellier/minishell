@@ -159,7 +159,7 @@ void	process_line(t_info *info, int first)
 	if (transform_line(info, 0, 0, 0))
 	{
 		update_cmd_status(info, 1);
-		print_error("minisheh: parsing error: number of quotes should be even\n");
+		print_error("minisheh: parsing error: number of quotes should be even");
 		return ;
 	}
 	print_lint(info, info->lint);

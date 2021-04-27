@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/26 23:36:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 12:46:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,14 @@ void	remove_char(char *line, int index)
 
 void	move_right(t_info *info, char *dest)
 {
+	// int		cursor;
+
+	// cursor = (info->cursor.posx - info->terminfo.prompt_len) + (info->cursor.posy * info->terminfo.col);
+	// cursor = (info->cursor.posy * info->terminfo.col) + ft_strlen(dest);
+	// cursor += 1;
+	// info->cursor.posx += 1;
+	// (void)info;
+	// (void)dest;
 	if (info->cursor.posy * info->terminfo.col + info->cursor.posx < (ft_strlen(dest) + info->terminfo.prompt_len))
 	{
 		(info->cursor.posx)++;
@@ -53,19 +61,20 @@ void	move_right(t_info *info, char *dest)
 
 void	move_left(t_info *info)
 {
+	// (void)info;
 	info->cursor.posx -= 1;
 	if (info->cursor.posy)
 	{
-		if (info->cursor.posx <= 0)
+		if (info->cursor.posx < 0)
 		{
-			info->cursor.posx = info->terminfo.col;
+			info->cursor.posx = info->terminfo.col - 1;
 			info->cursor.posy -= 1;
 			tputs(tgetstr("up", NULL), 1, ft_putchar);
 		}
 	}
 	else if (info->cursor.posx < info->terminfo.prompt_len)
 			info->cursor.posx += 1;
-	tputs(tgoto(tgetstr("ch", NULL), 0, info->cursor.posx), 1, ft_putchar);
+	tputs(tgoto(tgetstr("ch", NULL), 1, info->cursor.posx), 1, ft_putchar);
 }
 
 void	add_key(t_info *info, char *dest, char key)
@@ -73,18 +82,26 @@ void	add_key(t_info *info, char *dest, char key)
 	int		cursor;
 
 	cursor = (info->cursor.posx - info->terminfo.prompt_len) + (info->cursor.posy * info->terminfo.col);
-	clear_line(info);
 	add_char(dest, key, cursor);
-	ft_putstr_fd(dest, STDOUT_FILENO);
 	move_right(info, dest);
+	tputs(tgetstr("sc", NULL), 1, ft_putchar);
+	clear_line(info);
+	ft_putstr_fd(dest, STDOUT_FILENO);
+	tputs(tgetstr("rc", NULL), 1, ft_putchar);
+	// else if (info->cursor.posx < info->terminfo.prompt_len)
+	// 		info->cursor.posx += 1;
+	// move_right(info, dest);
 }
 
 void	delete_key(t_info *info, char *dest)
 {
 	int		i;
+	int		j;
+	int		count;
 	int		cursor;
 
 	i = 0;
+	count = 0;
 	cursor = (info->cursor.posx - info->terminfo.prompt_len) + (info->cursor.posy * info->terminfo.col);
 	if (info->cursor.posx > info->terminfo.prompt_len || info->cursor.posy > 0)
 	{
@@ -92,19 +109,20 @@ void	delete_key(t_info *info, char *dest)
 			i++;
 		if (dest && dest[i - 1])
 			i--;
-		clear_line(info);
 		remove_char(dest, i);
-		ft_putstr_fd(dest, STDOUT_FILENO);
-		info->cursor.posx -= 1;
-		if (info->cursor.posy)
+		move_left(info);
+		tputs(tgetstr("sc", NULL), 1, ft_putchar);
+		j = info->terminfo.prompt_len + ft_strlen(dest);
+		while (j >= info->terminfo.col && info->cursor.posy != count + 1)
 		{
-			if (info->cursor.posx <= 0)
-			{
-				info->cursor.posx = info->terminfo.col;
-				info->cursor.posy -= 1;
-			}
+			count += 1;
+			tputs(tgetstr("do", NULL), 1, ft_putchar);
+			j -= info->terminfo.col;
 		}
-		else if (info->cursor.posx < info->terminfo.prompt_len)
-				info->cursor.posx += 1;
+		info->cursor.posy += count;
+		clear_line(info);
+		info->cursor.posy -= count;
+		ft_putstr_fd(dest, STDOUT_FILENO);
+		tputs(tgetstr("rc", NULL), 1, ft_putchar);
 	}
 }
