@@ -74,63 +74,109 @@ int	read_line(t_info *info)
 // should i implement this ?
 
 
-void		modify_line_redir(char *str)
+int			is_pipe(t_cmd *cmd, int i)
 {
-	(void)str;
-	// int		i;
-	// int		start;
-	// int		count;
-	// char	*tmp;
-
-	// i = 0;
-	// start = 0;
-	// tmp = NULL;
-	// while (str[i])
-	// {
-	// 	count = 0;
-	// 	if (str[i] == BSLASH)
-	// 		i++;
-	// 	if (!is_redir_l(str[i]) || !is_redir_r(str[i]))
-	// 	{
-	// 		if (!start)
-	// 			start = i;
-	// 		while (str[i] && !ft_cinset(str[i], SEPARATOR))
-	// 			i++;
-	// 		count = count_until_redir(&str[i]);
-	// 		tmp = ft_substr(str, i, count);
-	// 		i += move_around(str, tmp, &start);
-	// 		remove_words(str, i);
-	// 		secure_free(tmp);
-	// 	}
-	// 	i++;
-	// }
+	if (!cmd->lint[i] || !cmd->args[i])
+		return (FAILURE);
+	if (cmd->lint[i][0] == _TOKEN && \
+		!compare_size(cmd->args[i], "|"))
+		return (SUCCESS);
+	return (FAILURE);
 }
 
-void	print_lint(t_info *info, int *lint)
+int			is_redir(t_cmd *cmd, int i)
 {
-	int	i;
+	if (i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i] || cmd->lint[i][0] == -1)
+		return (FAILURE);
+	if (cmd->lint[i][0] == _TOKEN && \
+		(!compare_size(cmd->args[i], "<") || cmd->args[i][0] == '>'))
+		return (SUCCESS);
+	return (FAILURE);
+}
 
-	i = 0;
-	ft_printf("\n--- LINT --- \n");
-	while (i < LINE_MAX && lint[i] != -1)
+void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
+{
+	char	*c_tmp;
+	int		*i_tmp;
+	
+	c_tmp = cmd->args[arg_index_one];
+	i_tmp = cmd->lint[arg_index_one];
+	cmd->args[arg_index_one] = cmd->args[arg_index_two];
+	cmd->lint[arg_index_one] = cmd->lint[arg_index_two];
+	cmd->args[arg_index_two] = c_tmp;
+	cmd->lint[arg_index_two] = i_tmp;
+}
+
+typedef struct s_al
+{
+	char			*arg;
+	int				*lint;
+}					t_al;
+
+void		move_arg(t_cmd *cmd, t_al *al, int index, int pos)
+{
+	int		*redir_lint;
+	char	*redir_arg;
+	int		*next_lint;
+	char	*next_arg;
+
+	redir_arg = cmd->args[pos];
+	redir_lint = cmd->lint[pos];
+	cmd->args[pos] = cmd->args[index];
+	cmd->lint[pos] = cmd->lint[index];
+	pos++;
+	while (cmd->args && cmd->args[pos] && pos < cmd->arg_nbr - 1)
 	{
-		if (lint[i] != _EMPTY)
-			ft_printf("%d", lint[i]);
-		else
-			ft_printf(" ");
-		i++;
+		next_arg = cmd->args[pos];
+		next_lint = cmd->lint[pos];
+		cmd->args[pos] = redir_arg;
+		cmd->lint[pos] = redir_lint;
+		redir_arg = next_arg;
+		redir_lint = next_lint;
+		print_cmd_info(cmd);
+		pos++;
 	}
 	ft_printf("\n");
+	al->arg = redir_arg;
+	al->lint = redir_lint;
+	// cmd->args[pos] = redir_arg;
+	// cmd->lint[pos] = redir_lint;
+	// cmd->args[i] = c_tmp;
+	// cmd->lint[i] = i_tmp;
+}
+
+void		modify_line_redir(t_cmd *cmd)
+{
+	t_al	*al;
+	int		i;
+	int		redir_pos;
+
 	i = 0;
-	while (info->line[i])
-	{
-		if (lint[i] != _EMPTY)
-			ft_printf("%c", info->line[i]);
-		else
-			ft_printf(" ");
+	al = NULL;
+	if (ft_calloc((void **)&al, 1, sizeof(al)))
+		return ;
+	al->arg = NULL;
+	al->lint = NULL;
+	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
+	redir_pos = i;
+	i++;
+	while (cmd->args && cmd->args[i])
+	{
+		i++;
+		while (cmd->args && cmd->args[i] && is_redir(cmd, i))
+		{
+			move_arg(cmd, al, i, redir_pos);
+			redir_pos++;
+			i++;
+		}
+		if (al)
+		{
+			cmd->args[i - 1] = al->arg;
+			cmd->lint[i - 1] = al->lint;
+			secure_free(al);
+		}
 	}
-	ft_printf("\n------------ \n");
 }
 
 /* 
@@ -165,14 +211,12 @@ void	process_line(t_info *info, int first)
 		print_error(NULL, "parsing error", "number of quotes should be even");
 		return ;
 	}
-	// print_lint(info, info->lint);
 	if (check_syntax(info))
 		return ;
 	cmd_tab = split_by_colon(info, info->line, info->lint);
 	info->index_cmd = 0;
 	while (cmd_tab && cmd_tab[info->index_cmd])
 	{
-		modify_line_redir(cmd_tab[info->index_cmd]);
 		read_cmd(info, cmd_tab[info->index_cmd]);
 		info->index_cmd += 1;
 	}

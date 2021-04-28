@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:29:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 20:25:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:46:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ void	compare_cmd(t_info *info, t_cmd *cmd)
 {
 	int		arg_index;
 
-	arg_index = 0;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
+	arg_index = cmd->arg_index;
 	if (!cmd->args || !cmd->args[arg_index])
 		cmd->bui = NONEXISTENT;
 	else if (!compare_size(cmd->args[arg_index], "echo"))

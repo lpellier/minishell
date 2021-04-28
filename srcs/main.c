@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 21:38:43 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:30:01 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	shell_loop(t_info *info)
 		ft_list_remove_if(&info->history_head, NULL, delete_empty_history, \
 		free_history_struct);
 	}
-	ft_printf("exit\n");
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	exit_code = info->exit_code;
 	free_tab(&info->dir_paths);
 	secure_free(info->line);
@@ -97,7 +97,7 @@ int	check_exec_options(t_info *info, int argc, char **argv)
 	}
 	else
 	{
-		ft_printf("Only one arguments is currently supported : ");
+		ft_printf("Only one argument is currently supported : ");
 		ft_printf("'-d' to help debug.\n");
 		return (FAILURE);
 	}

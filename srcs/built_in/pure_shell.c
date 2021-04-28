@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 22:59:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:41:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,17 @@ int	ft_echo(t_info *info, t_cmd *cmd)
 {
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
+	arg_index = cmd->arg_index + 1;
 	if (cmd->args[arg_index] && !only_n(cmd->args[arg_index]))
 		return (ft_echo_n(info, cmd));
-	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->next_pipe)
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
-		ft_printf("%s", cmd->args[arg_index]);
-		if (arg_index < cmd->arg_nbr - 1)
-			ft_printf(" ");
+		ft_putstr_fd(cmd->args[arg_index], STDOUT_FILENO);
+		if (arg_index < cmd->limit_index - 1)
+			ft_putstr_fd(" ", STDOUT_FILENO);
 		arg_index++;
 	}
-	ft_printf("\n");
+	ft_putstr_fd("\n", STDOUT_FILENO);
 	info->terminfo.echo_padding = 0;
 	return (SUCCESS);
 }
@@ -59,20 +57,18 @@ int	ft_echo_n(t_info *info, t_cmd *cmd)
 	int		padding;
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
+	arg_index = cmd->arg_index + 1;
 	padding = 0;
 	while (cmd->args && cmd->args[arg_index] && \
 		!only_n(cmd->args[arg_index]))
 		arg_index++;
-	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->next_pipe)
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
-		ft_printf("%s", cmd->args[arg_index]);
+		ft_putstr_fd(cmd->args[arg_index], STDOUT_FILENO);
 		padding += ft_strlen(cmd->args[arg_index]);
-		if (arg_index < cmd->arg_nbr - 1)
+		if (arg_index < cmd->limit_index - 1)
 		{
-			ft_printf(" ");
+			ft_putstr_fd(" ", STDOUT_FILENO);
 			padding += 1;
 		}
 		arg_index++;
@@ -114,10 +110,8 @@ int	ft_exit(t_info *info, t_cmd *cmd)
 {
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
-	if (cmd->next_pipe - arg_index <= 1)
+	arg_index = cmd->arg_index + 1;
+	if (cmd->limit_index - arg_index <= 1)
 	{
 		info->crashed = TRUE;
 		if (cmd->args[arg_index] && !str_is_alpha(cmd->args[arg_index]))
@@ -147,13 +141,12 @@ int	ft_pwd(t_info *info, t_cmd *cmd)
 	char	cwd[PATH_MAX];
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
-	if (!arg_is_option(cmd->args[arg_index]))	
+	arg_index = cmd->arg_index + 1;
+	if (!arg_is_option(cmd->args[cmd->arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option"));
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		ft_printf("%s\n", cwd);
+		ft_putstr_fd(cwd, STDOUT_FILENO);
+	ft_putstr_fd("\n", STDOUT_FILENO);
 	return (SUCCESS);
 }

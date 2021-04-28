@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 23:59:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:23:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
 		!compare_size(cmd->args[arg_index], "-"))
 	{
 		path = ft_strdup(oldpwd->value);
-		ft_printf("%s\n", path);
+		ft_putstr_fd(path, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	}
 	else
 		path = ft_strdup(cmd->args[arg_index]);
@@ -81,9 +82,7 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 	char	*path;
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
+	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option"));

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 22:55:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:54:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,13 @@ int	ft_export(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	error = 0;
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
+	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option"));
 	if (!cmd->args[arg_index])
 		return (print_declare_env(info));
-	while (cmd->args && cmd->args[arg_index])
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
 		error += export_content(info, cmd->args[arg_index]);
 		arg_index++;

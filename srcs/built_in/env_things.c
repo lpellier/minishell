@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 23:07:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:54:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,13 @@ int	ft_unset(t_info *info, t_cmd *cmd)
 	t_env	*data_ref;
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
+	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option"));
 	if (!info->env_head || !info->env_head->next)
 		return (FAILURE);
-	while (cmd->args && cmd->args[arg_index])
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
 		data_ref = create_env_struct(cmd->args[arg_index], NULL);
 		ft_list_remove_if(&info->env_head->next, data_ref, cmp_env, \
@@ -50,9 +48,7 @@ int	ft_env(t_info *info, t_cmd *cmd)
 {
 	int		arg_index;
 
-	arg_index = 1;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 2;
+	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option"));

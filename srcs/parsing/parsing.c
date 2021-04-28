@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 16:45:05 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 00:28:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,17 @@ void	init_cmd_lint(t_info *info, t_cmd *cmd)
 	int		lint_index;
 	int		j;
 
+	cmd->lint = NULL;
 	if (ft_calloc((void **)&cmd->lint, cmd->arg_nbr, sizeof(int *)))
 		return ;
 	i = 0;
-	j  = 0;
+	j  = info->lint_index;
 	while (cmd->args && cmd->args[i] && i < cmd->arg_nbr)
 	{
-		if (ft_calloc((void **)&cmd->lint[i], ft_strlen(cmd->args[i]), sizeof(int)))
+		cmd->lint[i] = NULL;
+		if (ft_calloc((void **)&cmd->lint[i], ft_strlen(cmd->args[i]) + 1, sizeof(int)))
 			return ;
-		bzero_lint(cmd->lint[i], ft_strlen(cmd->args[i]));
+		bzero_lint(cmd->lint[i], ft_strlen(cmd->args[i]) + 1);
 		while (info->lint[j] != -1 && info->lint[j] == _EMPTY)
 			j++;
 		lint_index = 0;
@@ -131,127 +133,63 @@ void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 	info->line_index = line_index;
 }
 
-int		set_arg_index(t_cmd *cmd, int next_pipe)
+int		pipe_in_args(t_cmd *cmd, int start)
 {
-	int		arg_index;
-	
-	arg_index = 0;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
-	while (cmd->args && cmd->args[arg_index])
+	while (cmd->args && cmd->args[start])
 	{
-		if (cmd->lint[arg_index][0] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
-			return (arg_index);
-		arg_index++;
+		if (!is_pipe(cmd, start))
+			return (start);
+		start++;
 	}
-	if (next_pipe)
-		return (cmd->arg_nbr);
-	return (0);
+	return (-1);
 }
 
-int	exec_cmd(t_info *info, t_cmd *cmd)
+void	update_arg_index(t_cmd *cmd, int start)
 {
-	int		arg_index;
+	int		i;
 
-	arg_index = 0;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
+	i = cmd->arg_index;
+	while (cmd->args && cmd->args[i])
+	{
+		if (!is_pipe(cmd, i))
+		{
+			cmd->arg_index = i + 1;
+			if (start)
+				cmd->arg_index = 0;
+			cmd->limit_index = pipe_in_args(cmd, cmd->arg_index);
+			if (cmd->limit_index == -1)
+				cmd->limit_index = cmd->arg_nbr;
+			return ;
+		}
+		i += 1;
+	}
+	cmd->limit_index = cmd->arg_nbr;
+}
+
+int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
+{
+	if (piped)
+		update_arg_index(cmd, 0);
 	compare_cmd(info, cmd);
-	cmd->recursive_index = set_arg_index(cmd, FALSE);
-	cmd->next_pipe = set_arg_index(cmd, TRUE);
-	if (cmd->args && cmd->args[arg_index] && !compare_size(cmd->args[arg_index], "."))
+	if (cmd->args && cmd->args[cmd->arg_index] && !compare_size(cmd->args[cmd->arg_index], "."))
 		return (print_error(NULL, ".", "filename argument required"));
-	else if (cmd->args && cmd->args[arg_index] && cmd->bui == 9)
-		return (print_error(NULL, cmd->args[arg_index], "command not found"));
-	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], "|"))
+	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9)
+		return (print_error(NULL, cmd->args[cmd->arg_index], "command not found"));
+	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|"))
 		pipe_for_exec(info, cmd, PIPE);
-	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], "<"))
+	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "<"))
 		redir(info, cmd, R_LEFT);
-	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], ">>"))
+	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], ">>"))
 		redir(info, cmd, R_RIGHTD);
-	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], ">"))
+	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], ">"))
 		redir(info, cmd, R_RIGHT);
 	else if (cmd->bui == 8)
 		pipe_for_exec(info, cmd, NOTHING);
-	else if (!cmd->args || !cmd->args[arg_index])
+	else if (!cmd->args || !cmd->args[cmd->arg_index])
 		return (FAILURE);
 	else
 		return(info->built_in[cmd->bui](info, cmd));
 	return (SUCCESS);
-}
-
-void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
-{
-	char	*c_tmp;
-	int		*i_tmp;
-
-	c_tmp = cmd->args[arg_index_one];
-	i_tmp = cmd->lint[arg_index_one];
-	cmd->args[arg_index_one] = cmd->args[arg_index_two];
-	cmd->lint[arg_index_one] = cmd->lint[arg_index_two];
-	cmd->args[arg_index_two] = c_tmp;
-	cmd->lint[arg_index_two] = i_tmp;
-}
-
-void	rearrange_args(t_cmd *cmd)
-{
-	int		i;
-	int		sub;
-	int		limit;
-	int		first;
-	int		second;
-
-	first = 0;
-	limit = cmd->arg_nbr / 2;
-	second = cmd->arg_nbr - 1;
-	while (first < limit)
-	{
-		swap_args(cmd, first, second);
-		first++;
-		second--;
-	}
-	i = 0;
-	first = 0;
-	while (cmd->args && cmd->args[i])
-	{
-		if (cmd->lint[i][0] == _TOKEN && \
-			!compare_size(cmd->args[i], "|"))
-		{
-			sub = 1;
-			if ((i - first) % 2 == 0)
-				sub = 0;
-			while ((i - first - sub) / 2)
-			{
-				swap_args(cmd, first, i - 1);
-				first++;
-			}
-			first = i + 1;
-		}
-		i++;
-	}
-	sub = 1;
-	if ((i - first) % 2 == 0)
-		sub = 0;
-	while ((i - first - sub) / 2)
-	{
-		swap_args(cmd, first, i - 1);
-		first++;
-	}
-}
-
-int		pipe_in_cmd(t_cmd *cmd)
-{
-	int		i;
-
-	i = 0;
-	while (cmd->args && cmd->args[i])
-	{
-		if (cmd->lint[i][0] == _TOKEN && \
-			!compare_size(cmd->args[i], "|"))
-			return (SUCCESS);
-		i++;
-	}
-	return (FAILURE);
 }
 
 void	read_cmd(t_info *info, char *cmd_line)
@@ -261,9 +199,9 @@ void	read_cmd(t_info *info, char *cmd_line)
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
 	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
-	if (!pipe_in_cmd(cmd))
-		rearrange_args(cmd);
-	if (info->debug_option)
-		print_cmd_info(cmd);
-	update_cmd_status(info, exec_cmd(info, cmd));
+	modify_line_redir(cmd);
+	update_arg_index(cmd, 1);
+	// if (info->debug_option)
+	// 	print_cmd_info(cmd);
+	// exec_cmd(info, cmd, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 23:59:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:43:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 	int		arg_index;
 	int i;
 
-	arg_index = 0;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
-	if (ft_calloc((void **)&argv, cmd->next_pipe - arg_index + 1, sizeof(char *)))
+	arg_index = cmd->arg_index;
+	if (ft_calloc((void **)&argv, cmd->limit_index - arg_index + 1, sizeof(char *)))
 		return (FAILURE);
 	env = list_to_tab(info->env_head);
 	i = 0;
-	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->next_pipe)
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
 		argv[i] = ft_strdup(cmd->args[arg_index]);
 		i++;
@@ -72,9 +70,7 @@ int	find_binary(t_info *info, t_cmd *cmd)
 	char	*path;
 	int		arg_index;
 
-	arg_index = 0;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
+	arg_index = cmd->arg_index;
 	if (!compare_size(cmd->args[arg_index], ".") || \
 		!compare_size(cmd->args[arg_index], ".."))
 		return (FAILURE);

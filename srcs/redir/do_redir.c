@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 17:33:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:46:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	redir(t_info *info, t_cmd *cmd, int separator)
 		dup2(file_fd, STDIN_FILENO);
 	else if (separator == R_RIGHT || separator == R_RIGHTD)
 		dup2(file_fd, STDOUT_FILENO);
-	exec_cmd(info, cmd);
+	exec_cmd(info, cmd, 0);
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(file_fd);

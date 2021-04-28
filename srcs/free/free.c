@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 12:24:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:24:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ void	free_cmd_struct(void *data)
 	secure_free(ptr->path);
 	ptr->bui = 9;
 	ptr->arg_nbr = 0;
-	ptr->recursive_index = 0;
-	ptr->next_pipe = 0;
 	secure_free(ptr);
 }
 

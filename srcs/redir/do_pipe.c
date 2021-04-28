@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 16:37:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:38:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ void	get_child(t_info *info, int separator, pid_t cpid)
 
 int	child_process(t_info *info, int separator, t_cmd *cmd, int *pipefd)
 {
-	(void)separator;
-	close(pipefd[1]);
+	close(pipefd[0]);
 	if (separator == PIPE)
 		dup2(pipefd[1], STDOUT_FILENO);
 	else
@@ -98,9 +97,9 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd, int separator)
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		get_child(info, separator, cpid);
 		if (separator == PIPE)
-			exec_cmd(info, cmd);
+			exec_cmd(info, cmd, 1);
+		get_child(info, separator, cpid);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }

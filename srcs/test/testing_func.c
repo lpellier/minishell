@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:45:07 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 16:02:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 00:25:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,21 @@
 
 void	print_cmd_info(t_cmd *cmd)
 {
+	int		j;
 	int		arg_index;
-	int		limit;
 
-	arg_index = 0;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
-	if (cmd->next_pipe)
-		limit = cmd->next_pipe;
-	else
-		limit = cmd->arg_nbr;
-	while (cmd->args && cmd->args[arg_index] && arg_index < limit)
+	arg_index = cmd->arg_index;
+	while (cmd->args && cmd->args[arg_index])
 	{
 		ft_printf(CYAN "'%s'" RESET, cmd->args[arg_index]);
-		if (arg_index < limit - 1)
+		if (arg_index < cmd->arg_nbr - 1)
 			ft_printf(RED " || " RESET);
 		arg_index++;
 	}
 	ft_printf(RED " || nbr -> " RESET);
 	ft_printf(CYAN "%d\n" RESET, cmd->arg_nbr);
-	arg_index = 0;
-	int		j;
-	if (cmd->recursive_index)
-		arg_index = cmd->recursive_index + 1;
-	while (cmd->args && cmd->args[arg_index] && arg_index < limit)
+	arg_index = cmd->arg_index;
+	while (cmd->args && cmd->args[arg_index])
 	{
 		j = 0;
 		ft_printf(" ");
@@ -47,7 +38,7 @@ void	print_cmd_info(t_cmd *cmd)
 			j++;
 		}
 		ft_printf(" ");
-		if (arg_index < limit - 1)
+		if (arg_index < cmd->arg_nbr - 1)
 			ft_printf(RED " || " RESET);
 		arg_index++;
 	}

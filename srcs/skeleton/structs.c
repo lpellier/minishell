@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 20:37:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 20:48:14 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ t_cmd	*create_cmd_struct(void)
 		return (NULL);
 	cmd->bui = 9;
 	cmd->arg_nbr = 0;
-	cmd->recursive_index = 0;
-	cmd->next_pipe = 0;
+	cmd->arg_index = 0;
+	cmd->limit_index = 0;
 	cmd->lint = NULL;
 	cmd->args = NULL;
 	cmd->path = NULL;

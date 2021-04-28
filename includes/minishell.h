@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 11:49:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:57:57 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ typedef struct s_cmd
 	char			*path;
 	int				**lint;
 	int				bui;
-	int				recursive_index;
-	int				next_pipe;
+	int				arg_index; // keeps track of current position in cmd
+	int				limit_index; // is set to wherever next pipe or end of cmd is
 	int				arg_nbr;
 }					t_cmd;
 
@@ -170,8 +170,10 @@ enum				e_status_codes
 ** main **
 **********/
 
+int			is_redir(t_cmd *cmd, int i);
+int			is_pipe(t_cmd *cmd, int i);
 int			arg_is_option(char *arg);
-int			exec_cmd(t_info *info, t_cmd *cmd);
+int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
 void		print_lint(t_info *info, int *lint);
 void		clear_line(t_info *info);
 int			is_empty_or_void(int lint);
@@ -273,7 +275,7 @@ char		**split_by_colon(t_info *info, char *line, int *lint);
 int			read_line(t_info *info);
 int			read_keys(t_info *info, char key, t_history *cur);
 void		process_line(t_info *info, int first);
-void		modify_line_redir(char *str);
+void		modify_line_redir(t_cmd *cmd);
 
 // read_everything_suite
 int			pass_q_and_dq(char *line, int i);
