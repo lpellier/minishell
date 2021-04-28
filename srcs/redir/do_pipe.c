@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 11:42:56 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 16:37:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,6 @@
 ** restoring stdout and stdin to original fds
 */
 
-int	child_process(t_info *info, int separator, t_cmd *cmd, int *pipefd)
-{
-	close(pipefd[0]);
-	if (separator == PIPE)
-		dup2(pipefd[1], STDOUT_FILENO);
-	else
-		close(pipefd[1]);
-	return ((info->built_in[cmd->bui])(info, cmd));
-}
 
 void	interpret_errors(t_info *info)
 {
@@ -62,12 +53,12 @@ void	get_child(t_info *info, int separator, pid_t cpid)
 	int	c_status;
 	(void)separator;
 
-	if (g_signal->kill || separator == PIPE)
-	{
-		kill(cpid, SIGINT);
-		update_cmd_status(info, 130);
-		c_status = 130;
-	}
+	// if (g_signal->kill || separator == PIPE)
+	// {
+	// 	kill(cpid, SIGINT);
+	// 	update_cmd_status(info, 130);
+	// 	c_status = 130;
+	// }
 	waitpid(cpid, &c_status, 0);
 	g_signal->bin_running = FALSE;
 	init_termcap(info);
@@ -75,10 +66,20 @@ void	get_child(t_info *info, int separator, pid_t cpid)
 	// interpret_errors(info);
 }
 
+int	child_process(t_info *info, int separator, t_cmd *cmd, int *pipefd)
+{
+	(void)separator;
+	close(pipefd[1]);
+	if (separator == PIPE)
+		dup2(pipefd[1], STDOUT_FILENO);
+	else
+		close(pipefd[1]);
+	return ((info->built_in[cmd->bui])(info, cmd));
+}
+
 int	pipe_for_exec(t_info *info, t_cmd *cmd, int separator)
 {
 	int		pipefd[2];
-	int		c_status;
 	pid_t	cpid;
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
@@ -97,18 +98,9 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd, int separator)
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		// get_child(info, separator, cpid);
+		get_child(info, separator, cpid);
 		if (separator == PIPE)
 			exec_cmd(info, cmd);
-		// if (g_signal->kill || separator == PIPE)
-		// {
-		// 	kill(cpid, SIGINT);
-		// 	update_cmd_status(info, 130);
-		// 	c_status = 130;
-		// }
-		waitpid(cpid, &c_status, 0);
-		g_signal->bin_running = FALSE;
-		init_termcap(info);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }

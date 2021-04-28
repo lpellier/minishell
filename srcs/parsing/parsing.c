@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 12:29:05 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 16:45:05 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,37 +49,6 @@ int		count_args(t_info *info, char *line, int *lint)
 	}
 	return (count);
 }
-
-// void	print_cmd_lint(t_cmd *cmd)
-// {
-// 	int	i;
-// 	int j;
-
-// 	i = 0;
-// 	ft_printf(RED"--- CMD LINT --- \n");
-// 	while (cmd->lint[i] != -1)
-// 	{
-// 		if (cmd->lint[i] != _EMPTY)
-// 			ft_printf("%d", cmd->lint[i]);
-// 		else
-// 			ft_printf(" ");
-// 		i++;
-// 	}
-// 	ft_printf("\n");
-// 	i = 0;
-// 	while (cmd->args && cmd->args[i])
-// 	{
-// 		j = 0;
-// 		while (cmd->args[i][j])
-// 		{
-// 			ft_printf("%c", cmd->args[i][j]);
-// 			j++;
-// 		}
-// 		ft_printf(" ");
-// 		i++;
-// 	}
-// 	ft_printf("\n---------------- \n"RESET);
-// }
 
 void	bzero_lint(int *lint, int size)
 {
@@ -162,46 +131,23 @@ void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 	info->line_index = line_index;
 }
 
-// int		advance_lint(int *lint, int arg_index)
-// {
-// 	int		i;
-// 	int		arg_count;
-
-// 	if (!arg_index)
-// 		return (0);
-// 	arg_count = 0;
-// 	i = 0;
-// 	while (lint[i] != -1)
-// 	{
-// 		if (lint[i] == _EMPTY)
-// 			arg_count++;
-// 		if (arg_count == arg_index)
-// 			return (i + 1);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
-// int		set_arg_index(t_cmd *cmd, int next_pipe)
-// {
-// 	int		arg_index;
-// 	int		len;
+int		set_arg_index(t_cmd *cmd, int next_pipe)
+{
+	int		arg_index;
 	
-// 	arg_index = 0;
-// 	if (cmd->recursive_index)
-// 		arg_index = cmd->recursive_index + 1;
-// 	len = advance_lint(cmd->lint, arg_index);
-// 	while (cmd->args && cmd->args[arg_index])
-// 	{
-// 		if (cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
-// 			return (arg_index);
-// 		len += ft_strlen(cmd->args[arg_index]) + 1;
-// 		arg_index++;
-// 	}
-// 	if (next_pipe)
-// 		return (cmd->arg_nbr);
-// 	return (0);
-// }
+	arg_index = 0;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 1;
+	while (cmd->args && cmd->args[arg_index])
+	{
+		if (cmd->lint[arg_index][0] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
+			return (arg_index);
+		arg_index++;
+	}
+	if (next_pipe)
+		return (cmd->arg_nbr);
+	return (0);
+}
 
 int	exec_cmd(t_info *info, t_cmd *cmd)
 {
@@ -210,9 +156,9 @@ int	exec_cmd(t_info *info, t_cmd *cmd)
 	arg_index = 0;
 	if (cmd->recursive_index)
 		arg_index = cmd->recursive_index + 1;
-	// cmd->recursive_index = set_arg_index(cmd, FALSE);
-	// cmd->next_pipe = set_arg_index(cmd, TRUE);
 	compare_cmd(info, cmd);
+	cmd->recursive_index = set_arg_index(cmd, FALSE);
+	cmd->next_pipe = set_arg_index(cmd, TRUE);
 	if (cmd->args && cmd->args[arg_index] && !compare_size(cmd->args[arg_index], "."))
 		return (print_error(NULL, ".", "filename argument required"));
 	else if (cmd->args && cmd->args[arg_index] && cmd->bui == 9)
@@ -234,85 +180,79 @@ int	exec_cmd(t_info *info, t_cmd *cmd)
 	return (SUCCESS);
 }
 
-// void	select_cmd_at_pipe(t_cmd *cmd, int pipe_arg)
-// {
-// 	char	**ret;
-// 	int		pipe_count;
-// 	int		len;
-// 	int		start;
-// 	int		arg_index;
+void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
+{
+	char	*c_tmp;
+	int		*i_tmp;
 
-// 	arg_index =  0;
-// 	pipe_count = 0;
-// 	len = advance_lint(cmd->lint, arg_index);
-// 	while (cmd->args && cmd->args[arg_index] && pipe_count < pipe_arg)
-// 	{
-// 		if (cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
-// 			pipe_count++;
-// 		len += ft_strlen(cmd->args[arg_index]) + 1;
-// 		arg_index++;
-// 	}
-// 	start = arg_index;
-// 	while (cmd->args && cmd->args[arg_index] && \
-// 		!(cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|")))
-// 	{
-// 		len += ft_strlen(cmd->args[arg_index]) + 1;
-// 		arg_index++;
-// 	}
-// 	int		ret_count;
+	c_tmp = cmd->args[arg_index_one];
+	i_tmp = cmd->lint[arg_index_one];
+	cmd->args[arg_index_one] = cmd->args[arg_index_two];
+	cmd->lint[arg_index_one] = cmd->lint[arg_index_two];
+	cmd->args[arg_index_two] = c_tmp;
+	cmd->lint[arg_index_two] = i_tmp;
+}
 
-// 	ret_count = 0;
-// 	if (ft_calloc((void **)&ret, (arg_index - start + 1), sizeof(char *)))
-// 		return ;
-// 	while (cmd->args && cmd->args[start] && start < arg_index)
-// 	{
-// 		ret[ret_count] = cmd->args
-// 		len += ft_strlen(cmd->args[start]) + 1;
-// 		start++;
-// 	}
-// }
+void	rearrange_args(t_cmd *cmd)
+{
+	int		i;
+	int		sub;
+	int		limit;
+	int		first;
+	int		second;
 
-// void	swap_cmd_parts(t_cmd *cmd, int pipe_count)
-// {
-// 	char	*tmp;
+	first = 0;
+	limit = cmd->arg_nbr / 2;
+	second = cmd->arg_nbr - 1;
+	while (first < limit)
+	{
+		swap_args(cmd, first, second);
+		first++;
+		second--;
+	}
+	i = 0;
+	first = 0;
+	while (cmd->args && cmd->args[i])
+	{
+		if (cmd->lint[i][0] == _TOKEN && \
+			!compare_size(cmd->args[i], "|"))
+		{
+			sub = 1;
+			if ((i - first) % 2 == 0)
+				sub = 0;
+			while ((i - first - sub) / 2)
+			{
+				swap_args(cmd, first, i - 1);
+				first++;
+			}
+			first = i + 1;
+		}
+		i++;
+	}
+	sub = 1;
+	if ((i - first) % 2 == 0)
+		sub = 0;
+	while ((i - first - sub) / 2)
+	{
+		swap_args(cmd, first, i - 1);
+		first++;
+	}
+}
 
-// 	(void)pipe_count;
-// 	tmp = cmd->args[0];
-// 	cmd->args[0] = cmd->args[cmd->arg_nbr - 1];
-// 	cmd->args[cmd->arg_nbr - 1] = tmp;
+int		pipe_in_cmd(t_cmd *cmd)
+{
+	int		i;
 
-	// select_cmd_at_pipe(cmd, 1);
-
-	// arg_index = cmd->arg_nbr - 1;
-	// len = advance_lint(cmd->lint, arg_index);
-	// while (arg_index > 0)
-	// {
-	// 	while (cmd->args && !compare_size(cmd->args[arg_index], '|') && cmd->lint[len] != 2)
-			
-	// 	len -= ft_strlen(cmd->args[arg_index]) - 1;
-	// 	arg_index--;
-	// }
-// }
-
-// void	rearrange_args(t_cmd *cmd)
-// {
-// 	int		pipe_count;
-// 	int		len;
-// 	int		arg_index;
-
-// 	arg_index = 0;
-// 	pipe_count = 0;
-// 	len = advance_lint(cmd->lint, arg_index);
-// 	while (cmd->args && cmd->args[arg_index])
-// 	{
-// 		if (cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
-// 			pipe_count++;
-// 		len += ft_strlen(cmd->args[arg_index]) + 1;
-// 		arg_index++;
-// 	}
-// 	if (pipe_count)
-// 		swap_cmd_parts(cmd, pipe_count);
-// }
+	i = 0;
+	while (cmd->args && cmd->args[i])
+	{
+		if (cmd->lint[i][0] == _TOKEN && \
+			!compare_size(cmd->args[i], "|"))
+			return (SUCCESS);
+		i++;
+	}
+	return (FAILURE);
+}
 
 void	read_cmd(t_info *info, char *cmd_line)
 {
@@ -321,8 +261,9 @@ void	read_cmd(t_info *info, char *cmd_line)
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
 	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
-	// rearrange_args(cmd);
+	if (!pipe_in_cmd(cmd))
+		rearrange_args(cmd);
 	if (info->debug_option)
 		print_cmd_info(cmd);
-	// update_cmd_status(info, exec_cmd(info, cmd));
+	update_cmd_status(info, exec_cmd(info, cmd));
 }

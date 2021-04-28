@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:45:07 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 12:16:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 16:02:16 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	print_cmd_info(t_cmd *cmd)
 			ft_printf(RED " || " RESET);
 		arg_index++;
 	}
-	ft_printf(RED " || bui -> " RESET);
-	ft_printf(CYAN "%d\n" RESET, cmd->bui);
+	ft_printf(RED " || nbr -> " RESET);
+	ft_printf(CYAN "%d\n" RESET, cmd->arg_nbr);
 	arg_index = 0;
 	int		j;
 	if (cmd->recursive_index)
@@ -51,6 +51,5 @@ void	print_cmd_info(t_cmd *cmd)
 			ft_printf(RED " || " RESET);
 		arg_index++;
 	}
-	ft_printf(RED " || nbr -> " RESET);
-	ft_printf(CYAN "%d\n" RESET, cmd->arg_nbr);
+	ft_printf("\n");
 }
