@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 00:21:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 00:00:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	init_built_in(t_info *info)
 	info->built_in[6] = ft_env;
 	info->built_in[7] = ft_cd;
 	info->built_in[8] = exec_binary;
-	info->built_in[9] = nothing;
 }
 
 int	init_env(t_info *info, char **envp)
@@ -76,7 +75,7 @@ int	init_terminal(t_info *info)
 
 	term = get_env_custom(info, "TERM");
 	if (!term || !term->value)
-		return (print_error("TERM environment variable not set.\nBye.\n"));
+		return (print_error(NULL, NULL, "TERM environment variable not set.\nBye.\n"));
 	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
 	tgetent(NULL, term->value);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 00:59:56 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:12:00 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,19 +107,24 @@ int	transform_line(t_info *info, int index, int quote_nb, int dquote_nb)
 	while (info->line[index] && info->line[index] != BSLASH && info->line[index] != QUOTE && \
 		info->line[index] != DQUOTE && info->line[index] != DOLLAR)
 	{
-		if (info->line[index] != 32 && info->line[index + 1] && \
-			!ft_cinset(info->line[index + 1], SEPARATOR))
-			add_char(info->line, 32, index + 1);
 		if (info->lint[index] == -1 && info->line[index] == 32)
 			info->lint[index] = _EMPTY;
 		else if (!ft_cinset(info->line[index], SEPARATOR))
-		{
 			info->lint[index] = _TOKEN;
-			if (info->line[index + 1] && info->line[index + 1] != 32)
-				add_char(info->line, 32, index + 1);
-		}
 		else if (info->lint[index] == -1)
 			info->lint[index] = _CHAR;
+		if (info->line[index - 1] != 32 && info->lint[index - 1] != _TOKEN && \
+			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _TOKEN)
+		{
+			info->lint[index] = _EMPTY;
+			add_char(info->line, 32, index);
+		}
+		if (info->line[index + 1] != 32 && info->line[index + 1] != '>' && \
+			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _TOKEN)
+		{
+			info->lint[index + 1] = _EMPTY;
+			add_char(info->line, 32, index + 1);
+		}
 		index++;
 	}
 	if (info->line[index] == QUOTE)

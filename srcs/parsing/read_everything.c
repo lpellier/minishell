@@ -25,6 +25,9 @@ int	read_keys(t_info *info, char key, t_history *cur)
 		if (g_signal->kill)
 		{
 			g_signal->kill = FALSE;
+			info->terminfo.echo_padding = 0;
+			info->cursor.posy = 0;
+			info->cursor.posx = info->terminfo.prompt_len + info->terminfo.echo_padding;
 			ft_bzero(info->line, ft_strlen(info->line));
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
@@ -159,10 +162,10 @@ void	process_line(t_info *info, int first)
 	if (transform_line(info, 0, 0, 0))
 	{
 		update_cmd_status(info, 1);
-		print_error("minisheh: parsing error: number of quotes should be even");
+		print_error(NULL, "parsing error", "number of quotes should be even");
 		return ;
 	}
-	print_lint(info, info->lint);
+	// print_lint(info, info->lint);
 	if (check_syntax(info))
 		return ;
 	cmd_tab = split_by_colon(info, info->line, info->lint);

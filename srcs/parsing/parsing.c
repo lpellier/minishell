@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 11:01:28 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 12:29:05 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,78 @@ int		count_args(t_info *info, char *line, int *lint)
 	return (count);
 }
 
-char	**split_by_empty(t_info *info, char *line, int arg_nbr)
+// void	print_cmd_lint(t_cmd *cmd)
+// {
+// 	int	i;
+// 	int j;
+
+// 	i = 0;
+// 	ft_printf(RED"--- CMD LINT --- \n");
+// 	while (cmd->lint[i] != -1)
+// 	{
+// 		if (cmd->lint[i] != _EMPTY)
+// 			ft_printf("%d", cmd->lint[i]);
+// 		else
+// 			ft_printf(" ");
+// 		i++;
+// 	}
+// 	ft_printf("\n");
+// 	i = 0;
+// 	while (cmd->args && cmd->args[i])
+// 	{
+// 		j = 0;
+// 		while (cmd->args[i][j])
+// 		{
+// 			ft_printf("%c", cmd->args[i][j]);
+// 			j++;
+// 		}
+// 		ft_printf(" ");
+// 		i++;
+// 	}
+// 	ft_printf("\n---------------- \n"RESET);
+// }
+
+void	bzero_lint(int *lint, int size)
+{
+	int		i;
+
+	i = 0;
+	while (i < size)
+	{
+		lint[i] = -1;
+		i++;
+	}
+}
+
+void	init_cmd_lint(t_info *info, t_cmd *cmd)
+{
+	int		i;
+	int		lint_index;
+	int		j;
+
+	if (ft_calloc((void **)&cmd->lint, cmd->arg_nbr, sizeof(int *)))
+		return ;
+	i = 0;
+	j  = 0;
+	while (cmd->args && cmd->args[i] && i < cmd->arg_nbr)
+	{
+		if (ft_calloc((void **)&cmd->lint[i], ft_strlen(cmd->args[i]), sizeof(int)))
+			return ;
+		bzero_lint(cmd->lint[i], ft_strlen(cmd->args[i]));
+		while (info->lint[j] != -1 && info->lint[j] == _EMPTY)
+			j++;
+		lint_index = 0;
+		while (info->lint[j] != -1 && info->lint[j] != _EMPTY)
+		{
+			cmd->lint[i][lint_index] = info->lint[j];
+			lint_index++;
+			j++;
+		}
+		i++;
+	}
+}
+
+void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 {
 	char	**split;
 	int		line_index;
@@ -60,7 +131,7 @@ char	**split_by_empty(t_info *info, char *line, int arg_nbr)
 	line_index = 0;
 	word_count = 0;
 	if (ft_calloc((void **)&split, arg_nbr + 1, sizeof(char *)))
-		return (NULL);
+		return ;
 	while (line[line_index] && info->lint[line_index + info->lint_index] != -1)
 	{
 		if (info->lint[line_index + info->lint_index] == _EMPTY_CHAR && \
@@ -84,116 +155,174 @@ char	**split_by_empty(t_info *info, char *line, int arg_nbr)
 		}
 		line_index++;
 	}
+	split[word_count] = NULL;
+	cmd->args = split;
+	init_cmd_lint(info, cmd);
 	info->lint_index += line_index + 1;
 	info->line_index = line_index;
-	split[word_count] = NULL;
-	return (split);
 }
 
-int		separator_in_args(char **args)
-{
-	int		ret;
-	int		i;
-
-	ret = -1;
-	i = 0;
-	while (args && args[i])
-	{
-		if (!compare_size(args[i], "|"))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-void	remove_int(int *lint, int index)
-{
-	while (lint[index])
-	{
-		lint[index] = lint[index + 1];
-		index++;
-	}
-}
-
-// void	print_lint_two(t_info *info, int *lint)
+// int		advance_lint(int *lint, int arg_index)
 // {
-// 	int	i;
-// 	int	lint_count;
-// 	int	j;
+// 	int		i;
+// 	int		arg_count;
 
+// 	if (!arg_index)
+// 		return (0);
+// 	arg_count = 0;
 // 	i = 0;
-// 	ft_printf("\n--- LINT --- \n");
-// 	while (info->args && info->args[i])
+// 	while (lint[i] != -1)
 // 	{
-// 		j = 0;
-// 		while (info->args[i][j])
-// 		{
-// 			ft_printf("%d", info->args[i][j]);
-// 			j++;
-// 		}
-// 		ft_printf(" ");
+// 		if (lint[i] == _EMPTY)
+// 			arg_count++;
+// 		if (arg_count == arg_index)
+// 			return (i + 1);
 // 		i++;
 // 	}
-// 	ft_printf("\n------------ \n");
+// 	return (0);
 // }
 
-void	erase_spaces(t_info *info)
-{
-	int		i;
-	int		count;
+// int		set_arg_index(t_cmd *cmd, int next_pipe)
+// {
+// 	int		arg_index;
+// 	int		len;
+	
+// 	arg_index = 0;
+// 	if (cmd->recursive_index)
+// 		arg_index = cmd->recursive_index + 1;
+// 	len = advance_lint(cmd->lint, arg_index);
+// 	while (cmd->args && cmd->args[arg_index])
+// 	{
+// 		if (cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
+// 			return (arg_index);
+// 		len += ft_strlen(cmd->args[arg_index]) + 1;
+// 		arg_index++;
+// 	}
+// 	if (next_pipe)
+// 		return (cmd->arg_nbr);
+// 	return (0);
+// }
 
-	i = 0;
-	count = 0;
-	while (info->lint[i] != -1 && i + count < info->line_index)
-	{
-		if (info->lint[i] == 0)
-		{
-			count++;
-			remove_int(info->lint, i);
-		}
-		else
-			i++;
-	}
-	// print_lint_two(info, info->lint);
+int	exec_cmd(t_info *info, t_cmd *cmd)
+{
+	int		arg_index;
+
+	arg_index = 0;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 1;
+	// cmd->recursive_index = set_arg_index(cmd, FALSE);
+	// cmd->next_pipe = set_arg_index(cmd, TRUE);
+	compare_cmd(info, cmd);
+	if (cmd->args && cmd->args[arg_index] && !compare_size(cmd->args[arg_index], "."))
+		return (print_error(NULL, ".", "filename argument required"));
+	else if (cmd->args && cmd->args[arg_index] && cmd->bui == 9)
+		return (print_error(NULL, cmd->args[arg_index], "command not found"));
+	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], "|"))
+		pipe_for_exec(info, cmd, PIPE);
+	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], "<"))
+		redir(info, cmd, R_LEFT);
+	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], ">>"))
+		redir(info, cmd, R_RIGHTD);
+	else if (cmd->recursive_index && !compare_size(cmd->args[cmd->recursive_index], ">"))
+		redir(info, cmd, R_RIGHT);
+	else if (cmd->bui == 8)
+		pipe_for_exec(info, cmd, NOTHING);
+	else if (!cmd->args || !cmd->args[arg_index])
+		return (FAILURE);
+	else
+		return(info->built_in[cmd->bui](info, cmd));
+	return (SUCCESS);
 }
 
-/*
-** recursive function that allows creating as many
-** linked lists as there are commands
-** is there another cmd determined by whether there is a pipe |
-** or a semi-colon for now;
-*/
+// void	select_cmd_at_pipe(t_cmd *cmd, int pipe_arg)
+// {
+// 	char	**ret;
+// 	int		pipe_count;
+// 	int		len;
+// 	int		start;
+// 	int		arg_index;
+
+// 	arg_index =  0;
+// 	pipe_count = 0;
+// 	len = advance_lint(cmd->lint, arg_index);
+// 	while (cmd->args && cmd->args[arg_index] && pipe_count < pipe_arg)
+// 	{
+// 		if (cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
+// 			pipe_count++;
+// 		len += ft_strlen(cmd->args[arg_index]) + 1;
+// 		arg_index++;
+// 	}
+// 	start = arg_index;
+// 	while (cmd->args && cmd->args[arg_index] && \
+// 		!(cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|")))
+// 	{
+// 		len += ft_strlen(cmd->args[arg_index]) + 1;
+// 		arg_index++;
+// 	}
+// 	int		ret_count;
+
+// 	ret_count = 0;
+// 	if (ft_calloc((void **)&ret, (arg_index - start + 1), sizeof(char *)))
+// 		return ;
+// 	while (cmd->args && cmd->args[start] && start < arg_index)
+// 	{
+// 		ret[ret_count] = cmd->args
+// 		len += ft_strlen(cmd->args[start]) + 1;
+// 		start++;
+// 	}
+// }
+
+// void	swap_cmd_parts(t_cmd *cmd, int pipe_count)
+// {
+// 	char	*tmp;
+
+// 	(void)pipe_count;
+// 	tmp = cmd->args[0];
+// 	cmd->args[0] = cmd->args[cmd->arg_nbr - 1];
+// 	cmd->args[cmd->arg_nbr - 1] = tmp;
+
+	// select_cmd_at_pipe(cmd, 1);
+
+	// arg_index = cmd->arg_nbr - 1;
+	// len = advance_lint(cmd->lint, arg_index);
+	// while (arg_index > 0)
+	// {
+	// 	while (cmd->args && !compare_size(cmd->args[arg_index], '|') && cmd->lint[len] != 2)
+			
+	// 	len -= ft_strlen(cmd->args[arg_index]) - 1;
+	// 	arg_index--;
+	// }
+// }
+
+// void	rearrange_args(t_cmd *cmd)
+// {
+// 	int		pipe_count;
+// 	int		len;
+// 	int		arg_index;
+
+// 	arg_index = 0;
+// 	pipe_count = 0;
+// 	len = advance_lint(cmd->lint, arg_index);
+// 	while (cmd->args && cmd->args[arg_index])
+// 	{
+// 		if (cmd->lint[len] == _TOKEN && !compare_size(cmd->args[arg_index], "|"))
+// 			pipe_count++;
+// 		len += ft_strlen(cmd->args[arg_index]) + 1;
+// 		arg_index++;
+// 	}
+// 	if (pipe_count)
+// 		swap_cmd_parts(cmd, pipe_count);
+// }
 
 void	read_cmd(t_info *info, char *cmd_line)
 {
-	int		sep_arg;
 	t_cmd	*cmd;
 
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
-	cmd->args = split_by_empty(info, cmd_line, cmd->arg_nbr);
-	// erase_spaces(info);
-	sep_arg = separator_in_args(cmd->args);
-	compare_cmd(info, cmd);
+	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
+	// rearrange_args(cmd);
 	if (info->debug_option)
 		print_cmd_info(cmd);
-	if (cmd->args && cmd->args[0] && !compare_size(cmd->args[0], ".") && cmd->bui == 9)
-		ft_printf("minisheh: .: usage: . filename [arguments]\n");
-	else if (cmd->args && cmd->args[0] && cmd->bui == 9)
-		ft_printf("minisheh: %s: command not found\n", cmd->args[0]);
-	// else if (cmd_line[info->line_index] == 124 && info->lint[info->lint_index] == _TOKEN)
-	// 	pipe_for_exec(info, index, PIPE);
-	// else if (!is_redir_l(line[index]))
-	// 	redir(line, index, R_LEFT);
-	// else if (!is_redir_r(line[index]) && line[index + 1] && \
-	// 	!is_redir_r(line[index + 1]))
-	// 	redir(line, index, R_RIGHTD);
-	// else if (!is_redir_r(line[index]))
-	// 	redir(line, index, R_RIGHT);
-	// else if (cmd->bui == 8)
-	// 	pipe_for_exec(line, index, NOTHING);
-	// else if (!cmd->cmd)
-	// 	return ;
-	// else
-	// 	update_cmd_status(info, info->built_in[cmd->bui]());
+	// update_cmd_status(info, exec_cmd(info, cmd));
 }

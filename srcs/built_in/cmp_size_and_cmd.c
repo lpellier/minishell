@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:29:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 00:07:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 20:25:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,26 @@ int	compare_size(char *s1, char *s2)
 
 void	compare_cmd(t_info *info, t_cmd *cmd)
 {
-	if (!cmd->args || !cmd->args[0])
+	int		arg_index;
+
+	arg_index = 0;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 1;
+	if (!cmd->args || !cmd->args[arg_index])
 		cmd->bui = NONEXISTENT;
-	else if (!compare_size(cmd->args[0], "echo"))
+	else if (!compare_size(cmd->args[arg_index], "echo"))
 		cmd->bui = ECHOO;
-	else if (!compare_size(cmd->args[0], "exit"))
+	else if (!compare_size(cmd->args[arg_index], "exit"))
 		cmd->bui = EXIT;
-	else if (!compare_size(cmd->args[0], "pwd"))
+	else if (!compare_size(cmd->args[arg_index], "pwd"))
 		cmd->bui = PWD;
-	else if (!compare_size(cmd->args[0], "export"))
+	else if (!compare_size(cmd->args[arg_index], "export"))
 		cmd->bui = EXPORT;
-	else if (!compare_size(cmd->args[0], "unset"))
+	else if (!compare_size(cmd->args[arg_index], "unset"))
 		cmd->bui = UNSET;
-	else if (!compare_size(cmd->args[0], "env"))
+	else if (!compare_size(cmd->args[arg_index], "env"))
 		cmd->bui = ENV;
-	else if (!compare_size(cmd->args[0], "cd"))
+	else if (!compare_size(cmd->args[arg_index], "cd"))
 		cmd->bui = CD;
 	else if (!find_binary(info, cmd))
 		cmd->bui = BINARY;

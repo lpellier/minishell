@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/26 23:46:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 23:59:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,77 +17,85 @@
 // ** to check for right bui and right input
 // */
 
-int	nothing_in_str(char *str)
+void	check_for_cdpath(t_info *info, char *path)
 {
-	int	i;
+	t_env	*cdpath;
+	char	*tmp;
+	char	*strjoin;
 
-	i = 0;
-	while (str[i])
+	cdpath = get_env_custom(info, "CDPATH");
+	if (cdpath)
 	{
-		if (is_whitespace(str[i]))
-			return (FAILURE);
-		i++;
+		tmp = ft_strdup(path);
+		secure_free(path);
+		if (!compare_size(cdpath->value, "/"))
+			path = ft_strjoin(cdpath->value, tmp);
+		else
+		{
+			strjoin = ft_strjoin(cdpath->value, "/");
+			path = ft_strjoin(strjoin, tmp);
+			secure_free(strjoin);
+		}
+		secure_free(tmp);
 	}
-	return (SUCCESS);
 }
 
-int	ft_cd()
+void	update_pwd(t_info *info)
 {
-	// t_cmd	*cmd;
-	// t_env	*old_pwd;
-	// t_env	*pwd;
-	// t_env	*cd_path;
-	// t_env	*home;
-	// char	cwd[PATH_MAX];
-	// char	*path;
-	// char	*tmp;
-	// char	*strjoin;
+	t_env	*pwd;
+	char	cwd[PATH_MAX];
+	
+	pwd = get_env_custom(info, "PWD");
+	if (!pwd)
+		return ;
+	modify_env(info, "OLDPWD", pwd->value, 0);
+	modify_env(info, "PWD", getcwd(cwd, sizeof(cwd)), 0);
+}
 
-	// path = NULL;
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// home = get_env_custom(info, "HOME");
-	// old_pwd = get_env_custom(info, "OLDPWD");
-	// cd_path = get_env_custom(info, "CDPATH");
-	// if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && nothing_in_str(home->value))
-	// 	path = ft_strdup(home->value);
-	// else if (home && !cmd->option && (!cmd->input || !compare_size(cmd->input, "~")) && !nothing_in_str(home->value))
-	// 	path = ft_strdup(".");
-	// else if (old_pwd && !compare_size(cmd->input, "-"))
-	// {
-	// 	path = ft_strdup(old_pwd->value);
-	// 	ft_printf("%s\n", path);
-	// }
-	// else if (cmd->option)
-	// 	return (print_error_option(cmd));
-	// else
-	// 	path = ft_strdup(cmd->input);
-	// if (cd_path)
-	// {
-	// 	tmp = ft_strdup(path);
-	// 	secure_free(path);
-	// 	if (!compare_size(cd_path->value, "/"))
-	// 		path = ft_strjoin(cd_path->value, tmp);
-	// 	else
-	// 	{
-	// 		strjoin = ft_strjoin(cd_path->value, "/");
-	// 		path = ft_strjoin(strjoin, tmp);
-	// 		secure_free(strjoin);
-	// 	}
-	// 	secure_free(tmp);
-	// }
-	// if (multiple_args(path))
-	// 	return (print_error("minisheh: cd: too many arguments"));
-	// else if (chdir(path))
-	// {
-	// 	ft_printf("minisheh: cd: %s: no such file or directory\n", path);
-	// 	return (FAILURE);
-	// }
-	// secure_free(path);
-	// pwd = get_env_custom(info, "PWD");
-	// if (!pwd)
-	// 	return (FAILURE);
-	// modify_env(info, "OLDPWD", pwd->value, 0);
-	// modify_env(info, "PWD", getcwd(cwd, sizeof(cwd)), 0);
+char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
+{
+	t_env	*oldpwd;
+	t_env	*home;
+	char	*path;
+
+	path = NULL;
+	home = get_env_custom(info, "HOME");
+	oldpwd = get_env_custom(info, "OLDPWD");
+	if (home && home->value && !cmd->args[arg_index])
+		path = ft_strdup(home->value);
+	else if (!home && !cmd->args[arg_index])
+		print_error(NULL, "cd", "HOME not set");
+	else if (oldpwd && oldpwd->value && \
+		!compare_size(cmd->args[arg_index], "-"))
+	{
+		path = ft_strdup(oldpwd->value);
+		ft_printf("%s\n", path);
+	}
+	else
+		path = ft_strdup(cmd->args[arg_index]);
+	return (path);
+}
+
+int	ft_cd(t_info *info, t_cmd *cmd)
+{
+	char	*path;
+	int		arg_index;
+
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	if (!arg_is_option(cmd->args[arg_index]))	
+		return (print_error(cmd->args[arg_index - 1], \
+			cmd->args[arg_index], "invalid option"));
+	if (cmd->args && cmd->args[arg_index] && \
+		cmd->args[arg_index + 1])
+		return (print_error(NULL, "cd", "too many arguments"));
+	path = define_path(info, cmd, arg_index);
+	check_for_cdpath(info, path);
+	if (chdir(path))
+		return (print_error("cd", path, "no such file or directory"));
+	secure_free(path);
+	update_pwd(info);
 	return (SUCCESS);
 }
 
@@ -170,9 +178,3 @@ char	*get_actual_cmd(char *cmd, char **path)
 	return (ret);
 }
 
-int	nothing()
-{
-	if (g_signal->kill == FALSE)
-		g_signal->kill = TRUE;
-	return (FAILURE);
-}

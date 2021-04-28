@@ -6,24 +6,11 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 11:52:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 21:38:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-// int	print_error_option(t_cmd *cmd)
-// {
-// 	(void)cmd;
-// 	// ft_printf("minisheh: %s: %s: invalid option\n", cmd->cmd, cmd->option);
-// 	return (FAILURE);
-// }
-
-int	print_error(char *error)
-{
-	ft_printf("%s\n", error);
-	return (FAILURE);
-}
 
 int	delete_empty_history(void *data, void *data_ref)
 {
@@ -72,8 +59,10 @@ void	print_prompt(t_info *info)
 int	shell_loop(t_info *info)
 {
 	int		first;
+	int		exit_code;
 
 	first = TRUE;
+	exit_code = 0;
 	ft_putstr_fd("\033[31mWelcome to Minisheh\n\x1b[0m", STDERR_FILENO);
 	while (!info->crashed)
 	{
@@ -84,12 +73,14 @@ int	shell_loop(t_info *info)
 		ft_list_remove_if(&info->history_head, NULL, delete_empty_history, \
 		free_history_struct);
 	}
+	ft_printf("exit\n");
+	exit_code = info->exit_code;
 	free_tab(&info->dir_paths);
 	secure_free(info->line);
 	ft_list_clear(info->env_head, free_env_struct);
 	ft_list_clear(info->history_head, free_history_struct);
 	secure_free(info);
-	return (SUCCESS);
+	return (exit_code);
 }
 
 int	check_exec_options(t_info *info, int argc, char **argv)

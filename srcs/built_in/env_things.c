@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/26 23:47:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 23:07:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,44 +16,51 @@
 **destroys a environment variable from memory
 */
 
-int	ft_unset()
+int	ft_unset(t_info *info, t_cmd *cmd)
 {
-	// t_cmd	*cmd;
-	// t_env	*data_ref;
+	t_env	*data_ref;
+	int		arg_index;
 
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// if (cmd->option)
-	// 	return (print_error_option(cmd));
-	// if (!info->env_head || !info->env_head->next)
-	// 	return (FAILURE);
-	// data_ref = create_env_struct(cmd->input, NULL);
-	// ft_list_remove_if(&info->env_head->next, data_ref, cmp_env, \
-	// 	free_env_struct);
-	// secure_free(data_ref);
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	if (!arg_is_option(cmd->args[arg_index]))	
+		return (print_error(cmd->args[arg_index - 1], \
+			cmd->args[arg_index], "invalid option"));
+	if (!info->env_head || !info->env_head->next)
+		return (FAILURE);
+	while (cmd->args && cmd->args[arg_index])
+	{
+		data_ref = create_env_struct(cmd->args[arg_index], NULL);
+		ft_list_remove_if(&info->env_head->next, data_ref, cmp_env, \
+			free_env_struct);
+		secure_free(data_ref);
+		arg_index++;
+	}
 	return (SUCCESS);
 }
 
-// int	print_declare_env(void)
-// {
-// 	if (!info->env_head || !info->env_head->next)
-// 		return (FAILURE);
-// 	ft_list_foreach(info->env_head->next, print_env_declare);
-// 	return (SUCCESS);
-// }
+
 
 // /*
 // ** outputs all environment variables
 // */
 
-int	ft_env()
+int	ft_env(t_info *info, t_cmd *cmd)
 {
-	// t_cmd	*cmd;
+	int		arg_index;
 
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// if (cmd->option)
-	// 	return (print_error_option(cmd));
-	// if (!info->env_head || !info->env_head->next)
-	// 	return (FAILURE);
-	// ft_list_foreach(info->env_head->next, print_env_struct);
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	if (!arg_is_option(cmd->args[arg_index]))	
+		return (print_error(cmd->args[arg_index - 1], \
+			cmd->args[arg_index], "invalid option"));
+	if (!info->env_head || !info->env_head->next)
+		return (FAILURE);
+	if (cmd->args && cmd->args[arg_index])
+		return (print_error(NULL, cmd->args[arg_index], \
+			"no such file or directory"));
+	ft_list_foreach(info->env_head->next, print_env_struct);
 	return (SUCCESS);
 }

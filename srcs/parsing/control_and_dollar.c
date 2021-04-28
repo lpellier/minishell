@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/26 23:16:14 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 21:17:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	control_d(t_info *info)
 	}
 	else if (!info->line || !info->line[0])
 	{
-		ft_printf("exit");
 		info->crashed = TRUE;
 		return (FAILURE);
 	}

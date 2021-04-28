@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/26 23:46:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 22:59:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ int	only_n(char *str)
 {
 	int		i;
 
-	i = 1;
+	i = 0;
+	if (str[i] != '-')
+		return (FAILURE);
+	i++;
 	while (str[i])
 	{
 		if (str[i] != 'n')
@@ -26,33 +29,24 @@ int	only_n(char *str)
 	return (SUCCESS);
 }
 
-int	ft_echo()
+int	ft_echo(t_info *info, t_cmd *cmd)
 {
-	// t_cmd	*cmd;
-	// char	*strjoin;
-	// char	*tmp;
+	int		arg_index;
 
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// if (cmd->option && !only_n(cmd->option))
-	// 	return (ft_echo_n());
-	// else if (cmd->option)
-	// {
-	// 	if (cmd->input)
-	// 	{
-	// 		tmp = ft_strdup(cmd->input);
-	// 		free(cmd->input);
-	// 		strjoin = ft_strjoin(cmd->option, " ");
-	// 		cmd->input = ft_strjoin(strjoin, tmp);
-	// 		secure_free(strjoin);
-	// 	}
-	// 	else
-	// 		cmd->input = ft_strdup(cmd->option);
-	// }
-	// if (!cmd->input)
-	// 	ft_printf("\n");
-	// else
-	// 	ft_printf("%s\n", cmd->input);
-	// info->terminfo.echo_padding = 0;
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	if (cmd->args[arg_index] && !only_n(cmd->args[arg_index]))
+		return (ft_echo_n(info, cmd));
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->next_pipe)
+	{
+		ft_printf("%s", cmd->args[arg_index]);
+		if (arg_index < cmd->arg_nbr - 1)
+			ft_printf(" ");
+		arg_index++;
+	}
+	ft_printf("\n");
+	info->terminfo.echo_padding = 0;
 	return (SUCCESS);
 }
 
@@ -60,75 +54,106 @@ int	ft_echo()
 // ** outputs input without \n
 // */
 
-char	*adjust_input_repeated_options(char *input)
+int	ft_echo_n(t_info *info, t_cmd *cmd)
 {
-	(void)input;
-	// int		i;
-	char	*ret;
-	// char	*strjoin;
-	// char	**split;
-	
-	// i = 0;
-	ret = NULL;
-	// split = ft_split(input, 32);
-	// while (split[i])
-	// {
-	// 	if (only_n(split[i]))
-	// 		break;
-	// 	i++;
-	// }
-	// while (split[i])
-	// {
-	// 	if (!ret)
-	// 		ret = ft_strdup(split[i]);
-	// 	else
-	// 	{
-	// 		strjoin = ft_strjoin(ret, " ");
-	// 		ret = ft_strjoin(strjoin, split[i]);
-	// 		secure_free(strjoin);
-	// 	}
-	// 	i++;
-	// }
-	return (ret);
+	int		padding;
+	int		arg_index;
+
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	padding = 0;
+	while (cmd->args && cmd->args[arg_index] && \
+		!only_n(cmd->args[arg_index]))
+		arg_index++;
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->next_pipe)
+	{
+		ft_printf("%s", cmd->args[arg_index]);
+		padding += ft_strlen(cmd->args[arg_index]);
+		if (arg_index < cmd->arg_nbr - 1)
+		{
+			ft_printf(" ");
+			padding += 1;
+		}
+		arg_index++;
+	}
+	info->terminfo.echo_padding = padding;
+	return (SUCCESS);
 }
 
-int	ft_echo_n()
+int	str_is_alpha(char *str)
 {
-	// t_cmd	*cmd;
+	int		i;
 
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// if (cmd->input)
-	// 	cmd->input = adjust_input_repeated_options(cmd->input);
-	// if (cmd->input)
-	// 	ft_printf("%s", cmd->input);
-	// info->terminfo.echo_padding = ft_strlen(cmd->input);
-	return (SUCCESS);
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalpha(str[i]))
+			return (SUCCESS);
+		i++;
+	}
+	return (FAILURE);
+}
+
+int	print_error(char *cmd, char *arg, char *error)
+{
+	if (cmd && arg && error)
+		ft_printf("minisheh: %s: %s: %s\n", cmd, arg, error);
+	else if (arg && error)
+		ft_printf("minisheh: %s: %s\n", arg, error);
+	else if (error)
+		ft_printf("minisheh: %s\n", error);
+	return (FAILURE);
 }
 
 // /*
 // ** exits terminal
 // */
 
-int	ft_exit()
+int	ft_exit(t_info *info, t_cmd *cmd)
 {
-	// info->crashed = TRUE;
-	// ft_printf("exit\n");
-	return (SUCCESS);
+	int		arg_index;
+
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	if (cmd->next_pipe - arg_index <= 1)
+	{
+		info->crashed = TRUE;
+		if (cmd->args[arg_index] && !str_is_alpha(cmd->args[arg_index]))
+			return (print_error("exit", cmd->args[arg_index], \
+				"numeric argument required"));
+		if (cmd->args[arg_index])
+			info->exit_code = ft_atoi(cmd->args[arg_index]);
+		return (SUCCESS);
+	}
+	return (FAILURE);
+}
+
+int		arg_is_option(char *arg)
+{
+	if (arg && arg[0] == '-')
+		return (SUCCESS);
+	return (FAILURE);
 }
 
 // /*
 // ** outputs current path
 // */
 
-int	ft_pwd()
+int	ft_pwd(t_info *info, t_cmd *cmd)
 {
-	// char	cwd[PATH_MAX];
-	// t_cmd	*cmd;
+	(void)info;
+	char	cwd[PATH_MAX];
+	int		arg_index;
 
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// if (cmd->option)
-	// 	return (print_error_option(cmd));
-	// if (getcwd(cwd, sizeof(cwd)) != NULL)
-	// 	ft_printf("%s\n", cwd);
+	arg_index = 1;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 2;
+	if (!arg_is_option(cmd->args[arg_index]))	
+		return (print_error(cmd->args[arg_index - 1], \
+			cmd->args[arg_index], "invalid option"));
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		ft_printf("%s\n", cwd);
 	return (SUCCESS);
 }

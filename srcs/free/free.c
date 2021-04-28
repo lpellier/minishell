@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/26 15:46:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 12:24:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,25 @@ void	free_tab(char ***tab)
 	*tab = NULL;
 }
 
+void	free_lint_tab(int arg_nbr, int ***tab)
+{
+	int		i;
+	int		**cpy;
+
+	i = 0;
+	cpy = *tab;
+	if (!cpy)
+		return ;
+	while (i < arg_nbr)
+	{
+		free(cpy[i]);
+		cpy[i] = NULL;
+		i++;
+	}
+	free(*tab);
+	*tab = NULL;
+}
+
 void	free_cmd_struct(void *data)
 {
 	t_cmd	*ptr;
@@ -38,10 +57,13 @@ void	free_cmd_struct(void *data)
 	ptr = (t_cmd *)data;
 	if (!data || !ptr)
 		return ;
-	ptr->bui = 9;
-	ptr->arg_nbr = 0;
+	free_lint_tab(ptr->arg_nbr, &ptr->lint);
 	free_tab(&ptr->args);
 	secure_free(ptr->path);
+	ptr->bui = 9;
+	ptr->arg_nbr = 0;
+	ptr->recursive_index = 0;
+	ptr->next_pipe = 0;
 	secure_free(ptr);
 }
 

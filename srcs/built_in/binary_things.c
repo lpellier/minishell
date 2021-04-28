@@ -6,100 +6,87 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/26 23:45:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 23:59:16 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// void	exec_binary_check(t_cmd *cmd, char **argv, char **split)
-// {
-// 	int	i;
-// 	int	j;
-
-// 	i = 0;
-// 	j = 1;
-// 	if (cmd->option)
-// 	{
-// 		argv[j] = ft_strdup(cmd->option);
-// 		j++;
-// 	}
-// 	if (split && split[0])
-// 	{
-// 		while (split[i])
-// 		{
-// 			argv[j] = ft_strdup(split[i]);
-// 			i++;
-// 			j++;
-// 		}
-// 	}
-// 	else if (cmd->input)
-// 	{
-// 		argv[j] = ft_strdup(cmd->input);
-// 		j++;
-// 	}
-// 	argv[j] = NULL;
-// }
-
-int	exec_binary(t_info *info)
+int	exec_binary(t_info *info, t_cmd *cmd)
 {
-	(void)info;
-	return (SUCCESS);
-	// t_cmd	*cmd;
-	// int		count;
-	// char	**argv;
-	// char	**split;
-	// char	**env;
+	char	**argv;
+	char	**env;
+	int		arg_index;
+	int i;
 
-	// cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-	// env = list_to_tab(info->env_head);
-	// if (ft_calloc((void **)&argv, count + 1, sizeof(char *)))
-	// 	return (FAILURE);
-	// argv[0] = ft_strdup(cmd->cmd);
-	// exec_binary_check(cmd, argv, split);
-	// if (execve(cmd->path, argv, env) == -1)
-	// 	return (errno);
-	// free_tab(&split);
-	// free_tab(&argv);
-	// free_tab(&env);
-	// return (SUCCESS);
+	arg_index = 0;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 1;
+	if (ft_calloc((void **)&argv, cmd->next_pipe - arg_index + 1, sizeof(char *)))
+		return (FAILURE);
+	env = list_to_tab(info->env_head);
+	i = 0;
+	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->next_pipe)
+	{
+		argv[i] = ft_strdup(cmd->args[arg_index]);
+		i++;
+		arg_index++;
+	}
+	argv[i] = NULL;
+	if (execve(cmd->path, argv, env) == -1)
+	{
+		free_tab(&argv);
+		free_tab(&env);
+		return (errno);
+	}
+	free_tab(&argv);
+	free_tab(&env);
+	return (SUCCESS);
+}
+
+int	check_in_path(t_info *info, t_cmd *cmd, int arg_index)
+{
+	char	*strjoin;
+	int		i;
+
+	if (!info->dir_paths)
+		return (FAILURE);
+	i = 0;
+	while (info->dir_paths[i])
+	{
+		if (!directories(info->dir_paths[i], cmd->args[arg_index]))
+		{
+			strjoin = ft_strjoin(info->dir_paths[i], "/");
+			cmd->path = ft_strjoin(strjoin, cmd->args[arg_index]);
+			secure_free(strjoin);
+			return (SUCCESS);
+		}
+		i++;
+	}
+	return (FAILURE);
 }
 
 int	find_binary(t_info *info, t_cmd *cmd)
 {
-	(void)info;
-	(void)cmd;
-	return(SUCCESS);
-	// char	*actu_cmd;
-	// char	*path;
-	// char	*strjoin;
-	// int		i;
+	char	*actu_cmd;
+	char	*path;
+	int		arg_index;
 
-	// i = 0;
-	// if (!compare_size(cmd->cmd, ".") || !compare_size(cmd->cmd, ".."))
-	// 	return (FAILURE);
-	// actu_cmd = get_actual_cmd(cmd->cmd, &path);
-	// if (!directories(path, actu_cmd))
-	// {
-	// 	cmd->path = ft_strdup(cmd->cmd);
-	// 	secure_free(actu_cmd);
-	// 	secure_free(path);
-	// 	return (SUCCESS);
-	// }
-	// secure_free(actu_cmd);
-	// secure_free(path);
-	// if (!info->dir_paths)
-	// 	return (FAILURE);
-	// while (info->dir_paths[i])
-	// {
-	// 	if (!directories(info->dir_paths[i], cmd->cmd))
-	// 	{
-	// 		strjoin = ft_strjoin(info->dir_paths[i], "/");
-	// 		cmd->path = ft_strjoin(strjoin, cmd->cmd);
-	// 		secure_free(strjoin);
-	// 		return (SUCCESS);
-	// 	}
-	// 	i++;
-	// }
-	// return (FAILURE);
+	arg_index = 0;
+	if (cmd->recursive_index)
+		arg_index = cmd->recursive_index + 1;
+	if (!compare_size(cmd->args[arg_index], ".") || \
+		!compare_size(cmd->args[arg_index], ".."))
+		return (FAILURE);
+	actu_cmd = get_actual_cmd(cmd->args[arg_index], &path);
+	if (!directories(path, actu_cmd))
+	{
+		cmd->path = ft_strdup(cmd->args[arg_index]);
+		secure_free(actu_cmd);
+		secure_free(path);
+		return (SUCCESS);
+	}
+	secure_free(actu_cmd);
+	secure_free(path);
+	return (check_in_path(info, cmd, arg_index));
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/27 10:46:54 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 11:49:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ typedef struct s_cmd
 {
 	char			**args;
 	char			*path;
+	int				**lint;
 	int				bui;
+	int				recursive_index;
+	int				next_pipe;
 	int				arg_nbr;
 }					t_cmd;
 
@@ -117,6 +120,7 @@ typedef struct s_info
 	int				cur_in_history;
 	int				crashed;
 	int				debug_option;
+	int				exit_code;
 	int				(*built_in[10])();
 }					t_info;
 
@@ -166,13 +170,15 @@ enum				e_status_codes
 ** main **
 **********/
 
+int			arg_is_option(char *arg);
+int			exec_cmd(t_info *info, t_cmd *cmd);
+void		print_lint(t_info *info, int *lint);
 void		clear_line(t_info *info);
 int			is_empty_or_void(int lint);
 int			count_args(t_info *info, char *line, int *lint);
 void		set_lint(t_info *info, int *lint);
 int			init_terminal();
-int			print_error_option(t_cmd *cmd);
-int			print_error(char *error);
+int			print_error(char *cmd, char *arg, char *error);
 void		move_right(t_info *info, char *dest);
 void		move_left(t_info *info);
 void		print_prompt(t_info *info);
@@ -186,41 +192,38 @@ int			check_exec_options(t_info *info, int argc, char **argv);
 *************/
 
 // binary_things
-int			exec_binary(t_info *info);
+int			exec_binary(t_info *info, t_cmd *cmd);
 int			find_binary(t_info *info, t_cmd *cmd);
-void		exec_binary_check(t_cmd *cmd, char **argv, char **split);
 
 // built_in
 char		last_char(char *str);
 int			str_isalpha_withplus(char *str);
 
 // pure_shell
-int			ft_pwd();
-int			ft_exit();
-int			ft_echo_n();
-int			ft_echo();
+int			ft_pwd(t_info *info, t_cmd *cmd);
+int			ft_exit(t_info *info, t_cmd *cmd);
+int			ft_echo_n(t_info *info, t_cmd *cmd);
+int			ft_echo(t_info *info, t_cmd *cmd);
 int			only_n(char *str);
 
 // built_in2
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
-int			ft_cd();
-int			nothing();
+int			ft_cd(t_info *info, t_cmd *cmd);
 
 // env_things
-int			ft_unset();
-int			print_declare_env(void);
-int			ft_env();
+int			ft_unset(t_info *info, t_cmd *cmd);
+int			ft_env(t_info *info, t_cmd *cmd);
 
 // cmp_size_and_cmp
 int			compare_size(char *s1, char *s2);
 void		compare_cmd(t_info *info, t_cmd *cmd);
 
 // do_export
-int			ft_export();
-int			export_error(t_cmd *cmd);
-int			export_remove_char(char **key_value);
-void		modify_export(char *key, char *value, int concat);
+int			print_declare_env(t_info *info);
+int			ft_export(t_info *info, t_cmd *cmd);
+int			export_content(t_info *info, char *str);
+void		modify_export(t_info *info, char *key, char *value);
 
 /*********
 ** free **
@@ -299,17 +302,16 @@ int			count_exceptions(int quote, int dquote);
 **********/
 
 // do_redir
+
 void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
-int			redir(t_info *info, char *line, int index, int separator);
-void		redir_something(t_info *info, char *line, int index);
+int			redir(t_info *info, t_cmd *cmd, int separator);
 
 // do_pipe
-int			pipe_for_exec(t_info *info, char *line, int separator);
+int			pipe_for_exec(t_info *info, t_cmd *cmd, int separator);
 int			child_process(t_info *info, int separator, t_cmd *cmd, \
 				int *pipefd);
 void		get_child(t_info *info, int separator, pid_t cpid);
-void		check_pipe(t_info *info, int separator);
 
 /*********
 ** free **

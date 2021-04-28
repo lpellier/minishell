@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 12:46:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/27 12:47:52 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,6 @@ void	remove_char(char *line, int index)
 
 void	move_right(t_info *info, char *dest)
 {
-	// int		cursor;
-
-	// cursor = (info->cursor.posx - info->terminfo.prompt_len) + (info->cursor.posy * info->terminfo.col);
-	// cursor = (info->cursor.posy * info->terminfo.col) + ft_strlen(dest);
-	// cursor += 1;
-	// info->cursor.posx += 1;
-	// (void)info;
-	// (void)dest;
 	if (info->cursor.posy * info->terminfo.col + info->cursor.posx < (ft_strlen(dest) + info->terminfo.prompt_len))
 	{
 		(info->cursor.posx)++;
@@ -88,9 +80,6 @@ void	add_key(t_info *info, char *dest, char key)
 	clear_line(info);
 	ft_putstr_fd(dest, STDOUT_FILENO);
 	tputs(tgetstr("rc", NULL), 1, ft_putchar);
-	// else if (info->cursor.posx < info->terminfo.prompt_len)
-	// 		info->cursor.posx += 1;
-	// move_right(info, dest);
 }
 
 void	delete_key(t_info *info, char *dest)

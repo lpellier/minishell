@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 00:30:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/28 11:42:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	child_process(t_info *info, int separator, t_cmd *cmd, int *pipefd)
 		dup2(pipefd[1], STDOUT_FILENO);
 	else
 		close(pipefd[1]);
-	return ((info->built_in[cmd->bui])());
+	return ((info->built_in[cmd->bui])(info, cmd));
 }
 
 void	interpret_errors(t_info *info)
@@ -60,6 +60,7 @@ void	interpret_errors(t_info *info)
 void	get_child(t_info *info, int separator, pid_t cpid)
 {
 	int	c_status;
+	(void)separator;
 
 	if (g_signal->kill || separator == PIPE)
 	{
@@ -68,52 +69,46 @@ void	get_child(t_info *info, int separator, pid_t cpid)
 		c_status = 130;
 	}
 	waitpid(cpid, &c_status, 0);
-	init_termcap(info);
 	g_signal->bin_running = FALSE;
+	init_termcap(info);
 	update_cmd_status(info, c_status % 255);
-	interpret_errors(info);
+	// interpret_errors(info);
 }
 
-void	check_pipe(t_info *info, int separator)
+int	pipe_for_exec(t_info *info, t_cmd *cmd, int separator)
 {
-	(void)info;
-	(void)separator;
-	// if (separator == PIPE)
-	// {
-	// 	while (!ft_cinset(line[index], SEPARATOR))
-	// 		index++;
-	// 	ft_list_push_back(&info->cmd_head, create_cmd_struct());
-	// 	info->index_cmd += 1;
-	// 	// read_cmd(line, index);
-	// }
-}
-
-int	pipe_for_exec(t_info *info, char *line, int separator)
-{
-	(void)line;
 	int		pipefd[2];
+	int		c_status;
 	pid_t	cpid;
-	t_cmd	*cmd;
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
 
 	g_signal->bin_running = TRUE;
-	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	save_std(&saved_stdin, &saved_stdout);
 	restore_term(info);
 	if (pipe(pipefd) == -1)
-		exit(EXIT_FAILURE);
+		return (FAILURE);
 	cpid = fork();
 	if (cpid == -1)
-		return (EXIT_FAILURE);
+		return (FAILURE);
 	else if (cpid == 0)
 		_exit(child_process(info, separator, cmd, pipefd));
 	else
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		check_pipe(info, separator);
-		get_child(info, separator, cpid);
+		// get_child(info, separator, cpid);
+		if (separator == PIPE)
+			exec_cmd(info, cmd);
+		// if (g_signal->kill || separator == PIPE)
+		// {
+		// 	kill(cpid, SIGINT);
+		// 	update_cmd_status(info, 130);
+		// 	c_status = 130;
+		// }
+		waitpid(cpid, &c_status, 0);
+		g_signal->bin_running = FALSE;
+		init_termcap(info);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }
