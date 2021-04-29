@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 21:23:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 16:27:05 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	arg_index = cmd->arg_index + 1;
-	if (!arg_is_option(cmd->args[arg_index]))	
+	if (!arg_is_option(cmd->args[arg_index]) && compare_size(cmd->args[arg_index], "-"))	
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option"));
 	if (cmd->args && cmd->args[arg_index] && \
