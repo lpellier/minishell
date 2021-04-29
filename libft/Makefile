@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/06 14:29:46 by tefroiss          #+#    #+#              #
-#    Updated: 2021/04/25 16:55:02 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/29 16:40:38 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,8 @@ SRCS	=		./ft_isalpha.c \
 				./ft_list_one.c \
 				./ft_list_two.c \
 				./get_next_line.c \
-				./get_next_line_utils.c 
+				./get_next_line_utils.c \
+				./secure_free.c
 
 
 OBJS		=	$(SRCS:.c=.o)

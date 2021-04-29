@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 21:47:04 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/26 21:47:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 16:37:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,18 @@ void	ft_list_push_back(t_list **begin_list, void *data)
 	while (list->next)
 		list = list->next;
 	list->next = ft_create_elem(data);
+}
+
+void    ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
+{
+        t_list  *ptr;
+
+        while (begin_list)
+        {
+                ptr = begin_list->next;
+                free_fct(begin_list->data);
+                free(begin_list);
+                begin_list = ptr;
+        }
+        begin_list = NULL;
 }

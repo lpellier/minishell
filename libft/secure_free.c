@@ -5,16 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/09 14:38:35 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 13:41:10 by lpellier         ###   ########.fr       */
+/*   Created: 2021/04/29 16:39:43 by lpellier          #+#    #+#             */
+/*   Updated: 2021/04/29 16:40:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "libft.h"
 
 void	secure_free(void *ptr)
 {
-	if (ptr)
-		free(ptr);
-	ptr = NULL;
+		if (ptr)
+			free(ptr);
+		ptr = NULL;
 }

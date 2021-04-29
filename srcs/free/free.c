@@ -94,16 +94,3 @@ void	free_history_struct(void *data)
 	secure_free(ptr);
 }
 
-void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
-{
-	t_list	*ptr;
-
-	while (begin_list)
-	{
-		ptr = begin_list->next;
-		free_fct(begin_list->data);
-		free(begin_list);
-		begin_list = ptr;
-	}
-	begin_list = NULL;
-}

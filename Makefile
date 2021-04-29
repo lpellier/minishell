@@ -6,7 +6,7 @@
 #    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/24 19:58:22 by lpellier         ###   ########.fr        #
+#    Updated: 2021/04/29 17:08:45 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,14 +27,12 @@ SRCS = srcs/main.c \
 		srcs/built_in/env_things.c \
 		srcs/built_in/pure_shell.c \
 		srcs/free/free.c \
-		srcs/free/secure_free.c \
 		srcs/parsing/backsl_and_quote.c \
 		srcs/parsing/char_and_key.c \
 		srcs/parsing/colon_and_count.c \
 		srcs/parsing/colon_count_split.c \
 		srcs/parsing/control_and_dollar.c \
 		srcs/parsing/directories.c \
-		srcs/parsing/get_something.c \
 		srcs/parsing/move_remove_add.c \
 		srcs/parsing/parsing_space.c \
 		srcs/parsing/parsing_utils.c \
