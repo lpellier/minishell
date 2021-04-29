@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 21:28:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 13:47:38 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,47 +87,23 @@ int	ft_isspace(int c)
 	return (ft_cinset(c, "\t\n\r\v\f "));
 }
 
-int	open_file(t_info *info, int separator, char *line, int *index)
+int	open_file(t_cmd *cmd, int start, int separator)
 {
-	t_env	*env;
-	char	*pwd;
-	char	*file_path;
-	char	*file_name;
-	char	*strjoin;
+	int		arg_index;
 	int		file_fd;
-	int		i;
 
-	i = 0;
-	env = get_env_custom(info, "PWD");
-	if (!env)
-		pwd = ft_strdup("./");
-	else
-		pwd = ft_strdup(env->value);
 	file_fd = -1;
-	while (!ft_cinset(line[*index], SEPARATOR))
-		*index += 1;
-	i = *index;
-	while (line[i] && ft_isprint(line[i]) && line[i] != 32 && \
-		ft_cinset(line[i], "<>"))
-		i++;
-	i -= *index;
-	file_name = ft_substr(line, *index, i);
-	*index += i;
-	strjoin = ft_strjoin(pwd, "/");
-	file_path = ft_strjoin(strjoin, file_name);
-	secure_free(strjoin);
+	arg_index = sep_in_args(cmd, start) + 1;
 	if (separator == R_RIGHT)
-		file_fd = open(file_path, O_WRONLY | O_TRUNC | O_CREAT, 00644);
+		file_fd = open(cmd->args[arg_index], O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	else if (separator == R_RIGHTD)
-		file_fd = open(file_path, O_WRONLY | O_APPEND | O_CREAT, 00644);
+		file_fd = open(cmd->args[arg_index], O_WRONLY | O_APPEND | O_CREAT, 00644);
 	else if (separator == R_LEFT)
 	{
-		file_fd = open(file_path, O_RDONLY, 00644);
+		file_fd = open(cmd->args[arg_index], O_RDONLY, 00644);
 		if (file_fd == -1)
-			print_error(NULL, file_name, "no such file or directory");
+			print_error(NULL, cmd->args[arg_index], \
+				"no such file or directory");
 	}
-	secure_free(pwd);
-	secure_free(file_name);
-	secure_free(file_path);
 	return (file_fd);
 }

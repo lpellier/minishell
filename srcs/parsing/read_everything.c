@@ -76,7 +76,7 @@ int	read_line(t_info *info)
 
 int			is_pipe(t_cmd *cmd, int i)
 {
-	if (!cmd->lint[i] || !cmd->args[i])
+	if (!cmd->args || i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i])
 		return (FAILURE);
 	if (cmd->lint[i][0] == _TOKEN && \
 		!compare_size(cmd->args[i], "|"))
@@ -86,7 +86,7 @@ int			is_pipe(t_cmd *cmd, int i)
 
 int			is_redir(t_cmd *cmd, int i)
 {
-	if (i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i] || cmd->lint[i][0] == -1)
+	if (!cmd->args || i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i])
 		return (FAILURE);
 	if (cmd->lint[i][0] == _TOKEN && \
 		(!compare_size(cmd->args[i], "<") || cmd->args[i][0] == '>'))
@@ -107,76 +107,23 @@ void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
 	cmd->lint[arg_index_two] = i_tmp;
 }
 
-typedef struct s_al
+void		modify_line_redir(t_cmd *cmd, int i)
 {
-	char			*arg;
-	int				*lint;
-}					t_al;
-
-void		move_arg(t_cmd *cmd, t_al *al, int index, int pos)
-{
-	int		*redir_lint;
-	char	*redir_arg;
-	int		*next_lint;
-	char	*next_arg;
-
-	redir_arg = cmd->args[pos];
-	redir_lint = cmd->lint[pos];
-	cmd->args[pos] = cmd->args[index];
-	cmd->lint[pos] = cmd->lint[index];
-	pos++;
-	while (cmd->args && cmd->args[pos] && pos < cmd->arg_nbr - 1)
-	{
-		next_arg = cmd->args[pos];
-		next_lint = cmd->lint[pos];
-		cmd->args[pos] = redir_arg;
-		cmd->lint[pos] = redir_lint;
-		redir_arg = next_arg;
-		redir_lint = next_lint;
-		print_cmd_info(cmd);
-		pos++;
-	}
-	ft_printf("\n");
-	al->arg = redir_arg;
-	al->lint = redir_lint;
-	// cmd->args[pos] = redir_arg;
-	// cmd->lint[pos] = redir_lint;
-	// cmd->args[i] = c_tmp;
-	// cmd->lint[i] = i_tmp;
-}
-
-void		modify_line_redir(t_cmd *cmd)
-{
-	t_al	*al;
-	int		i;
 	int		redir_pos;
 
-	i = 0;
-	al = NULL;
-	if (ft_calloc((void **)&al, 1, sizeof(al)))
-		return ;
-	al->arg = NULL;
-	al->lint = NULL;
 	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
 	redir_pos = i;
-	i++;
-	while (cmd->args && cmd->args[i])
+	i += 2;
+	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
 	{
+		swap_args(cmd, redir_pos, i);
+		swap_args(cmd, i, i - 1);
+		redir_pos++;
 		i++;
-		while (cmd->args && cmd->args[i] && is_redir(cmd, i))
-		{
-			move_arg(cmd, al, i, redir_pos);
-			redir_pos++;
-			i++;
-		}
-		if (al)
-		{
-			cmd->args[i - 1] = al->arg;
-			cmd->lint[i - 1] = al->lint;
-			secure_free(al);
-		}
 	}
+	if (cmd->args && cmd->args[i])
+		modify_line_redir(cmd, i);
 }
 
 /* 

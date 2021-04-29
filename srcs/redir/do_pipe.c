@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 21:38:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 12:58:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,9 @@ void	interpret_errors(t_info *info)
 	}
 }
 
-void	get_child(t_info *info, int separator, pid_t cpid)
+void	get_child(t_info *info, pid_t cpid)
 {
 	int	c_status;
-	(void)separator;
 
 	// if (g_signal->kill || separator == PIPE)
 	// {
@@ -66,17 +65,14 @@ void	get_child(t_info *info, int separator, pid_t cpid)
 	// interpret_errors(info);
 }
 
-int	child_process(t_info *info, int separator, t_cmd *cmd, int *pipefd)
+int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 {
 	close(pipefd[0]);
-	if (separator == PIPE)
-		dup2(pipefd[1], STDOUT_FILENO);
-	else
-		close(pipefd[1]);
+	dup2(pipefd[1], STDOUT_FILENO);
 	return ((info->built_in[cmd->bui])(info, cmd));
 }
 
-int	pipe_for_exec(t_info *info, t_cmd *cmd, int separator)
+int	pipe_for_exec(t_info *info, t_cmd *cmd)
 {
 	int		pipefd[2];
 	pid_t	cpid;
@@ -92,14 +88,13 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd, int separator)
 	if (cpid == -1)
 		return (FAILURE);
 	else if (cpid == 0)
-		_exit(child_process(info, separator, cmd, pipefd));
+		_exit(child_process(info, cmd, pipefd));
 	else
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
-		if (separator == PIPE)
-			exec_cmd(info, cmd, 1);
-		get_child(info, separator, cpid);
+		exec_cmd(info, cmd, TRUE);
+		get_child(info, cpid);
 		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
 	}
 }

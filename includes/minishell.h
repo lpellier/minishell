@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 21:57:57 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 13:48:14 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ enum				e_status_codes
 ** main **
 **********/
 
+int		sep_in_args(t_cmd *cmd, int start);
 int			is_redir(t_cmd *cmd, int i);
 int			is_pipe(t_cmd *cmd, int i);
 int			arg_is_option(char *arg);
@@ -275,7 +276,7 @@ char		**split_by_colon(t_info *info, char *line, int *lint);
 int			read_line(t_info *info);
 int			read_keys(t_info *info, char key, t_history *cur);
 void		process_line(t_info *info, int first);
-void		modify_line_redir(t_cmd *cmd);
+void		modify_line_redir(t_cmd *cmd, int i);
 
 // read_everything_suite
 int			pass_q_and_dq(char *line, int i);
@@ -310,10 +311,9 @@ int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
 int			redir(t_info *info, t_cmd *cmd, int separator);
 
 // do_pipe
-int			pipe_for_exec(t_info *info, t_cmd *cmd, int separator);
-int			child_process(t_info *info, int separator, t_cmd *cmd, \
-				int *pipefd);
-void		get_child(t_info *info, int separator, pid_t cpid);
+int			pipe_for_exec(t_info *info, t_cmd *cmd);
+int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
+void		get_child(t_info *info, pid_t cpid);
 
 /*********
 ** free **
@@ -334,7 +334,7 @@ void		free_env_struct(void *data);
 
 char		*ft_strncpy(char *dest, char *src, unsigned int n);
 char		*ft_strtrim(char const *s1, char const *set);
-int			open_file(t_info *info, int separator, char *line, int *index);
+int			open_file(t_cmd *cmd, int start, int separator);
 int			ft_isspace(int c);
 int			ft_cinset(const char c, const char *set);
 int			ft_isseparator(int c);

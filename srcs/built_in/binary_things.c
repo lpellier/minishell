@@ -6,13 +6,13 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 20:43:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/29 12:54:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	exec_binary(t_info *info, t_cmd *cmd)
+int	binary_process(t_info *info, t_cmd *cmd)
 {
 	char	**argv;
 	char	**env;
@@ -40,6 +40,29 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 	free_tab(&argv);
 	free_tab(&env);
 	return (SUCCESS);
+}
+
+int	exec_binary(t_info *info, t_cmd *cmd)
+{
+	int		status;
+	pid_t	cpid;
+	
+	g_signal->bin_running = TRUE;
+	restore_term(info);
+	cpid = fork();
+	if (cpid == -1)
+		return (FAILURE);
+	else if (cpid == 0)
+		_exit(binary_process(info, cmd));
+	else
+	{
+		waitpid(cpid, &status, 0);
+		g_signal->bin_running = FALSE;
+		init_termcap(info);
+		update_cmd_status(info, status % 255);
+		// interpret_errors(info);
+		return (status);
+	}
 }
 
 int	check_in_path(t_info *info, t_cmd *cmd, int arg_index)
