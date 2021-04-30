@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/29 12:55:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 18:05:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void	init_cmd_lint(t_info *info, t_cmd *cmd)
 	while (cmd->args && cmd->args[i] && i < cmd->arg_nbr)
 	{
 		cmd->lint[i] = NULL;
-		if (ft_calloc((void **)&cmd->lint[i], ft_strlen(cmd->args[i]) + 1, sizeof(int)))
+		if (ft_calloc((void **)&cmd->lint[i], LINE_MAX, sizeof(int)))
 			return ;
-		bzero_lint(cmd->lint[i], ft_strlen(cmd->args[i]) + 1);
+		bzero_lint(cmd->lint[i], LINE_MAX);
 		while (info->lint[j] != -1 && info->lint[j] == _EMPTY)
 			j++;
 		lint_index = 0;
@@ -95,6 +95,7 @@ void	init_cmd_lint(t_info *info, t_cmd *cmd)
 void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 {
 	char	**split;
+	char	*tmp;
 	int		line_index;
 	int		word_index;
 	int		word_count;
@@ -120,7 +121,12 @@ void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 			word_index++;
 		if (word_index - line_index > 0)
 		{
-			split[word_count] = ft_substr(line, line_index, word_index - line_index);
+			if (ft_calloc((void **)&split[word_count], LINE_MAX, sizeof(char)))
+				return ;
+			ft_bzero(split[word_count], LINE_MAX);
+			tmp = ft_substr(line, line_index, word_index - line_index);
+			ft_strcpy(split[word_count], tmp);
+			secure_free(tmp);
 			line_index += word_index - line_index;
 			word_count++;
 		}
@@ -168,15 +174,18 @@ void	update_arg_index(t_cmd *cmd, int start)
 
 int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 {
+	int		code;
+
+	code = 0;
 	if (piped)
 		update_arg_index(cmd, FALSE);
 	compare_cmd(info, cmd);
 	if (cmd->args && cmd->args[cmd->arg_index] && !compare_size(cmd->args[cmd->arg_index], "."))
-		return (print_error(NULL, ".", "filename argument required"));
+		code = print_error(NULL, ".", "filename argument required", 2);
 	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9)
-		return (print_error(NULL, cmd->args[cmd->arg_index], "command not found"));
+		code = print_error(NULL, cmd->args[cmd->arg_index], "command not found", 127);
 	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|"))
-		pipe_for_exec(info, cmd);
+		code = pipe_for_exec(info, cmd);
 	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "<"))
 		redir(info, cmd, R_LEFT);
 	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], ">>"))
@@ -184,10 +193,10 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], ">"))
 		redir(info, cmd, R_RIGHT);
 	else if (!cmd->args || !cmd->args[cmd->arg_index])
-		return (FAILURE);
+		code = 1;
 	else
-		return(info->built_in[cmd->bui](info, cmd));
-	return (SUCCESS);
+		code = info->built_in[cmd->bui](info, cmd);
+	return (code);
 }
 
 int		redir_in_cmd(t_cmd *cmd)
@@ -217,6 +226,38 @@ int		multiple_args_after_redir(t_cmd *cmd)
 	return (FAILURE);
 }
 
+int		dollar_in_arg(t_cmd *cmd, int i, int *start)
+{
+	while (cmd->args[i] && cmd->args[i][*start])
+	{
+		if (cmd->args[i][*start] == DOLLAR && (cmd->lint[i][*start] == _DOLLAR || cmd->lint[i][*start] == _DQUOTED))
+			return (*start);
+		*start += 1;
+	}
+	return (-1);
+}
+
+void	check_for_dollars(t_info *info, t_cmd *cmd)
+{
+	int		i;
+	int		count;
+	int		start;
+
+	i = 0;
+	while (cmd->args && cmd->args[i])
+	{
+		count = 0;
+		start = dollar_in_arg(cmd, i, &count);
+		while (start != -1)
+		{
+			dollar(info, cmd, i, start);
+			start = dollar_in_arg(cmd, i, &count);
+			count++;
+		}
+		i++;
+	}
+}
+
 void	read_cmd(t_info *info, char *cmd_line)
 {
 	t_cmd	*cmd;
@@ -224,11 +265,13 @@ void	read_cmd(t_info *info, char *cmd_line)
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
 	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
+	check_for_dollars(info, cmd);
 	if (!redir_in_cmd(cmd))
 		while (!multiple_args_after_redir(cmd))
 			modify_line_redir(cmd, 0);
 	update_arg_index(cmd, TRUE);
 	if (info->debug_option)
 		print_cmd_info(cmd);
-	exec_cmd(info, cmd, FALSE);
+	update_cmd_status(info, exec_cmd(info, cmd, FALSE));
+	interpret_errors(info);
 }

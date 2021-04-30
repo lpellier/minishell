@@ -6,11 +6,53 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 12:47:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 14:35:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	intcat(int *dest, int start, int *src)
+{
+	int		i;
+
+	i = 0;
+	while (src[i] != - 1)
+	{
+		dest[start] = src[i];
+		i++;
+		start++;
+	}
+}
+
+int		*sublint(int *src, int index)
+{
+	int		i;
+	int 	*cpy;
+
+	if (ft_calloc((void **)&cpy, LINE_MAX, sizeof(int)))
+		return (NULL);
+	bzero_lint(cpy, LINE_MAX);
+	i = 0;
+	while (src[index] != - 1)
+	{
+		cpy[i] = src[index];
+		index++;
+		i++;
+	}
+	return (cpy);
+}
+
+void	add_int(int *dest, int key, int index)
+{
+	int		*tmp;
+
+	tmp = sublint(dest, index);
+	dest[index] = key;
+	index++;
+	intcat(dest, index, tmp);
+	secure_free(tmp);
+}
 
 void	add_char(char *dest, char key, int index)
 {
@@ -25,6 +67,15 @@ void	add_char(char *dest, char key, int index)
 	ft_strncat(dest, tmp_two, ft_strlen(tmp_two));
 	secure_free(tmp_one);
 	secure_free(tmp_two);
+}
+
+void	remove_int(int	*lint, int index)
+{
+	while (lint[index] != -1)
+	{
+		lint[index] = lint[index + 1];
+		index++;
+	}
 }
 
 void	remove_char(char *line, int index)

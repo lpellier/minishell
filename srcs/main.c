@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 21:30:01 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:31:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,12 @@ void	update_cmd_status(t_info *info, int new_code)
 
 	data = (t_env *)info->env_head->data;
 	secure_free(data->value);
-	data->value = ft_itoa(new_code);
+	if (new_code == 13)
+		new_code = 126;
+	if (g_signal->kill)
+		data->value = ft_itoa(130);
+	else
+		data->value = ft_itoa(new_code);
 }
 
 void	print_prompt(t_info *info)

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 17:12:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 14:39:10 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ int	dquote(t_info *info, int *index)
 		info->lint[*index] = _DQUOTED;
 		if (info->line[*index] == BSLASH)
 			backslash(info, index, 1);
-		else if (info->line[*index] == DOLLAR)
-			dollar(info, index, 1);
 		else
 			*index += 1;
 	}
@@ -104,23 +102,25 @@ int	transform_line(t_info *info, int index, int quote_nb, int dquote_nb)
 	int		ret;
 
 	ret = 0;
-	while (info->line[index] && info->line[index] != BSLASH && info->line[index] != QUOTE && \
-		info->line[index] != DQUOTE && info->line[index] != DOLLAR)
+	while (info->line[index] && info->line[index] != BSLASH && \
+		info->line[index] != QUOTE && info->line[index] != DQUOTE)
 	{
 		if (info->lint[index] == -1 && info->line[index] == 32)
 			info->lint[index] = _EMPTY;
 		else if (!ft_cinset(info->line[index], SEPARATOR))
-			info->lint[index] = _TOKEN;
+			info->lint[index] = _SEP;
+		else if (info->line[index] == '$')
+			info->lint[index] = _DOLLAR;
 		else if (info->lint[index] == -1)
 			info->lint[index] = _CHAR;
-		if (info->line[index - 1] != 32 && info->lint[index - 1] != _TOKEN && \
-			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _TOKEN)
+		if (info->line[index - 1] != 32 && info->lint[index - 1] != _SEP && \
+			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _SEP)
 		{
 			info->lint[index] = _EMPTY;
 			add_char(info->line, 32, index);
 		}
 		if (info->line[index + 1] != 32 && info->line[index + 1] != '>' && \
-			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _TOKEN)
+			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _SEP)
 		{
 			info->lint[index + 1] = _EMPTY;
 			add_char(info->line, 32, index + 1);
@@ -133,8 +133,6 @@ int	transform_line(t_info *info, int index, int quote_nb, int dquote_nb)
 		dquote_nb += dquote(info, &index);
 	else if (info->line[index] == BSLASH)
 		backslash(info, &index, 0);
-	else if (info->line[index] == DOLLAR)
-		dollar(info, &index, 0);
 	if (info->line[index])
 		ret = transform_line(info, index, quote_nb, dquote_nb);
 	else

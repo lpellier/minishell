@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/29 17:19:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 15:45:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,10 @@ enum				e_line_indicators
 {
 	_EMPTY,
 	_CHAR,
-	_TOKEN,
+	_SEP,
 	_QUOTED,
 	_DQUOTED,
+	_DOLLAR,
 	_EMPTY_CHAR
 };
 
@@ -198,7 +199,7 @@ int			ft_echo(t_info *info, t_cmd *cmd);
 int         arg_is_option(char *arg);
 int			only_n(char *str);
 int     	str_is_alpha(char *str);
-int			print_error(char *cmd, char *arg, char *error);
+int			print_error(char *cmd, char *arg, char *error, int code);
 
 // built_in2
 void    	check_for_cdpath(t_info *info, char *path);
@@ -248,7 +249,11 @@ int			is_whitespace(char c);
 void    	move_left(t_info *info);
 void    	move_right(t_info *info, char *dest);
 void		add_char(char *dest, char key, int index);
+int		*sublint(int *src, int index);
+void	intcat(int *dest, int start, int *src);
+void		remove_int(int	*lint, int index);
 void		remove_char(char *line, int index);
+void		add_int(int *dest, int key, int index);
 void		add_key(t_info *info, char *dest, char key);
 void		delete_key(t_info *info, char *dest);
 
@@ -303,26 +308,11 @@ int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
 // control_and_dollar
 int			control_d(t_info *info);
 int			ft_isalpha_ordollar(int c);
-int			dollar(t_info *info, int *index, int quote);
-void		dollar_suite(t_info *info, char *var, int *index, int i, int quote);
+int			dollar(t_info *info, t_cmd *cmd, int arg_index, int start);
+void		dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start);
 
 // colon_and_count
 int			count_exceptions(int quote, int dquote);
-
-/**********
-** redir **
-**********/
-
-// do_redir
-
-void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
-int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
-int			redir(t_info *info, t_cmd *cmd, int separator);
-
-// do_pipe
-int			pipe_for_exec(t_info *info, t_cmd *cmd);
-int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
-void		get_child(t_info *info, pid_t cpid);
 
 /*********
 ** free **
@@ -344,7 +334,7 @@ void		free_env_struct(void *data);
 // do_pipe
 int     pipe_for_exec(t_info *info, t_cmd *cmd);
 int     child_process(t_info *info, t_cmd *cmd, int *pipefd);
-void    get_child(t_info *info, pid_t cpid);
+int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
 void    interpret_errors(t_info *info);
 
 // do_redir

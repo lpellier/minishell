@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/29 12:54:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 17:49:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 		waitpid(cpid, &status, 0);
 		g_signal->bin_running = FALSE;
 		init_termcap(info);
-		update_cmd_status(info, status % 255);
+		// update_cmd_status(info, status % 255);
 		// interpret_errors(info);
-		return (status);
+		return (status % 255);
 	}
 }
 
@@ -94,6 +94,7 @@ int	find_binary(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	arg_index = cmd->arg_index;
+	path = NULL;
 	if (!compare_size(cmd->args[arg_index], ".") || \
 		!compare_size(cmd->args[arg_index], ".."))
 		return (FAILURE);

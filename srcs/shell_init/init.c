@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 00:00:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 15:48:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	init_terminal(t_info *info)
 
 	term = get_env_custom(info, "TERM");
 	if (!term || !term->value)
-		return (print_error(NULL, NULL, "TERM environment variable not set.\nBye.\n"));
+		return (print_error(NULL, NULL, "TERM environment variable not set.\nBye.\n", 1));
 	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
 	tgetent(NULL, term->value);

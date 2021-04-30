@@ -38,7 +38,7 @@ int	read_keys(t_info *info, char key, t_history *cur)
 			if (control_d(info))
 				break ;
 		}
-		else if (key != '\n' && ft_cinset(key, WHITESPACE))
+		else if (key != '\n' && ft_cinset(key, WHITESPACE) && ft_isprint(key))
 			add_key(info, info->line, key);
 		if (info->cur_in_history == 0 || key == '\n')
 			update_history(info, cur);
@@ -78,7 +78,7 @@ int			is_pipe(t_cmd *cmd, int i)
 {
 	if (!cmd->args || i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i])
 		return (FAILURE);
-	if (cmd->lint[i][0] == _TOKEN && \
+	if (cmd->lint[i][0] == _SEP && \
 		!compare_size(cmd->args[i], "|"))
 		return (SUCCESS);
 	return (FAILURE);
@@ -88,7 +88,7 @@ int			is_redir(t_cmd *cmd, int i)
 {
 	if (!cmd->args || i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i])
 		return (FAILURE);
-	if (cmd->lint[i][0] == _TOKEN && \
+	if (cmd->lint[i][0] == _SEP && \
 		(!compare_size(cmd->args[i], "<") || cmd->args[i][0] == '>'))
 		return (SUCCESS);
 	return (FAILURE);
@@ -155,7 +155,7 @@ void	process_line(t_info *info, int first)
 	if (transform_line(info, 0, 0, 0))
 	{
 		update_cmd_status(info, 1);
-		print_error(NULL, "parsing error", "number of quotes should be even");
+		print_error(NULL, "parsing error", "number of quotes should be even", 1);
 		return ;
 	}
 	if (check_syntax(info))
@@ -164,6 +164,7 @@ void	process_line(t_info *info, int first)
 	info->index_cmd = 0;
 	while (cmd_tab && cmd_tab[info->index_cmd])
 	{
+		// check_for_dollars(cmd_tab[info->index_cmd]);
 		read_cmd(info, cmd_tab[info->index_cmd]);
 		info->index_cmd += 1;
 	}

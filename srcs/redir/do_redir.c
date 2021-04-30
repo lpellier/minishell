@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/29 13:48:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:39:01 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int		create_next_file(t_cmd *cmd, int start)
 	if (start >= cmd->arg_nbr)
 		return (-1);
 	if (cmd->args && !compare_size(cmd->args[start], "<") && \
-		cmd->lint[start][0] == _TOKEN)
+		cmd->lint[start][0] == _SEP)
 		file_fd = open_file(cmd, start, R_LEFT);
 	else if (cmd->args && !compare_size(cmd->args[start], ">") && \
-		cmd->lint[start][0] == _TOKEN)
+		cmd->lint[start][0] == _SEP)
 		file_fd = open_file(cmd, start, R_RIGHT);
 	else if (cmd->args && !compare_size(cmd->args[start], ">>") && \
-		cmd->lint[start][0] == _TOKEN)
+		cmd->lint[start][0] == _SEP)
 		file_fd = open_file(cmd, start, R_RIGHTD);
 	else
 		file_fd = -1;
@@ -77,7 +77,7 @@ int	redir(t_info *info, t_cmd *cmd, int separator)
 
 	file_fd = create_files(cmd);
 	if (file_fd == -1)
-		return (print_error(NULL, NULL, "couldn't open requested file"));
+		return (1);
 	save_std(&saved_stdin, &saved_stdout);
 	if (separator == R_LEFT)
 		dup2(file_fd, STDIN_FILENO);

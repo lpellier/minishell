@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:29:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 20:46:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 15:33:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,5 @@ void	compare_cmd(t_info *info, t_cmd *cmd)
 	else if (!find_binary(info, cmd))
 		cmd->bui = BINARY;
 	else
-	{
 		cmd->bui = NONEXISTENT;
-		update_cmd_status(info, 127);
-	}
 }

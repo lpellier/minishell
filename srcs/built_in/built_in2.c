@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/29 16:27:05 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 17:48:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
 	oldpwd = get_env_custom(info, "OLDPWD");
 	if (home && home->value && !cmd->args[arg_index])
 		path = ft_strdup(home->value);
-	else if (!home && !cmd->args[arg_index])
-		print_error(NULL, "cd", "HOME not set");
+	else if ((!home && !cmd->args[arg_index]) || (home && !home->value))
+		return (NULL);
 	else if (oldpwd && oldpwd->value && \
 		!compare_size(cmd->args[arg_index], "-"))
 	{
@@ -85,14 +85,16 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[arg_index]) && compare_size(cmd->args[arg_index], "-"))	
 		return (print_error(cmd->args[arg_index - 1], \
-			cmd->args[arg_index], "invalid option"));
+			cmd->args[arg_index], "invalid option", 1));
 	if (cmd->args && cmd->args[arg_index] && \
 		cmd->args[arg_index + 1])
-		return (print_error(NULL, "cd", "too many arguments"));
+		return (print_error(NULL, "cd", "too many arguments", 1));
 	path = define_path(info, cmd, arg_index);
+	if (!path || (cmd->lint[arg_index] && cmd->lint[arg_index][0] == _EMPTY_CHAR))
+		return (print_error(NULL, "cd", "HOME not set", 1));
 	check_for_cdpath(info, path);
 	if (chdir(path))
-		return (print_error("cd", path, "no such file or directory"));
+		return (print_error("cd", path, "no such file or directory", 1));
 	secure_free(path);
 	update_pwd(info);
 	return (SUCCESS);
@@ -163,6 +165,8 @@ char	*get_actual_cmd(char *cmd, char **path)
 
 	i = 0;
 	split = ft_split(cmd, '/');
+	if (!split)
+		return (NULL);
 	while (split[i])
 		i++;
 	if (i > 0)

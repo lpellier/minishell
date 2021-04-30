@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:55 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/26 23:13:54 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 13:01:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		count_cmd(char *line, int *lint)
 	count = 1;
 	while (line[i] && lint[i] != -1)
 	{
-		if (line[i] == COLON && lint[i] == _TOKEN)
+		if (line[i] == COLON && lint[i] == _SEP)
 			count++;
 		i++;
 	}
@@ -60,7 +60,7 @@ char	**split_by_colon(t_info *info, char *line, int *lint)
 		word_index = line_index;
 		while (line[word_index] && lint[word_index] != -1)
 		{
-			if (line[word_index] == COLON && lint[word_index] == _TOKEN)
+			if (line[word_index] == COLON && lint[word_index] == _SEP)
 				break ;
 			word_index++;
 		}

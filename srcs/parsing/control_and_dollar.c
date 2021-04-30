@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/27 21:17:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 17:55:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ int	ft_isalpha_ordollar(int c)
 		return (0);
 }
 
-void	dollar_suite(t_info *info, char *var, int *index, int i, int quote)
+void	dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start)
 {
+	int		i;
+	int		quote;
 	t_list	*var_list;
 	t_env	*var_key;
 	t_env	*data_ref;
@@ -50,45 +52,50 @@ void	dollar_suite(t_info *info, char *var, int *index, int i, int quote)
 		data_ref, cmp_env);
 	secure_free(data_ref);
 	secure_free(var);
-	if (var_list)
+	if (!var_list)
 	{
-		var_key = (t_env *)var_list->data;
-		i = 0;
-		while (var_key->value[i])
-		{
-			add_char(info->line, var_key->value[i], *index);
-			if (quote)
-				info->lint[*index] = _DQUOTED;
-			else
-				info->lint[*index] = _CHAR;
-			*index += 1;
-			i++;
-		}
+		add_int(cmd->lint[arg_index], _EMPTY_CHAR, 0);
+		return ;
 	}
-}
-
-int	dollar(t_info *info, int *index, int quote)
-{
-	char	*var;
-	int		i;
-
+	var_key = (t_env *)var_list->data;
+	quote = FALSE;
+	if (cmd->lint[arg_index][start] == _DQUOTED)
+		quote = TRUE;
 	i = 0;
-	if (!info->line[*index] || !info->line[*index + 1] || (info->line[*index + 1] && \
-		!ft_isalpha_ordollar(info->line[*index + 1])))
+	while (var_key->value[i])
 	{
-		*index += 1;
-		return (FAILURE);
-	}
-	if (ft_calloc((void **)&var, 256, sizeof(char)))
-		return (FAILURE);
-	while (info->line[*index] && (ft_isalpha(info->line[*index]) || (info->line[*index] == \
-		DOLLAR && i == 0) || (info->line[*index] == '?')))
-	{
-		if (i > 0)
-			var[i - 1] = info->line[*index];
-		remove_char(info->line, *index);
+		add_char(cmd->args[arg_index], var_key->value[i], start);
+		if (quote)
+			add_int(cmd->lint[arg_index], _DQUOTED, start);
+		else
+			add_int(cmd->lint[arg_index], _CHAR, start);
+		start++;
 		i++;
 	}
-	dollar_suite(info, var, index, i, quote);
+	if (i == 0)
+		add_int(cmd->lint[arg_index], _EMPTY_CHAR, start);
+}
+
+int	dollar(t_info *info, t_cmd *cmd, int arg_index, int start)
+{
+	char	*var;
+	int		j;
+
+	j = 0;
+	if (!cmd->args[arg_index][start] || !cmd->args[arg_index][start + 1] || \
+		(cmd->args[arg_index][start + 1] && !ft_isalpha_ordollar(cmd->args[arg_index][start + 1])))
+		return (FAILURE);
+	if (ft_calloc((void **)&var, 256, sizeof(char)))
+		return (FAILURE);
+	while (cmd->args[arg_index][start] && (ft_isalpha(cmd->args[arg_index][start]) || \
+		(cmd->args[arg_index][start] == DOLLAR && j == 0) || (cmd->args[arg_index][start] == '?')))
+	{
+		if (j > 0)
+			var[j - 1] = cmd->args[arg_index][start];
+		remove_char(cmd->args[arg_index], start);
+		remove_int(cmd->lint[arg_index], start);
+		j++;
+	}
+	dollar_suite(info, cmd, arg_index, var, start);
 	return (SUCCESS);
 }

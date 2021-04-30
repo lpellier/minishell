@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 21:41:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 15:48:02 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	str_is_alpha(char *str)
 	return (FAILURE);
 }
 
-int	print_error(char *cmd, char *arg, char *error)
+int	print_error(char *cmd, char *arg, char *error, int code)
 {
 	if (cmd && arg && error)
 		ft_printf("minisheh: %s: %s: %s\n", cmd, arg, error);
@@ -99,7 +99,7 @@ int	print_error(char *cmd, char *arg, char *error)
 		ft_printf("minisheh: %s: %s\n", arg, error);
 	else if (error)
 		ft_printf("minisheh: %s\n", error);
-	return (FAILURE);
+	return (code);
 }
 
 // /*
@@ -116,7 +116,7 @@ int	ft_exit(t_info *info, t_cmd *cmd)
 		info->crashed = TRUE;
 		if (cmd->args[arg_index] && !str_is_alpha(cmd->args[arg_index]))
 			return (print_error("exit", cmd->args[arg_index], \
-				"numeric argument required"));
+				"numeric argument required", 1));
 		if (cmd->args[arg_index])
 			info->exit_code = ft_atoi(cmd->args[arg_index]);
 		return (SUCCESS);
@@ -144,7 +144,7 @@ int	ft_pwd(t_info *info, t_cmd *cmd)
 	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[cmd->arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
-			cmd->args[arg_index], "invalid option"));
+			cmd->args[arg_index], "invalid option", 1));
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		ft_putstr_fd(cwd, STDOUT_FILENO);
 	ft_putstr_fd("\n", STDOUT_FILENO);

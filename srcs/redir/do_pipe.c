@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/29 12:58:46 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:30:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,28 +41,21 @@ void	interpret_errors(t_info *info)
 		code = ft_atoi(code_env->value);
 		cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 		if (code == EACCES)
-		{
 			ft_printf("minisheh: %s: permission denied\n", cmd->args[0]);
-			update_cmd_status(info, 126);
-		}
 	}
 }
 
-void	get_child(t_info *info, pid_t cpid)
+int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
 	int	c_status;
 
-	// if (g_signal->kill || separator == PIPE)
-	// {
-	// 	kill(cpid, SIGINT);
-	// 	update_cmd_status(info, 130);
-	// 	c_status = 130;
-	// }
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	exec_cmd(info, cmd, TRUE);
 	waitpid(cpid, &c_status, 0);
 	g_signal->bin_running = FALSE;
 	init_termcap(info);
-	update_cmd_status(info, c_status % 255);
-	// interpret_errors(info);
+	return (c_status % 255);
 }
 
 int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
@@ -75,6 +68,7 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 int	pipe_for_exec(t_info *info, t_cmd *cmd)
 {
 	int		pipefd[2];
+	int		status;
 	pid_t	cpid;
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
@@ -91,10 +85,10 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 		_exit(child_process(info, cmd, pipefd));
 	else
 	{
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
-		exec_cmd(info, cmd, TRUE);
-		get_child(info, cpid);
-		return (restore_std(saved_stdin, saved_stdout, pipefd[0]));
+		status = get_child(info, cmd, cpid, pipefd);
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(pipefd[0]);
+		return (status);
 	}
 }

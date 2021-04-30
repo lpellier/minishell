@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 20:54:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 15:47:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	export_content(t_info *info, char *str)
 	{
 		secure_free(key);
 		secure_free(value);
-		return (print_error("export", str, "not a valid identifier"));
+		return (print_error("export", str, "not a valid identifier", 1));
 	}
 	modify_export(info, key, value);
 	return (SUCCESS);
@@ -84,7 +84,7 @@ int	ft_export(t_info *info, t_cmd *cmd)
 	arg_index = cmd->arg_index + 1;
 	if (!arg_is_option(cmd->args[arg_index]))	
 		return (print_error(cmd->args[arg_index - 1], \
-			cmd->args[arg_index], "invalid option"));
+			cmd->args[arg_index], "invalid option", 1));
 	if (!cmd->args[arg_index])
 		return (print_declare_env(info));
 	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
