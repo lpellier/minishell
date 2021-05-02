@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 17:32:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 19:04:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,6 +363,7 @@ int			ft_cinset(const char c, const char *set);
 int     init_terminal(t_info *info);
 void    set_lint(t_info *info, int *lint);
 int			init_env(t_info *info, char **envp);
+void	reset_dir_paths(t_info *info);
 void		reset_info(t_info *info);
 int			init_info(t_info *info, char **envp);
 void		init_built_in(t_info *info);

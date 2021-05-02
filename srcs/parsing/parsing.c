@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 16:08:34 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 20:19:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,9 +278,23 @@ void	check_for_dollars(t_info *info, t_cmd *cmd)
 	}
 }
 
+int		only_redirs(t_cmd *cmd)
+{
+	int		i;
+
+	i = 0;
+	while (cmd->args && !is_redir(cmd, i))
+		i += 2;
+	if (cmd->args[i])
+		return (FAILURE);
+	return (SUCCESS);
+}
+
 void	read_cmd(t_info *info, char *cmd_line)
 {
 	t_cmd	*cmd;
+	pid_t	saved_stdin;
+	pid_t	saved_stdout;
 
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
@@ -288,13 +302,25 @@ void	read_cmd(t_info *info, char *cmd_line)
 	check_for_dollars(info, cmd);
 	if (!redir_in_cmd(cmd))
 	{
-		move_first_redir(cmd);
+		if (only_redirs(cmd))
+			move_first_redir(cmd);
 		while (!multiple_args_after_redir(cmd))
 			modify_line_redir(cmd, 0);
 	}
 	update_arg_index(cmd, TRUE);
 	if (info->debug_option)
 		print_cmd_info(cmd);
-	update_cmd_status(info, exec_cmd(info, cmd, FALSE));
+	if (!only_redirs(cmd))
+	{
+		save_std(&saved_stdin, &saved_stdout);
+		if (create_files(cmd) <= -1)
+			update_cmd_status(info, FAILURE);
+		else
+			update_cmd_status(info, SUCCESS);
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+	}
+	else
+		update_cmd_status(info, exec_cmd(info, cmd, FALSE));
 	interpret_errors(info);
 }

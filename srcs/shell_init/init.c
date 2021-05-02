@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/30 15:48:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 19:04:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	init_info(t_info *info, char **envp)
 	return (SUCCESS);
 }
 
-void	reset_info(t_info *info)
+void	reset_dir_paths(t_info *info)
 {
 	t_env	*env;
 
@@ -125,6 +125,11 @@ void	reset_info(t_info *info)
 		info->dir_paths = ft_split(env->value, ':');
 	else
 		info->dir_paths = NULL;
+}
+
+void	reset_info(t_info *info)
+{
+	reset_dir_paths(info);
 	info->cur_in_history = 0;
 	g_signal->kill = FALSE;
 	info->cursor.posy = 0;

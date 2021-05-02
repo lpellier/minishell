@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 15:47:48 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 19:05:38 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	ft_unset(t_info *info, t_cmd *cmd)
 		secure_free(data_ref);
 		arg_index++;
 	}
+	reset_dir_paths(info);
 	return (SUCCESS);
 }
 
