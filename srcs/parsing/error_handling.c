@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 14:56:04 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 21:29:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/04/30 19:35:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	pipe_error_syntax(t_info *info, int i)
 				return (SUCCESS);
 			count++;
 		}
-		ft_printf("\nminisheh: syntax error near unexpected token `|'\n");
+		ft_printf("minisheh: syntax error near unexpected token `|'\n");
 		update_cmd_status(info, 2);
 		return (FAILURE);
 	}
@@ -38,7 +38,7 @@ int	double_error_syntax(t_info *info, int i, char token)
 	if (info->line[i] == token && info->line[i + 1] && \
 		info->line[i + 1] == token)
 	{
-		ft_printf("\nminisheh: syntax error near");
+		ft_printf("minisheh: syntax error near");
 		ft_printf(" unexpected token `%c%c'\n", token, token);
 		update_cmd_status(info, 2);
 		return (FAILURE);
@@ -53,13 +53,12 @@ int	check_syntax(t_info *info)
 	i = 0;
 	if (!info->line)
 		return (FAILURE);
-	// i += spaces(info->line, i);
 	if (double_error_syntax(info, i, COLON) || \
 		double_error_syntax(info, i, 124))
 		return (FAILURE);
 	if (info->line[i] == COLON || info->line[i] == 124)
 	{
-		ft_printf("\nminisheh: syntax error near");
+		ft_printf("minisheh: syntax error near");
 		ft_printf(" unexpected token `%c'\n", info->line[i]);
 		update_cmd_status(info, 2);
 		return (FAILURE);

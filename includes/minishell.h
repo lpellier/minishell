@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/30 15:45:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 12:27:17 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ typedef struct s_cmd
 	int				arg_index; // keeps track of current position in cmd
 	int				limit_index; // is set to wherever next pipe or end of cmd is
 	int				arg_nbr;
+	int				init_redir;
+	pid_t			init_stdin;
+	pid_t			init_stdout;
 }					t_cmd;
 
 /*
@@ -143,6 +146,7 @@ enum				e_line_indicators
 	_QUOTED,
 	_DQUOTED,
 	_DOLLAR,
+	_BSPACED,
 	_EMPTY_CHAR
 };
 
@@ -202,7 +206,7 @@ int     	str_is_alpha(char *str);
 int			print_error(char *cmd, char *arg, char *error, int code);
 
 // built_in2
-void    	check_for_cdpath(t_info *info, char *path);
+int 	   	check_for_cdpath(t_info *info, char **path);
 void    	update_pwd(t_info *info);
 char		*define_path(t_info *info, t_cmd *cmd, int arg_index);
 char		**list_to_tab(t_list *begin_list);
@@ -218,6 +222,9 @@ int			compare_size(char *s1, char *s2);
 void		compare_cmd(t_info *info, t_cmd *cmd);
 
 // do_export
+int	export_error(char *str, char *key, char *value);
+int value_error(char *key, char *value);
+int	key_error(char *key);
 int			print_declare_env(t_info *info);
 int			ft_export(t_info *info, t_cmd *cmd);
 int			export_content(t_info *info, char *str);
@@ -263,6 +270,8 @@ int             count_args(t_info *info, char *line, int *lint);
 void    bzero_lint(int *lint, int size);
 void    init_cmd_lint(t_info *info, t_cmd *cmd);
 void    split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
+int		pipe_in_args(t_cmd *cmd, int start);
+int		redir_in_args(t_cmd *cmd, int start);
 int             sep_in_args(t_cmd *cmd, int start);
 void    update_arg_index(t_cmd *cmd, int start);
 int     exec_cmd(t_info *info, t_cmd *cmd, int piped);
@@ -341,7 +350,7 @@ void    interpret_errors(t_info *info);
 void    save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 int     restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
 int             create_next_file(t_cmd *cmd, int start);
-int     redir(t_info *info, t_cmd *cmd, int separator);
+int     redir(t_info *info, t_cmd *cmd);
 int     create_files(t_cmd *cmd);
 
 // redir_std

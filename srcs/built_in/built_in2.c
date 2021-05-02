@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/30 17:48:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/01 18:34:00 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 // ** to check for right bui and right input
 // */
 
-void	check_for_cdpath(t_info *info, char *path)
+int		check_for_cdpath(t_info *info, char **path)
 {
 	t_env	*cdpath;
 	char	*tmp;
@@ -26,18 +26,20 @@ void	check_for_cdpath(t_info *info, char *path)
 	cdpath = get_env_custom(info, "CDPATH");
 	if (cdpath)
 	{
-		tmp = ft_strdup(path);
-		secure_free(path);
+		tmp = ft_strdup(*path);
+		secure_free(*path);
 		if (!compare_size(cdpath->value, "/"))
-			path = ft_strjoin(cdpath->value, tmp);
+			*path = ft_strjoin(cdpath->value, tmp);
 		else
 		{
 			strjoin = ft_strjoin(cdpath->value, "/");
-			path = ft_strjoin(strjoin, tmp);
+			*path = ft_strjoin(strjoin, tmp);
 			secure_free(strjoin);
 		}
 		secure_free(tmp);
+		return (SUCCESS);
 	}
+	return (FAILURE);
 }
 
 void	update_pwd(t_info *info)
@@ -61,10 +63,15 @@ char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
 	path = NULL;
 	home = get_env_custom(info, "HOME");
 	oldpwd = get_env_custom(info, "OLDPWD");
-	if (home && home->value && !cmd->args[arg_index])
-		path = ft_strdup(home->value);
-	else if ((!home && !cmd->args[arg_index]) || (home && !home->value))
+	if (home && !compare_size(home->value, ""))
 		return (NULL);
+	else if (home && home->value && !cmd->args[arg_index])
+		path = ft_strdup(home->value);
+	else if (!home && !cmd->args[arg_index])
+	{
+		print_error(NULL, "cd", "HOME not set", 1);
+		return (NULL);
+	}
 	else if (oldpwd && oldpwd->value && \
 		!compare_size(cmd->args[arg_index], "-"))
 	{
@@ -90,9 +97,9 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 		cmd->args[arg_index + 1])
 		return (print_error(NULL, "cd", "too many arguments", 1));
 	path = define_path(info, cmd, arg_index);
-	if (!path || (cmd->lint[arg_index] && cmd->lint[arg_index][0] == _EMPTY_CHAR))
-		return (print_error(NULL, "cd", "HOME not set", 1));
-	check_for_cdpath(info, path);
+	if (!path)
+		return (FAILURE);
+	check_for_cdpath(info, &path);
 	if (chdir(path))
 		return (print_error("cd", path, "no such file or directory", 1));
 	secure_free(path);

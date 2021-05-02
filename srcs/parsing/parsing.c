@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/30 18:05:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 12:37:08 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,28 @@ void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 	info->line_index = line_index;
 }
 
+int		redir_in_args(t_cmd *cmd, int start)
+{
+	while (cmd->args && cmd->args[start])
+	{
+		if (!is_redir(cmd, start))
+			return (start);
+		start++;
+	}
+	return (cmd->arg_nbr);
+}
+
+int		pipe_in_args(t_cmd *cmd, int start)
+{
+	while (cmd->args && cmd->args[start])
+	{
+		if (!is_pipe(cmd, start))
+			return (start);
+		start++;
+	}
+	return (cmd->arg_nbr);
+}
+
 int		sep_in_args(t_cmd *cmd, int start)
 {
 	while (cmd->args && cmd->args[start])
@@ -155,21 +177,33 @@ int		sep_in_args(t_cmd *cmd, int start)
 void	update_arg_index(t_cmd *cmd, int start)
 {
 	int		i;
+	int		saved_index;
 
 	i = cmd->arg_index;
+	saved_index = i;
 	while (cmd->args && cmd->args[i])
 	{
 		if (!is_pipe(cmd, i) || !is_redir(cmd, i))
 		{
 			cmd->arg_index = i + 1;
 			if (start)
-				cmd->arg_index = 0;
+				cmd->arg_index = saved_index;
 			cmd->limit_index = sep_in_args(cmd, cmd->arg_index);
 			return ;
 		}
 		i += 1;
 	}
 	cmd->limit_index = cmd->arg_nbr;
+}
+
+void		skip_open_redirs(t_cmd *cmd)
+{
+	while (cmd->args && cmd->args[cmd->arg_index] && \
+		!is_redir(cmd, cmd->arg_index))
+	{
+		cmd->arg_index += 2;
+		cmd->init_redir = TRUE;
+	}
 }
 
 int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
@@ -182,20 +216,22 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 	compare_cmd(info, cmd);
 	if (cmd->args && cmd->args[cmd->arg_index] && !compare_size(cmd->args[cmd->arg_index], "."))
 		code = print_error(NULL, ".", "filename argument required", 2);
-	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9)
+	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9 && is_redir(cmd, cmd->arg_index))
 		code = print_error(NULL, cmd->args[cmd->arg_index], "command not found", 127);
-	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|"))
+	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|") && !cmd->init_redir)
 		code = pipe_for_exec(info, cmd);
-	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "<"))
-		redir(info, cmd, R_LEFT);
-	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], ">>"))
-		redir(info, cmd, R_RIGHTD);
-	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], ">"))
-		redir(info, cmd, R_RIGHT);
+	else if (!is_redir(cmd, cmd->limit_index))
+		redir(info, cmd);
 	else if (!cmd->args || !cmd->args[cmd->arg_index])
 		code = 1;
 	else
 		code = info->built_in[cmd->bui](info, cmd);
+	if (cmd->init_redir)
+	{
+		cmd->init_redir = FALSE;
+		dup2(cmd->init_stdin, STDIN_FILENO);
+		dup2(cmd->init_stdout, STDOUT_FILENO);
+	}
 	return (code);
 }
 
@@ -269,6 +305,9 @@ void	read_cmd(t_info *info, char *cmd_line)
 	if (!redir_in_cmd(cmd))
 		while (!multiple_args_after_redir(cmd))
 			modify_line_redir(cmd, 0);
+	save_std(&cmd->init_stdin, &cmd->init_stdout);
+	create_files(cmd);
+	skip_open_redirs(cmd);
 	update_arg_index(cmd, TRUE);
 	if (info->debug_option)
 		print_cmd_info(cmd);

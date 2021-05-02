@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 16:39:01 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 12:26:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,22 @@ int		create_next_file(t_cmd *cmd, int start)
 		return (-1);
 	if (cmd->args && !compare_size(cmd->args[start], "<") && \
 		cmd->lint[start][0] == _SEP)
+	{
 		file_fd = open_file(cmd, start, R_LEFT);
+		dup2(file_fd, STDIN_FILENO);
+	}
 	else if (cmd->args && !compare_size(cmd->args[start], ">") && \
 		cmd->lint[start][0] == _SEP)
+	{
 		file_fd = open_file(cmd, start, R_RIGHT);
+		dup2(file_fd, STDOUT_FILENO);
+	}
 	else if (cmd->args && !compare_size(cmd->args[start], ">>") && \
 		cmd->lint[start][0] == _SEP)
+	{
 		file_fd = open_file(cmd, start, R_RIGHTD);
+		dup2(file_fd, STDOUT_FILENO);
+	}
 	else
 		file_fd = -1;
 	return (file_fd);
@@ -52,10 +61,10 @@ int	create_files(t_cmd *cmd)
 	int file_fd;
 	int	before_last;
 
-	index = sep_in_args(cmd, cmd->arg_index);
+	index = redir_in_args(cmd, cmd->arg_index);
 	file_fd = create_next_file(cmd, index);
 	before_last = file_fd;
-	index = sep_in_args(cmd, index + 1);
+	index = redir_in_args(cmd, index + 1);
 	while (file_fd != -1 && index < cmd->arg_nbr)
 	{
 		close(file_fd);
@@ -63,28 +72,22 @@ int	create_files(t_cmd *cmd)
 		if (file_fd == -1)
 			break ;
 		before_last = file_fd;
-		index = sep_in_args(cmd, index + 1);
+		index = redir_in_args(cmd, index + 1);
 	}
 	return (before_last);
-	// sep in args returns pos of redir OR pipe (will have to remove that)
 }
 
-int	redir(t_info *info, t_cmd *cmd, int separator)
+int	redir(t_info *info, t_cmd *cmd)
 {
 	int		file_fd;
 	pid_t	saved_stdin;
 	pid_t	saved_stdout;
 
+	save_std(&saved_stdin, &saved_stdout);
 	file_fd = create_files(cmd);
 	if (file_fd == -1)
-		return (1);
-	save_std(&saved_stdin, &saved_stdout);
-	if (separator == R_LEFT)
-		dup2(file_fd, STDIN_FILENO);
-	else if (separator == R_RIGHT || separator == R_RIGHTD)
-		dup2(file_fd, STDOUT_FILENO);
+		return (FAILURE);
 	info->built_in[cmd->bui](info, cmd);
-	// maybe save arg_indexes for the call of this function
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(file_fd);

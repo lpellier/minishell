@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/28 21:28:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/01 18:08:53 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	print_env_struct(void *data)
 	ptr = (t_env *)data;
 	ft_putstr_fd(ptr->key, STDOUT_FILENO);
 	ft_putstr_fd("=", STDOUT_FILENO);
-	ft_putstr_fd(ptr->value, STDOUT_FILENO);
+	if (ptr->value)
+		ft_putstr_fd(ptr->value, STDOUT_FILENO);
 	ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
@@ -45,6 +46,7 @@ void	print_env_declare(void *data)
 	ptr = (t_env *)data;
 	ft_putstr_fd("declare -x ", STDOUT_FILENO);
 	ft_putstr_fd(ptr->key, STDOUT_FILENO);
+	ft_putstr_fd("=", STDOUT_FILENO);
 	ft_putstr_fd("\"", STDOUT_FILENO);
 	ft_putstr_fd(ptr->key, STDOUT_FILENO);
 	ft_putstr_fd("\"\n", STDOUT_FILENO);

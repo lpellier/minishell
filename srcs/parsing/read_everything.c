@@ -164,7 +164,6 @@ void	process_line(t_info *info, int first)
 	info->index_cmd = 0;
 	while (cmd_tab && cmd_tab[info->index_cmd])
 	{
-		// check_for_dollars(cmd_tab[info->index_cmd]);
 		read_cmd(info, cmd_tab[info->index_cmd]);
 		info->index_cmd += 1;
 	}

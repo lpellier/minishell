@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 15:48:02 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/01 17:56:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	str_is_alpha(char *str)
 int	print_error(char *cmd, char *arg, char *error, int code)
 {
 	if (cmd && arg && error)
-		ft_printf("minisheh: %s: %s: %s\n", cmd, arg, error);
+		ft_printf("minisheh: %s: `%s': %s\n", cmd, arg, error);
 	else if (arg && error)
 		ft_printf("minisheh: %s: %s\n", arg, error);
 	else if (error)

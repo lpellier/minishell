@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 17:55:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/01 18:01:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start)
 	secure_free(var);
 	if (!var_list)
 	{
-		add_int(cmd->lint[arg_index], _EMPTY_CHAR, 0);
+		add_int(cmd->lint[arg_index], _EMPTY_CHAR, start);
 		return ;
 	}
 	var_key = (t_env *)var_list->data;
@@ -82,16 +82,20 @@ int	dollar(t_info *info, t_cmd *cmd, int arg_index, int start)
 	int		j;
 
 	j = 0;
-	if (!cmd->args[arg_index][start] || !cmd->args[arg_index][start + 1] || \
-		(cmd->args[arg_index][start + 1] && !ft_isalpha_ordollar(cmd->args[arg_index][start + 1])))
+	if ((cmd->args[arg_index][start + 1] && !ft_isalpha(cmd->args[arg_index][start + 1])) || \
+		!cmd->args[arg_index][start + 1])
+			return (FAILURE);
+	remove_char(cmd->args[arg_index], start);
+	remove_int(cmd->lint[arg_index], start);
+	if (!cmd->args[arg_index])
 		return (FAILURE);
 	if (ft_calloc((void **)&var, 256, sizeof(char)))
 		return (FAILURE);
-	while (cmd->args[arg_index][start] && (ft_isalpha(cmd->args[arg_index][start]) || \
-		(cmd->args[arg_index][start] == DOLLAR && j == 0) || (cmd->args[arg_index][start] == '?')))
+	while (cmd->args[arg_index][start] && \
+		(ft_isalnum(cmd->args[arg_index][start]) || \
+			cmd->args[arg_index][start] == '?'))
 	{
-		if (j > 0)
-			var[j - 1] = cmd->args[arg_index][start];
+		var[j] = cmd->args[arg_index][start];
 		remove_char(cmd->args[arg_index], start);
 		remove_int(cmd->lint[arg_index], start);
 		j++;

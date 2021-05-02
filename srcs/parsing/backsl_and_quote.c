@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 14:39:10 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/01 18:00:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	backslash(t_info *info, int *index, int dquote)
 	if (!dquote)
 	{
 		remove_char(info->line, *index);
-		info->lint[*index] = _CHAR;
+		info->lint[*index] = _BSPACED;
 		*index += 1;
 	}
 	else if (dquote)
@@ -26,7 +26,7 @@ int	backslash(t_info *info, int *index, int dquote)
 			info->line[*index + 1] == DOLLAR || info->line[*index + 1] == DQUOTE))
 		{
 			remove_char(info->line, *index);
-			info->lint[*index] = _DQUOTED;
+			info->lint[*index] = _BSPACED;
 		}
 		*index += 1;
 	}
