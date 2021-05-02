@@ -107,6 +107,22 @@ void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
 	cmd->lint[arg_index_two] = i_tmp;
 }
 
+void		move_first_redir(t_cmd *cmd)
+{
+	int		i;
+
+	i = cmd->arg_index;
+	while (cmd->args && !is_redir(cmd, i))
+		i += 2;
+	if (i == 0)
+		return ;
+	while (i > 0)
+	{
+		swap_args(cmd, i, i - 1);
+		i--;
+	}
+}
+
 void		modify_line_redir(t_cmd *cmd, int i)
 {
 	int		redir_pos;

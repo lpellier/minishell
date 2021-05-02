@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 12:37:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 16:08:34 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,16 +196,6 @@ void	update_arg_index(t_cmd *cmd, int start)
 	cmd->limit_index = cmd->arg_nbr;
 }
 
-void		skip_open_redirs(t_cmd *cmd)
-{
-	while (cmd->args && cmd->args[cmd->arg_index] && \
-		!is_redir(cmd, cmd->arg_index))
-	{
-		cmd->arg_index += 2;
-		cmd->init_redir = TRUE;
-	}
-}
-
 int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 {
 	int		code;
@@ -218,7 +208,7 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 		code = print_error(NULL, ".", "filename argument required", 2);
 	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9 && is_redir(cmd, cmd->arg_index))
 		code = print_error(NULL, cmd->args[cmd->arg_index], "command not found", 127);
-	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|") && !cmd->init_redir)
+	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|"))
 		code = pipe_for_exec(info, cmd);
 	else if (!is_redir(cmd, cmd->limit_index))
 		redir(info, cmd);
@@ -226,12 +216,6 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 		code = 1;
 	else
 		code = info->built_in[cmd->bui](info, cmd);
-	if (cmd->init_redir)
-	{
-		cmd->init_redir = FALSE;
-		dup2(cmd->init_stdin, STDIN_FILENO);
-		dup2(cmd->init_stdout, STDOUT_FILENO);
-	}
 	return (code);
 }
 
@@ -303,11 +287,11 @@ void	read_cmd(t_info *info, char *cmd_line)
 	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
 	check_for_dollars(info, cmd);
 	if (!redir_in_cmd(cmd))
+	{
+		move_first_redir(cmd);
 		while (!multiple_args_after_redir(cmd))
 			modify_line_redir(cmd, 0);
-	save_std(&cmd->init_stdin, &cmd->init_stdout);
-	create_files(cmd);
-	skip_open_redirs(cmd);
+	}
 	update_arg_index(cmd, TRUE);
 	if (info->debug_option)
 		print_cmd_info(cmd);

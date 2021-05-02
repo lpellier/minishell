@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 12:27:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 17:32:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,6 @@ typedef struct s_cmd
 	int				arg_index; // keeps track of current position in cmd
 	int				limit_index; // is set to wherever next pipe or end of cmd is
 	int				arg_nbr;
-	int				init_redir;
-	pid_t			init_stdin;
-	pid_t			init_stdout;
 }					t_cmd;
 
 /*
@@ -298,6 +295,7 @@ void    swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two);
 int                     is_redir(t_cmd *cmd, int i);
 int                     is_pipe(t_cmd *cmd, int i);
 void		modify_line_redir(t_cmd *cmd, int i);
+void		move_first_redir(t_cmd *cmd);
 
 // read_everything_suite
 int			pass_q_and_dq(char *line, int i);

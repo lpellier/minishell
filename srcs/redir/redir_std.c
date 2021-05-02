@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 16:39:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 17:48:10 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ int	open_file(t_cmd *cmd, int start, int separator)
 	{
 		file_fd = open(cmd->args[arg_index], O_RDONLY, 00644);
 		if (file_fd == -1)
+		{	
 			print_error(NULL, cmd->args[arg_index], \
 				"no such file or directory", 1);
+			return (-2);
+		}	
 	}
 	return (file_fd);
 }

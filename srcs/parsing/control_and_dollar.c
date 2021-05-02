@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/01 18:01:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/02 18:49:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ int	dollar(t_info *info, t_cmd *cmd, int arg_index, int start)
 	int		j;
 
 	j = 0;
-	if ((cmd->args[arg_index][start + 1] && !ft_isalpha(cmd->args[arg_index][start + 1])) || \
-		!cmd->args[arg_index][start + 1])
+	if ((cmd->args[arg_index][start + 1] && !ft_isalpha(cmd->args[arg_index][start + 1]) && \
+		cmd->args[arg_index][start + 1] != '?') || !cmd->args[arg_index][start + 1])
 			return (FAILURE);
 	remove_char(cmd->args[arg_index], start);
 	remove_int(cmd->lint[arg_index], start);
