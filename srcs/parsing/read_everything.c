@@ -168,14 +168,16 @@ void	process_line(t_info *info, int first)
 	read_line(info);
 	set_lint(info, info->lint);
 	ft_printf("\n");
-	if (transform_line(info, 0, 0, 0))
+	if (check_syntax(info))
 	{
-		update_cmd_status(info, 1);
-		print_error(NULL, "parsing error", "number of quotes should be even", 1);
+		update_cmd_status(info, 2);
 		return ;
 	}
-	if (check_syntax(info))
+	if (transform_line(info, 0, 0, 0))
+	{
+		update_cmd_status(info, print_error(NULL, "parsing error", "number of quotes should be even", 1));
 		return ;
+	}
 	cmd_tab = split_by_colon(info, info->line, info->lint);
 	info->index_cmd = 0;
 	while (cmd_tab && cmd_tab[info->index_cmd])

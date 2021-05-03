@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/03 11:55:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 12:51:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,18 +199,20 @@ void	update_arg_index(t_cmd *cmd, int start)
 int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 {
 	int		code;
+	int		next_redir;
 
 	code = 0;
 	if (piped)
 		update_arg_index(cmd, FALSE);
 	compare_cmd(info, cmd);
+	next_redir = redir_in_args(cmd, cmd->arg_index);
 	if (cmd->args && cmd->args[cmd->arg_index] && !compare_size(cmd->args[cmd->arg_index], "."))
 		code = print_error(NULL, ".", "filename argument required", 2);
 	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9 && is_redir(cmd, cmd->arg_index))
 		code = print_error(NULL, cmd->args[cmd->arg_index], "command not found", 127);
-	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|"))
+	else if (cmd->limit_index && !is_pipe(cmd, cmd->limit_index))
 		code = pipe_for_exec(info, cmd);
-	else if (!is_redir(cmd, cmd->limit_index))
+	else if (cmd->limit_index && !is_redir(cmd, cmd->limit_index))
 		code = redir(info, cmd);
 	else if (!cmd->args || !cmd->args[cmd->arg_index])
 		code = 1;
@@ -241,7 +243,7 @@ int		multiple_args_after_redir(t_cmd *cmd)
 	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
 	i += 2;
-	if (cmd->args && cmd->args[i] && is_redir(cmd, i))
+	if (cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
 		return (SUCCESS);
 	return (FAILURE);
 }
@@ -285,7 +287,7 @@ int		only_redirs(t_cmd *cmd)
 	i = 0;
 	while (cmd->args && !is_redir(cmd, i))
 		i += 2;
-	if (cmd->args[i])
+	if (cmd->args[i] && is_pipe(cmd, i))
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -319,8 +321,12 @@ void	read_cmd(t_info *info, char *cmd_line)
 			update_cmd_status(info, SUCCESS);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
+		while (cmd->args && !is_redir(cmd, cmd->arg_index))
+			cmd->arg_index += 2;
+		if (cmd->args && !is_pipe(cmd, cmd->arg_index))
+			cmd->arg_index += 1;
+		cmd->limit_index = sep_in_args(cmd, cmd->arg_index);
 	}
-	else
-		update_cmd_status(info, exec_cmd(info, cmd, FALSE));
+	update_cmd_status(info, exec_cmd(info, cmd, FALSE));
 	interpret_errors(info);
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/03 11:31:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 13:38:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ enum				e_line_indicators
 	_EMPTY,
 	_CHAR,
 	_SEP,
-	_QUOTED,
+	_QUOTED, 
 	_DQUOTED,
 	_DOLLAR,
 	_BSPACED,
