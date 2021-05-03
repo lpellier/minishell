@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 19:04:36 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 11:31:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_cmd
 {
 	char			**args;
 	char			*path;
+	char			*saved_env_arg;
 	int				**lint;
 	int				bui;
 	int				arg_index; // keeps track of current position in cmd
@@ -316,7 +317,7 @@ int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
 int			control_d(t_info *info);
 int			ft_isalpha_ordollar(int c);
 int			dollar(t_info *info, t_cmd *cmd, int arg_index, int start);
-void		dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start);
+void		dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start, int quote);
 
 // colon_and_count
 int			count_exceptions(int quote, int dquote);

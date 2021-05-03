@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:39:00 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/28 20:24:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 11:32:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	free_cmd_struct(void *data)
 	free_lint_tab(ptr->arg_nbr, &ptr->lint);
 	free_tab(&ptr->args);
 	secure_free(ptr->path);
+	secure_free(ptr->saved_env_arg);
 	ptr->bui = 9;
 	ptr->arg_nbr = 0;
 	secure_free(ptr);

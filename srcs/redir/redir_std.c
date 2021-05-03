@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/02 17:48:10 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 11:32:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,32 @@ int	ft_cinset(const char c, const char *set)
 	return (OTHER);
 }
 
+int	space_in_arg(t_cmd *cmd, int index)
+{
+	int	i;
+
+	i = 0;
+	if (!cmd->args[index] || cmd->lint[index][0] == _EMPTY_CHAR)
+		return (SUCCESS);
+	while (cmd->args && cmd->args[index] && cmd->args[index][i])
+	{
+		if ((cmd->args[index][i] == 32 && cmd->lint[index][i] == _CHAR) || \
+			cmd->lint[index][i] == _EMPTY_CHAR)
+			return (SUCCESS);
+		i++;
+	}
+	return (FAILURE);
+}
+
 int	open_file(t_cmd *cmd, int start, int separator)
 {
 	int		arg_index;
 	int		file_fd;
 
 	file_fd = -1;
-	arg_index = sep_in_args(cmd, start) + 1;
+	arg_index = redir_in_args(cmd, start) + 1;
+	if (!space_in_arg(cmd, arg_index))
+		return (print_error(NULL, cmd->saved_env_arg, "ambiguous redirect", -1));
 	if (separator == R_RIGHT)
 		file_fd = open(cmd->args[arg_index], O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	else if (separator == R_RIGHTD)
@@ -45,11 +64,8 @@ int	open_file(t_cmd *cmd, int start, int separator)
 	{
 		file_fd = open(cmd->args[arg_index], O_RDONLY, 00644);
 		if (file_fd == -1)
-		{	
-			print_error(NULL, cmd->args[arg_index], \
-				"no such file or directory", 1);
-			return (-2);
-		}	
+			return (print_error(NULL, cmd->args[arg_index], \
+				"no such file or directory", -2));
 	}
 	return (file_fd);
 }

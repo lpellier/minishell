@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 15:12:16 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 13:22:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 11:31:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_cmd	*create_cmd_struct(void)
 	cmd->arg_nbr = 0;
 	cmd->arg_index = 0;
 	cmd->limit_index = 0;
+	cmd->saved_env_arg = NULL;
 	cmd->lint = NULL;
 	cmd->args = NULL;
 	cmd->path = NULL;
