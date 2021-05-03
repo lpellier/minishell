@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/01 18:34:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 18:06:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,10 @@ char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
 	path = NULL;
 	home = get_env_custom(info, "HOME");
 	oldpwd = get_env_custom(info, "OLDPWD");
-	if (home && !compare_size(home->value, ""))
-		return (NULL);
-	else if (home && home->value && !cmd->args[arg_index])
+	if (home && home->value && !cmd->args[arg_index])
 		path = ft_strdup(home->value);
-	else if (!home && !cmd->args[arg_index])
+	else if (!home && (!cmd->args[arg_index] || \
+		cmd->lint[arg_index][0] == _EMPTY_CHAR))
 	{
 		print_error(NULL, "cd", "HOME not set", 1);
 		return (NULL);
@@ -99,6 +98,11 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 	path = define_path(info, cmd, arg_index);
 	if (!path)
 		return (FAILURE);
+	else if (!compare_size(path, ""))
+	{
+		secure_free(path);
+		return (SUCCESS);
+	}
 	check_for_cdpath(info, &path);
 	if (chdir(path))
 		return (print_error("cd", path, "no such file or directory", 1));

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/01 17:56:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 17:54:28 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_echo_n(t_info *info, t_cmd *cmd)
 		}
 		arg_index++;
 	}
-	info->terminfo.echo_padding = padding;
+	info->terminfo.echo_padding = padding; // need to find a formula to adjust padding in case line is carried down
 	return (SUCCESS);
 }
 
