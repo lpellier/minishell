@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/02 19:05:38 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 12:09:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_env(t_info *info, t_cmd *cmd)
 			cmd->args[arg_index], "invalid option", 1));
 	if (!info->env_head || !info->env_head->next)
 		return (FAILURE);
-	if (cmd->args && cmd->args[arg_index])
+	if (cmd->args && cmd->args[arg_index] && is_pipe(cmd, arg_index))
 		return (print_error(NULL, cmd->args[arg_index], \
 			"no such file or directory", 1));
 	ft_list_foreach(info->env_head->next, print_env_struct);

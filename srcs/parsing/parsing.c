@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 20:19:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 11:55:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 	else if (cmd->limit_index && !compare_size(cmd->args[cmd->limit_index], "|"))
 		code = pipe_for_exec(info, cmd);
 	else if (!is_redir(cmd, cmd->limit_index))
-		redir(info, cmd);
+		code = redir(info, cmd);
 	else if (!cmd->args || !cmd->args[cmd->arg_index])
 		code = 1;
 	else

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 16:30:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/03 12:14:35 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,14 @@ void	interpret_errors(t_info *info)
 int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
 	int	c_status;
+	int	saved_status;
 
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
-	exec_cmd(info, cmd, TRUE);
+	saved_status = exec_cmd(info, cmd, TRUE);
 	waitpid(cpid, &c_status, 0);
+	if (saved_status)
+		c_status = saved_status;
 	g_signal->bin_running = FALSE;
 	init_termcap(info);
 	return (c_status % 255);
