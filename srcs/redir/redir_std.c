@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/03 11:32:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 19:01:28 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,29 @@ int	ft_cinset(const char c, const char *set)
 	return (OTHER);
 }
 
-int	space_in_arg(t_cmd *cmd, int index)
+int	arg_is_empty(t_cmd *cmd, int index)
 {
-	int	i;
+	int		i;
 
 	i = 0;
-	if (!cmd->args[index] || cmd->lint[index][0] == _EMPTY_CHAR)
-		return (SUCCESS);
-	while (cmd->args && cmd->args[index] && cmd->args[index][i])
+	while (cmd->args[index][i])
 	{
-		if ((cmd->args[index][i] == 32 && cmd->lint[index][i] == _CHAR) || \
-			cmd->lint[index][i] == _EMPTY_CHAR)
-			return (SUCCESS);
+		if (cmd->lint[index][i] != _EMPTY_CHAR)
+			return (FAILURE);
 		i++;
 	}
+	return (SUCCESS);
+}
+
+int	space_in_arg(t_cmd *cmd, int index)
+{
+	int	next_redir;
+
+	next_redir = redir_in_args(cmd, index);
+	if (next_redir - index > 1)
+		return (SUCCESS);
+	if (!cmd->args[index] || !arg_is_empty(cmd, index))
+		return (SUCCESS);
 	return (FAILURE);
 }
 

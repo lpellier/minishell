@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/01 18:11:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 18:56:00 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	ft_export(t_info *info, t_cmd *cmd)
 		return (print_declare_env(info));
 	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
-		if (cmd->lint[arg_index][0] == _EMPTY_CHAR)
+		if (!arg_is_empty(cmd, arg_index))
 			error += print_error("export", cmd->args[arg_index], "not a valid identifier", 1);
 		else
 			error += export_content(info, cmd->args[arg_index]);

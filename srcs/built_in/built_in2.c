@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/03 18:06:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 18:56:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
 	if (home && home->value && !cmd->args[arg_index])
 		path = ft_strdup(home->value);
 	else if (!home && (!cmd->args[arg_index] || \
-		cmd->lint[arg_index][0] == _EMPTY_CHAR))
+		!arg_is_empty(cmd, arg_index)))
 	{
 		print_error(NULL, "cd", "HOME not set", 1);
 		return (NULL);
