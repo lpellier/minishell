@@ -243,7 +243,7 @@ int		multiple_args_after_redir(t_cmd *cmd)
 	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
 	i += 2;
-	if (cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
+	if (i < cmd->arg_nbr && cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
 		return (SUCCESS);
 	return (FAILURE);
 }
