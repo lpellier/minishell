@@ -113,7 +113,7 @@ int	transform_line(t_info *info, int index, int quote_nb, int dquote_nb)
 			info->lint[index] = _DOLLAR;
 		else if (info->lint[index] == -1)
 			info->lint[index] = _CHAR;
-		if (info->line[index - 1] != 32 && info->lint[index - 1] != _SEP && \
+		if (index > 0 && info->line[index - 1] != 32 && info->lint[index - 1] != _SEP && \
 			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _SEP)
 		{
 			info->lint[index] = _EMPTY;

@@ -82,9 +82,11 @@ int	shell_loop(t_info *info)
 	exit_code = info->exit_code;
 	free_tab(&info->dir_paths);
 	secure_free(info->line);
+	secure_free(info->lint);
 	ft_list_clear(info->env_head, free_env_struct);
 	ft_list_clear(info->history_head, free_history_struct);
 	secure_free(info);
+	secure_free(g_signal);
 	return (exit_code);
 }
 

@@ -36,7 +36,7 @@ void	interpret_errors(t_info *info)
 	int		code;
 
 	code_env = info->env_head->data;
-	if (code_env)
+	if (code_env && code_env->value)
 	{
 		code = ft_atoi(code_env->value);
 		cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
@@ -61,11 +61,27 @@ int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 	return (c_status % 255);
 }
 
+void	free_in_children(t_info *info)
+{
+	free_tab(&info->dir_paths);
+	free_tab(&info->cmd_tab);
+	secure_free(info->line);
+	secure_free(info->lint);
+	ft_list_clear(info->env_head, free_env_struct);
+	ft_list_clear(info->cmd_head, free_cmd_struct);
+	ft_list_clear(info->history_head, free_history_struct);
+	secure_free(info);
+}
+
 int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 {
+	int status;
+
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
-	return ((info->built_in[cmd->bui])(info, cmd));
+	status = (info->built_in[cmd->bui])(info, cmd);
+	free_in_children(info);
+	return (status);
 }
 
 int	pipe_for_exec(t_info *info, t_cmd *cmd)

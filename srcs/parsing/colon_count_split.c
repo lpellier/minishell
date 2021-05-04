@@ -68,11 +68,11 @@ char	**split_by_colon(t_info *info, char *line, int *lint)
 		}
 		if (word_index - line_index > 0)
 		{
-			secure_free(tmp);
 			tmp = ft_substr(line, line_index, word_index - line_index);
 			if (ft_calloc((void **)&split[word_count], LINE_MAX, sizeof(char)))
 				return (NULL);
 			ft_strcpy(split[word_count], tmp); 
+			secure_free(tmp);
 			line_index += word_index - line_index;
 			word_count++;
 		}

@@ -105,7 +105,10 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 	}
 	check_for_cdpath(info, &path);
 	if (chdir(path))
+	{
+		secure_free(path);
 		return (print_error("cd", path, "no such file or directory", 1));
+	}
 	secure_free(path);
 	update_pwd(info);
 	return (SUCCESS);

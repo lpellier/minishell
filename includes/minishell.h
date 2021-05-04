@@ -112,6 +112,7 @@ typedef struct s_info
 	t_list			*env_head;
 	t_list			*history_head;
 	char			**envp;
+	char			**cmd_tab;
 	char			**dir_paths;
 	char			*line;
 	int				*lint;
@@ -340,6 +341,7 @@ void		free_env_struct(void *data);
 **********/
 
 // do_pipe
+void	free_in_children(t_info *info);
 int     pipe_for_exec(t_info *info, t_cmd *cmd);
 int     child_process(t_info *info, t_cmd *cmd, int *pipefd);
 int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);

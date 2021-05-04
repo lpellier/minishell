@@ -38,7 +38,7 @@ int	init_env(t_info *info, char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], '=');
-	info->env_head = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
+	info->env_head->next = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
 		ft_strdup(key_value[1])));
 	free_tab(&key_value);
 	i++;
@@ -46,7 +46,7 @@ int	init_env(t_info *info, char **envp)
 	{
 		key_value = ft_split(envp[i], '=');
 		if (key_value && key_value[0] && key_value[1])
-			ft_list_push_back(&info->env_head, \
+			ft_list_push_back(&info->env_head->next, \
 				create_env_struct(ft_strdup(key_value[0]), \
 				ft_strdup(key_value[1])));
 		free_tab(&key_value);
@@ -94,9 +94,14 @@ int	init_info(t_info *info, char **envp)
 {
 	t_env	*shlvl;
 	
+	info->env_head = ft_create_elem(create_env_struct(ft_strdup("?"), \
+		ft_strdup("0")));
 	init_env(info, envp);
 	if (init_terminal(info))
+	{
+		ft_list_clear(info->env_head, free_env_struct);
 		return (FAILURE);
+	}
 	if (ft_calloc((void **)&info->line, LINE_MAX, sizeof(char)))
 		return (FAILURE);
 	if (ft_calloc((void **)&info->lint, LINE_MAX, sizeof(int)))
@@ -107,8 +112,6 @@ int	init_info(t_info *info, char **envp)
 	shlvl = get_env_custom(info, "SHLVL");
 	if (shlvl)
 		shlvl->value = ft_itoa(ft_atoi(shlvl->value) + 1);
-	ft_list_push_front(&info->env_head, create_env_struct(ft_strdup("?"), \
-		ft_strdup("0")));
 	reset_info(info);
 	return (SUCCESS);
 }

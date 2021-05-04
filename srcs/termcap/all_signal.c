@@ -29,6 +29,7 @@ void	ft_sigint(int sig)
 		if (!(cur_dir))
 			cur_dir = ft_strdup("/");
 		strjoin = ft_strjoin("\033[34m~ ", cur_dir);
+		secure_free(cur_dir);
 		prompt = ft_strjoin(strjoin, " > \x1b[0m");
 		secure_free(strjoin);
 		ft_printf("%s", prompt);

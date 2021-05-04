@@ -16,3 +16,4 @@ void	init_termcap(t_info *info)
 {
 	tcsetattr(STDOUT_FILENO, TCSANOW, &info->termios_p);
 }
+

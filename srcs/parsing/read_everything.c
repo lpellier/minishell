@@ -157,10 +157,8 @@ void		modify_line_redir(t_cmd *cmd, int i)
 
 void	process_line(t_info *info, int first)
 {
-	char	**cmd_tab;
 	int		crashed;
 
-  	cmd_tab = NULL;
 	crashed = FALSE;
 	if (first)
 		info->history_head = ft_create_elem(create_history_struct());
@@ -179,13 +177,13 @@ void	process_line(t_info *info, int first)
 		update_cmd_status(info, print_error(NULL, "parsing error", "number of quotes should be even", 1));
 		return ;
 	}
-	cmd_tab = split_by_colon(info, info->line, info->lint);
+	info->cmd_tab = split_by_colon(info, info->line, info->lint);
 	info->index_cmd = 0;
-	while (cmd_tab && cmd_tab[info->index_cmd])
+	while (info->cmd_tab && info->cmd_tab[info->index_cmd])
 	{
-		read_cmd(info, cmd_tab[info->index_cmd]);
+		read_cmd(info, info->cmd_tab[info->index_cmd]);
 		info->index_cmd += 1;
 	}
 	ft_list_clear(info->cmd_head, free_cmd_struct);
-	free_tab(&cmd_tab);
+	free_tab(&info->cmd_tab);
 }

@@ -35,6 +35,7 @@ int	binary_process(t_info *info, t_cmd *cmd)
 	{
 		free_tab(&argv);
 		free_tab(&env);
+		free_in_children(info);
 		return (errno);
 	}
 	free_tab(&argv);
@@ -59,8 +60,6 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 		waitpid(cpid, &status, 0);
 		g_signal->bin_running = FALSE;
 		init_termcap(info);
-		// update_cmd_status(info, status % 255);
-		// interpret_errors(info);
 		return (status % 255);
 	}
 }
@@ -78,7 +77,8 @@ int	check_in_path(t_info *info, t_cmd *cmd, int arg_index)
 		if (!directories(info->dir_paths[i], cmd->args[arg_index]))
 		{
 			strjoin = ft_strjoin(info->dir_paths[i], "/");
-			cmd->path = ft_strjoin(strjoin, cmd->args[arg_index]);
+			if (!cmd->path)
+				cmd->path = ft_strjoin(strjoin, cmd->args[arg_index]);
 			secure_free(strjoin);
 			return (SUCCESS);
 		}
@@ -101,7 +101,8 @@ int	find_binary(t_info *info, t_cmd *cmd)
 	actu_cmd = get_actual_cmd(cmd->args[arg_index], &path);
 	if (!directories(path, actu_cmd))
 	{
-		cmd->path = ft_strdup(cmd->args[arg_index]);
+		if (!cmd->path)
+			cmd->path = ft_strdup(cmd->args[arg_index]);
 		secure_free(actu_cmd);
 		secure_free(path);
 		return (SUCCESS);
