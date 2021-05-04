@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/03 12:51:20 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 14:22:11 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,24 +259,36 @@ int		dollar_in_arg(t_cmd *cmd, int i, int *start)
 	return (-1);
 }
 
-void	check_for_dollars(t_info *info, t_cmd *cmd)
+void	check_for_dollars(t_info *info, char *cmd_line)
 {
+	// int		i;
+	// int		count;
+	// int		start;
+
+	// i = 0;
+	// while (cmd->args && cmd->args[i])
+	// {
+	// 	count = 0;
+	// 	start = dollar_in_arg(cmd, i, &count);
+	// 	while (start != -1)
+	// 	{
+	// 		dollar(info, cmd, i, start);
+	// 		start = dollar_in_arg(cmd, i, &count);
+	// 		count++;
+	// 	}
+	// 	i++;
+	// }
 	int		i;
-	int		count;
-	int		start;
+	int		li;
 
 	i = 0;
-	while (cmd->args && cmd->args[i])
+	li = info->lint_index;
+	while (cmd_line[i])
 	{
-		count = 0;
-		start = dollar_in_arg(cmd, i, &count);
-		while (start != -1)
-		{
-			dollar(info, cmd, i, start);
-			start = dollar_in_arg(cmd, i, &count);
-			count++;
-		}
+		if (cmd_line[i] == DOLLAR && (info->lint[li] == _DOLLAR || info->lint[li] == _DQUOTED))
+			dollar(info, cmd_line, i);
 		i++;
+		li++;
 	}
 }
 
@@ -299,9 +311,9 @@ void	read_cmd(t_info *info, char *cmd_line)
 	pid_t	saved_stdout;
 
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
+	check_for_dollars(info, cmd_line);
 	cmd->arg_nbr = count_args(info, cmd_line, info->lint);
 	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
-	check_for_dollars(info, cmd);
 	if (!redir_in_cmd(cmd))
 	{
 		if (only_redirs(cmd))

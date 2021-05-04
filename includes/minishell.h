@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/03 13:38:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 14:00:00 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,8 +316,8 @@ int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
 // control_and_dollar
 int			control_d(t_info *info);
 int			ft_isalpha_ordollar(int c);
-int			dollar(t_info *info, t_cmd *cmd, int arg_index, int start);
-void		dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start, int quote);
+int			dollar(t_info *info, char *cmd_line, int start);
+void		dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote);
 
 // colon_and_count
 int			count_exceptions(int quote, int dquote);

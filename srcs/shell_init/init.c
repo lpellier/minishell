@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/02 19:04:17 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 16:53:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ void	reset_info(t_info *info)
 {
 	reset_dir_paths(info);
 	info->cur_in_history = 0;
+	info->terminfo.col = tgetnum("co");
+	info->terminfo.lin = tgetnum("li");
 	g_signal->kill = FALSE;
 	info->cursor.posy = 0;
 	g_signal->bin_running = FALSE;

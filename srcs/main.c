@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/30 20:09:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 16:59:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	print_prompt(t_info *info)
 	secure_free(strjoin);
 	ft_putstr_fd(prompt, STDERR_FILENO);
 	secure_free(prompt);
-	info->terminfo.prompt_len = ft_strlen(cur_dir) + 5;
+	info->terminfo.prompt_len = (ft_strlen(cur_dir) % info->terminfo.col) + 5;
 	info->cursor.posx = info->terminfo.prompt_len + info->terminfo.echo_padding;
 	info->cursor.posy = 0;
 	secure_free(cur_dir);

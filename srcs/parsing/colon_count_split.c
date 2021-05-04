@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:55 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 13:01:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 14:01:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ void	create_cmd_list(t_info *info, int nbr)
 char	**split_by_colon(t_info *info, char *line, int *lint)
 {
 	char	**split;
+	char	*tmp;
 	int		line_index;
 	int		word_index;
 	int		word_count;
 	int		cmd_nbr;
 
 	line_index = 0;
+	tmp = NULL;
 	word_count = 0;
 	cmd_nbr = count_cmd(line, lint);
 	if (ft_calloc((void **)&split, cmd_nbr + 1, sizeof(char *)))
@@ -66,7 +68,11 @@ char	**split_by_colon(t_info *info, char *line, int *lint)
 		}
 		if (word_index - line_index > 0)
 		{
-			split[word_count] = ft_substr(line, line_index, word_index - line_index);
+			secure_free(tmp);
+			tmp = ft_substr(line, line_index, word_index - line_index);
+			if (ft_calloc((void **)&split[word_count], LINE_MAX, sizeof(char)))
+				return (NULL);
+			ft_strcpy(split[word_count], tmp); 
 			line_index += word_index - line_index;
 			word_count++;
 		}

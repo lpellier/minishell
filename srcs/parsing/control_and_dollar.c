@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/03 12:12:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 14:47:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,68 +39,88 @@ int	ft_isalpha_ordollar(int c)
 		return (0);
 }
 
-void	dollar_suite(t_info *info, t_cmd *cmd, int arg_index, char *var, int start, int quote)
+void	dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote)
 {
 	int		i;
+	int		li;
 	t_list	*var_list;
 	t_env	*var_key;
 	t_env	*data_ref;
 
+	li = info->lint_index + start;
 	data_ref = create_env_struct(var, NULL);
 	var_list = ft_list_find(info->env_head, data_ref, cmp_env);
 	secure_free(data_ref);
 	secure_free(var);
 	if (!var_list)
 	{
-		add_int(cmd->lint[arg_index], _EMPTY_CHAR, start);
+		if (quote == TRUE && info->lint[li] == _EMPTY)
+		{
+			add_char(cmd_line, 32, start);
+			add_int(info->lint, _EMPTY_CHAR, li);
+		}
 		return ;
 	}
 	var_key = (t_env *)var_list->data;
 	i = 0;
 	while (var_key->value[i])
 	{
-		add_char(cmd->args[arg_index], var_key->value[i], start);
+		add_char(cmd_line, var_key->value[i], start);
 		if (quote)
-			add_int(cmd->lint[arg_index], _DQUOTED, start);
+			add_int(info->lint, _DQUOTED, li);
+		else if (var_key->value[i] == 32)
+			add_int(info->lint, _EMPTY, li);
 		else
-			add_int(cmd->lint[arg_index], _CHAR, start);
+			add_int(info->lint, _CHAR, li);
 		start++;
+		li++;
 		i++;
 	}
-	if (i == 0)
-		add_int(cmd->lint[arg_index], _EMPTY_CHAR, start);
 }
 
-int	dollar(t_info *info, t_cmd *cmd, int arg_index, int start)
+int	dollar(t_info *info, char *cmd_line, int start)
 {
 	char	*var;
 	int		j;
+	int		li;
 	int		quote;
 
 	j = 0;
-	if ((cmd->args[arg_index][start + 1] && !ft_isalpha(cmd->args[arg_index][start + 1]) && \
-		cmd->args[arg_index][start + 1] != '?') || !cmd->args[arg_index][start + 1])
+	li = info->lint_index + start;
+	if ((cmd_line[start + 1] && !ft_isalpha(cmd_line[start + 1]) && \
+		cmd_line[start + 1] != '?') || !cmd_line[start + 1])
 			return (FAILURE);
-	secure_free(cmd->saved_env_arg);
-	cmd->saved_env_arg = ft_strdup(cmd->args[arg_index]);
-	remove_char(cmd->args[arg_index], start);
-	remove_int(cmd->lint[arg_index], start);
-	if (!cmd->args[arg_index])
+	remove_char(cmd_line, start);
+	remove_int(info->lint, li);
+	if (!cmd_line)
 		return (FAILURE);
 	if (ft_calloc((void **)&var, 256, sizeof(char)))
 		return (FAILURE);
 	quote = FALSE;
-	if (cmd->lint[arg_index][start] == _DQUOTED)
+	if (info->lint[li] == _DQUOTED)
 		quote = TRUE;
-	while (cmd->args[arg_index][start] && \
-		(ft_isalnum(cmd->args[arg_index][start]) || \
-			cmd->args[arg_index][start] == '?'))
+	if (quote)
 	{
-		var[j] = cmd->args[arg_index][start];
-		remove_char(cmd->args[arg_index], start);
-		remove_int(cmd->lint[arg_index], start);
-		j++;
+		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
+		cmd_line[start] == '?') && info->lint[li] == _DQUOTED)
+		{
+			var[j] = cmd_line[start];
+			remove_char(cmd_line, start);
+			remove_int(info->lint, li);
+			j++;
+		}
 	}
-	dollar_suite(info, cmd, arg_index, var, start, quote);
+	else
+	{
+		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
+			cmd_line[start] == '?'))
+		{
+			var[j] = cmd_line[start];
+			remove_char(cmd_line, start);
+			remove_int(info->lint, li);
+			j++;
+		}
+	}
+	dollar_suite(info, cmd_line, var, start, quote);
 	return (SUCCESS);
 }
