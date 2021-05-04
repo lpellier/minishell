@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 14:22:11 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 19:31:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,8 @@ int		multiple_args_after_redir(t_cmd *cmd)
 	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
 	i += 2;
-	if (i < cmd->arg_nbr && cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
+	if (i < cmd->arg_nbr && cmd->args && cmd->args[i] && \
+		is_redir(cmd, i) && is_pipe(cmd, i) && arg_is_dollared(cmd, i))
 		return (SUCCESS);
 	return (FAILURE);
 }
@@ -261,23 +262,6 @@ int		dollar_in_arg(t_cmd *cmd, int i, int *start)
 
 void	check_for_dollars(t_info *info, char *cmd_line)
 {
-	// int		i;
-	// int		count;
-	// int		start;
-
-	// i = 0;
-	// while (cmd->args && cmd->args[i])
-	// {
-	// 	count = 0;
-	// 	start = dollar_in_arg(cmd, i, &count);
-	// 	while (start != -1)
-	// 	{
-	// 		dollar(info, cmd, i, start);
-	// 		start = dollar_in_arg(cmd, i, &count);
-	// 		count++;
-	// 	}
-	// 	i++;
-	// }
 	int		i;
 	int		li;
 

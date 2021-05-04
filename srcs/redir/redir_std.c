@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/04 19:01:28 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 19:29:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,20 @@ int	ft_cinset(const char c, const char *set)
 		return (FAILURE);
 	}
 	return (OTHER);
+}
+
+int	arg_is_dollared(t_cmd *cmd, int index)
+{
+	int		i;
+
+	i = 0;
+	while (cmd->args[index][i])
+	{
+		if (cmd->lint[index][i] != _DOLLARED)
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
 }
 
 int	arg_is_empty(t_cmd *cmd, int index)

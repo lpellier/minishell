@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 18:54:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 19:30:08 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ enum				e_line_indicators
 	_DQUOTED,
 	_DOLLAR,
 	_BSPACED,
+	_DOLLARED,
 	_EMPTY_CHAR
 };
 
@@ -355,6 +356,7 @@ int     redir(t_info *info, t_cmd *cmd);
 int     create_files(t_cmd *cmd);
 
 // redir_std
+int	arg_is_dollared(t_cmd *cmd, int index);
 int	arg_is_empty(t_cmd *cmd, int index);
 int	space_in_arg(t_cmd *cmd, int index);
 int			open_file(t_cmd *cmd, int start, int separator);

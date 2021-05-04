@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/04 19:03:56 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 19:27:09 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote)
 		else if (var_key->value[i] == 32)
 			add_int(info->lint, _EMPTY, li);
 		else
-			add_int(info->lint, _CHAR, li);
+			add_int(info->lint, _DOLLARED, li);
 		start++;
 		li++;
 		i++;
