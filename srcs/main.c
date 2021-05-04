@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 16:59:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 17:12:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	update_cmd_status(t_info *info, int new_code)
 	if (new_code == EACCES)
 		new_code = 126;
 	if (g_signal->kill)
-		data->value = ft_itoa(130);
+		data->value = ft_itoa(g_signal->kill);
 	else
 		data->value = ft_itoa(new_code);
 }

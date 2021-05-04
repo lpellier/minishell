@@ -22,8 +22,9 @@ int	read_keys(t_info *info, char key, t_history *cur)
 	{
 		if (read(STDIN_FILENO, &key, 1) == -1)
 			return (FAILURE);
-		if (g_signal->kill)
+		if (g_signal->kill == 130)
 		{
+			update_cmd_status(info, g_signal->kill);
 			g_signal->kill = FALSE;
 			info->terminfo.echo_padding = 0;
 			info->cursor.posy = 0;

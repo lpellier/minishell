@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 14:35:30 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/04 17:02:56 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ void	move_right(t_info *info, char *dest)
 
 void	move_left(t_info *info)
 {
-	// (void)info;
 	info->cursor.posx -= 1;
 	if (info->cursor.posy)
 	{
