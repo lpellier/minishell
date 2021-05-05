@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 19:30:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:12:03 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,23 +342,23 @@ void		free_env_struct(void *data);
 **********/
 
 // do_pipe
-void	free_in_children(t_info *info);
-int     pipe_for_exec(t_info *info, t_cmd *cmd);
-int     child_process(t_info *info, t_cmd *cmd, int *pipefd);
-int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
-void    interpret_errors(t_info *info);
+void		free_in_children(t_info *info);
+int			pipe_for_exec(t_info *info, t_cmd *cmd);
+int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
+int			get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
+void		interpret_errors(t_info *info);
 
 // do_redir
-void    save_std(pid_t *saved_stdin, pid_t *saved_stdout);
-int     restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
-int             create_next_file(t_cmd *cmd, int start);
-int     redir(t_info *info, t_cmd *cmd);
-int     create_files(t_cmd *cmd);
+void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
+int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
+int			create_next_file(t_cmd *cmd, int start);
+int			redir(t_info *info, t_cmd *cmd);
+int			create_files(t_cmd *cmd);
 
 // redir_std
-int	arg_is_dollared(t_cmd *cmd, int index);
-int	arg_is_empty(t_cmd *cmd, int index);
-int	space_in_arg(t_cmd *cmd, int index);
+int			arg_is_dollared(t_cmd *cmd, int index);
+int			arg_is_empty(t_cmd *cmd, int index);
+int			space_in_arg(t_cmd *cmd, int index);
 int			open_file(t_cmd *cmd, int start, int separator);
 int			ft_cinset(const char c, const char *set);
 
@@ -366,13 +366,15 @@ int			ft_cinset(const char c, const char *set);
 ** shell_init **
 ***************/
 
-// init
-int     init_terminal(t_info *info);
-void    set_lint(t_info *info, int *lint);
-int			init_env(t_info *info, char **envp);
-void	reset_dir_paths(t_info *info);
+// init_info
 void		reset_info(t_info *info);
 int			init_info(t_info *info, char **envp);
+
+// init
+int			init_terminal(t_info *info);
+void		set_lint(t_info *info, int *lint);
+int			init_env(t_info *info, char **envp);
+void		reset_dir_paths(t_info *info);
 void		init_built_in(t_info *info);
 
 /*************

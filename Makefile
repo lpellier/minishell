@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
+#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/04/29 17:08:45 by lpellier         ###   ########.fr        #
+#    Updated: 2021/05/05 16:12:24 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRCS = srcs/main.c \
 		srcs/redir/do_pipe.c \
 		srcs/redir/do_redir.c \
 		srcs/redir/redir_std.c \
+		srcs/shell_init/init_info.c \
 		srcs/shell_init/init.c \
 		srcs/skeleton/print_and_cmp.c \
 		srcs/skeleton/struct_env.c \

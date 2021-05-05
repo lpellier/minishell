@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 16:53:47 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:09:55 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ int	init_terminal(t_info *info)
 
 	term = get_env_custom(info, "TERM");
 	if (!term || !term->value)
-		return (print_error(NULL, NULL, "TERM environment variable not set.\nBye.\n", 1));
+		return (print_error(NULL, \
+			NULL, "TERM environment variable not set.\nBye.\n", 1));
 	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
 	tgetent(NULL, term->value);
@@ -87,32 +88,6 @@ int	init_terminal(t_info *info)
 	info->terminfo.col = tgetnum("co");
 	info->terminfo.lin = tgetnum("li");
 	init_termcap(info);
-	return (SUCCESS);
-}
-
-int	init_info(t_info *info, char **envp)
-{
-	t_env	*shlvl;
-	
-	info->env_head = ft_create_elem(create_env_struct(ft_strdup("?"), \
-		ft_strdup("0")));
-	init_env(info, envp);
-	if (init_terminal(info))
-	{
-		ft_list_clear(info->env_head, free_env_struct);
-		return (FAILURE);
-	}
-	if (ft_calloc((void **)&info->line, LINE_MAX, sizeof(char)))
-		return (FAILURE);
-	if (ft_calloc((void **)&info->lint, LINE_MAX, sizeof(int)))
-		return (FAILURE);
-	init_built_in(info);
-	info->terminfo.echo_padding = 0;
-	info->crashed = FALSE;
-	shlvl = get_env_custom(info, "SHLVL");
-	if (shlvl)
-		shlvl->value = ft_itoa(ft_atoi(shlvl->value) + 1);
-	reset_info(info);
 	return (SUCCESS);
 }
 
@@ -128,15 +103,4 @@ void	reset_dir_paths(t_info *info)
 		info->dir_paths = ft_split(env->value, ':');
 	else
 		info->dir_paths = NULL;
-}
-
-void	reset_info(t_info *info)
-{
-	reset_dir_paths(info);
-	info->cur_in_history = 0;
-	info->terminfo.col = tgetnum("co");
-	info->terminfo.lin = tgetnum("li");
-	g_signal->kill = FALSE;
-	info->cursor.posy = 0;
-	g_signal->bin_running = FALSE;
 }
