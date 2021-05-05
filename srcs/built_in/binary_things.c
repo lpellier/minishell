@@ -6,11 +6,19 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:57:51 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:09:54 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	free_for_children(char ***argv, char ***env, t_info *info)
+{
+	free_tab(argv);
+	free_tab(env);
+	free_in_children(info);
+	return (errno);
+}
 
 int	binary_process(t_info *info, t_cmd *cmd)
 {
@@ -33,12 +41,7 @@ int	binary_process(t_info *info, t_cmd *cmd)
 	}
 	argv[i] = NULL;
 	if (execve(cmd->path, argv, env) == -1)
-	{
-		free_tab(&argv);
-		free_tab(&env);
-		free_in_children(info);
-		return (errno);
-	}
+		return (free_for_children(&argv, &env, info));
 	free_tab(&argv);
 	free_tab(&env);
 	return (SUCCESS);
