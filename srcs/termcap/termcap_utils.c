@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   termcap_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/26 23:26:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:19:37 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	clear_line(t_info *info)
 		tputs(tgetstr("up", NULL), 1, ft_putchar);
 		count--;
 	}
-	tputs(tgoto(tgetstr("ch", NULL), 1, info->terminfo.prompt_len), 1, ft_putchar);
+	tputs(tgoto(tgetstr("ch", NULL), 1, \
+		info->terminfo.prompt_len), 1, ft_putchar);
 	tputs(tgetstr("ce", NULL), 1, ft_putchar);
 }
 
@@ -48,7 +49,8 @@ void	print_last_cmd(t_info *info, char *line)
 	hist = (t_history *)cur->data;
 	clear_line(info);
 	info->cursor.posy = hist->posy;
-	info->cursor.posx = (ft_strlen(hist->line) + info->terminfo.prompt_len) % info->terminfo.col;
+	info->cursor.posx = (ft_strlen(hist->line) + \
+		info->terminfo.prompt_len) % info->terminfo.col;
 	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
@@ -67,7 +69,8 @@ void	print_prev_cmd(t_info *info, char *line)
 	hist = (t_history *)cur->data;
 	clear_line(info);
 	info->cursor.posy = hist->posy;
-	info->cursor.posx = (ft_strlen(hist->line) + info->terminfo.prompt_len) % info->terminfo.col;
+	info->cursor.posx = (ft_strlen(hist->line) + \
+		info->terminfo.prompt_len) % info->terminfo.col;
 	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
@@ -83,7 +86,8 @@ void	check_for_arrows(t_info *info, char *line)
 	char	key;
 	int		cursor;
 
-	cursor = info->cursor.posx + info->cursor.posy * info->terminfo.col - info->terminfo.prompt_len;
+	cursor = info->cursor.posx + info->cursor.posy * \
+		info->terminfo.col - info->terminfo.prompt_len;
 	if (read(0, &key, 1) == -1)
 		return ;
 	if (key == 91)

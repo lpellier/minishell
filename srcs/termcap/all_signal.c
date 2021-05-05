@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:03:40 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 17:18:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:18:58 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_sigint(int sig)
 	}
 }
 
-void    ft_sigquit(int sig)
+void	ft_sigquit(int sig)
 {
 	(void)sig;
 	g_signal->kill = 131;
