@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary_things.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/04/30 17:49:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:57:51 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ int	binary_process(t_info *info, t_cmd *cmd)
 	char	**argv;
 	char	**env;
 	int		arg_index;
-	int i;
+	int		i;
 
 	arg_index = cmd->arg_index;
-	if (ft_calloc((void **)&argv, cmd->limit_index - arg_index + 1, sizeof(char *)))
+	if (ft_calloc((void **)&argv, cmd->limit_index - arg_index + 1, \
+		sizeof(char *)))
 		return (FAILURE);
 	env = list_to_tab(info->env_head);
 	i = 0;
@@ -47,7 +48,7 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 {
 	int		status;
 	pid_t	cpid;
-	
+
 	g_signal->bin_running = TRUE;
 	restore_term(info);
 	cpid = fork();
