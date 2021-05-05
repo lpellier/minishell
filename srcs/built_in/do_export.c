@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/04 18:56:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:35:18 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** need to figure out return codes for built in
 */
 
-void		modify_export(t_info *info, char *key, char *value)
+void	modify_export(t_info *info, char *key, char *value)
 {
 	int		concat;
 	t_env	*env_tmp;
@@ -39,28 +39,8 @@ void		modify_export(t_info *info, char *key, char *value)
 	secure_free(value);
 }
 
-int	key_error(char *key)
-{
-	int		i;
-
-	i = 0;
-	while (key[i])
-	{
-		if (!ft_isalnum(key[i]) && key[i] != '+')
-			return (FAILURE);
-		i++;
-	}
-	if (!key || (key && (ft_isdigit(key[0]) || !is_whitespace(key[0]))))
-		return (FAILURE);
-	return (SUCCESS);
-}
-
-int value_error(char *key, char *value)
-{
-	if ((key && key[0] == 0) || (value && (value[0] == '=')))
-		return (OTHER);
-	return (SUCCESS);
-}
+// error += key_error(key); -> 0 or 1
+// error += value_error(key, value); -> 0 or 2
 
 int	export_error(char *str, char *key, char *value )
 {
@@ -68,8 +48,8 @@ int	export_error(char *str, char *key, char *value )
 	int		error;
 
 	error = 0;
-	error += key_error(key); // 0 or 1
-	error += value_error(key, value); // 0 or 2
+	error += key_error(key);
+	error += value_error(key, value);
 	if (error >= 1)
 	{
 		culprit = ft_strdup(str);
@@ -79,7 +59,6 @@ int	export_error(char *str, char *key, char *value )
 	}
 	return (SUCCESS);
 }
-
 
 int	export_content(t_info *info, char *str)
 {
@@ -97,7 +76,7 @@ int	export_content(t_info *info, char *str)
 	if (str[i - 1] && str[i - 1] == '=')
 		value = ft_strdup("");
 	else
-		value = ft_substr(str, i + 1, ft_strlen(str) - i - 1); 
+		value = ft_substr(str, i + 1, ft_strlen(str) - i - 1);
 	if (export_error(str, key, value))
 	{
 		secure_free(key);
@@ -123,7 +102,7 @@ int	ft_export(t_info *info, t_cmd *cmd)
 
 	error = 0;
 	arg_index = cmd->arg_index + 1;
-	if (!arg_is_option(cmd->args[arg_index]))	
+	if (!arg_is_option(cmd->args[arg_index]))
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option", 1));
 	if (!cmd->args[arg_index])
@@ -131,7 +110,8 @@ int	ft_export(t_info *info, t_cmd *cmd)
 	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
 		if (!arg_is_empty(cmd, arg_index))
-			error += print_error("export", cmd->args[arg_index], "not a valid identifier", 1);
+			error += print_error("export", cmd->args[arg_index], \
+				"not a valid identifier", 1);
 		else
 			error += export_content(info, cmd->args[arg_index]);
 		arg_index++;

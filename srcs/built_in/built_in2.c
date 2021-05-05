@@ -3,50 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   built_in2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:36:09 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 18:56:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:44:50 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// /*
-// ** change directory, will need a find function in linked list
-// ** to check for right bui and right input
-// */
-
-int		check_for_cdpath(t_info *info, char **path)
-{
-	t_env	*cdpath;
-	char	*tmp;
-	char	*strjoin;
-
-	cdpath = get_env_custom(info, "CDPATH");
-	if (cdpath)
-	{
-		tmp = ft_strdup(*path);
-		secure_free(*path);
-		if (!compare_size(cdpath->value, "/"))
-			*path = ft_strjoin(cdpath->value, tmp);
-		else
-		{
-			strjoin = ft_strjoin(cdpath->value, "/");
-			*path = ft_strjoin(strjoin, tmp);
-			secure_free(strjoin);
-		}
-		secure_free(tmp);
-		return (SUCCESS);
-	}
-	return (FAILURE);
-}
-
 void	update_pwd(t_info *info)
 {
 	t_env	*pwd;
 	char	cwd[PATH_MAX];
-	
+
 	pwd = get_env_custom(info, "PWD");
 	if (!pwd)
 		return ;
@@ -83,37 +53,6 @@ char	*define_path(t_info *info, t_cmd *cmd, int arg_index)
 	return (path);
 }
 
-int	ft_cd(t_info *info, t_cmd *cmd)
-{
-	char	*path;
-	int		arg_index;
-
-	arg_index = cmd->arg_index + 1;
-	if (!arg_is_option(cmd->args[arg_index]) && compare_size(cmd->args[arg_index], "-"))	
-		return (print_error(cmd->args[arg_index - 1], \
-			cmd->args[arg_index], "invalid option", 1));
-	if (cmd->args && cmd->args[arg_index] && \
-		cmd->args[arg_index + 1])
-		return (print_error(NULL, "cd", "too many arguments", 1));
-	path = define_path(info, cmd, arg_index);
-	if (!path)
-		return (FAILURE);
-	else if (!compare_size(path, ""))
-	{
-		secure_free(path);
-		return (SUCCESS);
-	}
-	check_for_cdpath(info, &path);
-	if (chdir(path))
-	{
-		secure_free(path);
-		return (print_error("cd", path, "no such file or directory", 1));
-	}
-	secure_free(path);
-	update_pwd(info);
-	return (SUCCESS);
-}
-
 /*
 ** this is used to count different arguments for binaries
 ** this WILL be tricky as we'll need to account for ""  and ''
@@ -121,29 +60,6 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 ** and there might be backslashes canceling quotes ->
 ** it's going to be tough
 */
-
-// char	**count_args(t_cmd *cmd, int *count)
-// {
-// 	char	**split;
-// 	int		i;
-
-// 	*count = 0;
-// 	i = 0;
-// 	if (cmd->input)
-// 	{
-// 		split = ft_split(cmd->input, ' ');
-// 		while (split[i])
-// 			i++;
-// 		*count += i;
-// 	}
-// 	else
-// 		split = NULL;
-// 	if (cmd->cmd)
-// 		*count += 1;
-// 	if (cmd->option)
-// 		*count += 1;
-// 	return (split);
-// }
 
 char	**list_to_tab(t_list *begin_list)
 {
@@ -194,4 +110,3 @@ char	*get_actual_cmd(char *cmd, char **path)
 	free_tab(&split);
 	return (ret);
 }
-

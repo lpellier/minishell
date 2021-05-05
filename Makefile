@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/05/05 16:12:24 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/05/05 16:49:07 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,9 +22,12 @@ SRCS = srcs/main.c \
 		srcs/built_in/binary_things.c \
 		srcs/built_in/built_in.c \
 		srcs/built_in/built_in2.c \
+		srcs/built_in/cd_things.c \
 		srcs/built_in/cmp_size_and_cmd.c \
 		srcs/built_in/do_export.c \
+		srcs/built_in/echo_things.c \
 		srcs/built_in/env_things.c \
+		srcs/built_in/key_n_value_error.c \
 		srcs/built_in/pure_shell.c \
 		srcs/free/free.c \
 		srcs/parsing/backsl_and_quote.c \

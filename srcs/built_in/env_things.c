@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_things.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/03 12:09:15 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:41:39 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_unset(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	arg_index = cmd->arg_index + 1;
-	if (!arg_is_option(cmd->args[arg_index]))	
+	if (!arg_is_option(cmd->args[arg_index]))
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option", 1));
 	if (!info->env_head || !info->env_head->next)
@@ -39,8 +39,6 @@ int	ft_unset(t_info *info, t_cmd *cmd)
 	return (SUCCESS);
 }
 
-
-
 // /*
 // ** outputs all environment variables
 // */
@@ -50,7 +48,7 @@ int	ft_env(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	arg_index = cmd->arg_index + 1;
-	if (!arg_is_option(cmd->args[arg_index]))	
+	if (!arg_is_option(cmd->args[arg_index]))
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option", 1));
 	if (!info->env_head || !info->env_head->next)

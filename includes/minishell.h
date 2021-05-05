@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/05 16:12:03 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:53:54 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,23 +195,28 @@ int			find_binary(t_info *info, t_cmd *cmd);
 char		last_char(char *str);
 int			str_isalpha_withplus(char *str);
 
+// echo_things
+int			ft_echo_n(t_info *info, t_cmd *cmd);
+int			ft_echo(t_info *info, t_cmd *cmd);
+int			only_n(char *str);
+
 // pure_shell
 int			ft_pwd(t_info *info, t_cmd *cmd);
 int			ft_exit(t_info *info, t_cmd *cmd);
-int			ft_echo_n(t_info *info, t_cmd *cmd);
-int			ft_echo(t_info *info, t_cmd *cmd);
-int         arg_is_option(char *arg);
-int			only_n(char *str);
+int			arg_is_option(char *arg);
 int     	str_is_alpha(char *str);
 int			print_error(char *cmd, char *arg, char *error, int code);
 
 // built_in2
-int 	   	check_for_cdpath(t_info *info, char **path);
 void    	update_pwd(t_info *info);
 char		*define_path(t_info *info, t_cmd *cmd, int arg_index);
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
+
+// cd_things
 int			ft_cd(t_info *info, t_cmd *cmd);
+int			just_secure_free(char *path);
+int			check_for_cdpath(t_info *info, char **path);
 
 // env_things
 int			ft_unset(t_info *info, t_cmd *cmd);
@@ -222,13 +227,15 @@ int			compare_size(char *s1, char *s2);
 void		compare_cmd(t_info *info, t_cmd *cmd);
 
 // do_export
-int	export_error(char *str, char *key, char *value);
-int value_error(char *key, char *value);
-int	key_error(char *key);
+int			export_error(char *str, char *key, char *value);
 int			print_declare_env(t_info *info);
 int			ft_export(t_info *info, t_cmd *cmd);
 int			export_content(t_info *info, char *str);
 void		modify_export(t_info *info, char *key, char *value);
+
+// key_n_value_error
+int			value_error(char *key, char *value);
+int			key_error(char *key);
 
 /*********
 ** free **
@@ -323,19 +330,6 @@ void		dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote
 
 // colon_and_count
 int			count_exceptions(int quote, int dquote);
-
-/*********
-** free **
-*********/
-
-// secure_free
-void		secure_free(void *ptr);
-
-// free
-void		free_tab(char ***tab);
-void		free_history_struct(void *data);
-void		free_cmd_struct(void *data);
-void		free_env_struct(void *data);
 
 /**********
 ** redir **
