@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_std.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/04 19:29:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:22:11 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,14 @@ int	open_file(t_cmd *cmd, int start, int separator)
 	file_fd = -1;
 	arg_index = redir_in_args(cmd, start) + 1;
 	if (!space_in_arg(cmd, arg_index))
-		return (print_error(NULL, cmd->saved_env_arg, "ambiguous redirect", -1));
+		return (print_error(NULL, cmd->saved_env_arg, \
+			"ambiguous redirect", -1));
 	if (separator == R_RIGHT)
-		file_fd = open(cmd->args[arg_index], O_WRONLY | O_TRUNC | O_CREAT, 00644);
+		file_fd = open(cmd->args[arg_index], \
+			O_WRONLY | O_TRUNC | O_CREAT, 00644);
 	else if (separator == R_RIGHTD)
-		file_fd = open(cmd->args[arg_index], O_WRONLY | O_APPEND | O_CREAT, 00644);
+		file_fd = open(cmd->args[arg_index], \
+			O_WRONLY | O_APPEND | O_CREAT, 00644);
 	else if (separator == R_LEFT)
 	{
 		file_fd = open(cmd->args[arg_index], O_RDONLY, 00644);

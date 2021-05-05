@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/03 12:14:35 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:21:36 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 ** restoring stdout and stdin to original fds
 */
 
-
 void	interpret_errors(t_info *info)
 {
 	t_env	*code_env;
@@ -45,7 +44,7 @@ void	interpret_errors(t_info *info)
 	}
 }
 
-int		get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
+int	get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
 	int	c_status;
 	int	saved_status;
@@ -75,7 +74,7 @@ void	free_in_children(t_info *info)
 
 int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 {
-	int status;
+	int	status;
 
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);

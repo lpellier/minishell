@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/03 10:56:53 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:22:28 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd)
 	return (SUCCESS);
 }
 
-int		create_next_file(t_cmd *cmd, int start)
+int	create_next_file(t_cmd *cmd, int start)
 {
 	int		file_fd;
 
@@ -58,7 +58,7 @@ int		create_next_file(t_cmd *cmd, int start)
 int	create_files(t_cmd *cmd)
 {
 	int	index;
-	int file_fd;
+	int	file_fd;
 	int	before_last;
 
 	index = redir_in_args(cmd, cmd->arg_index);
