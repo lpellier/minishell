@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/05 16:53:54 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:20:28 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,12 +174,6 @@ enum				e_status_codes
 /*********
 ** main **
 **********/
-
-int			delete_empty_history(void *data, void *data_ref);
-int			shell_loop(t_info *info);
-void		print_prompt(t_info *info);
-void		update_cmd_status(t_info *info, int new_code);
-int			check_exec_options(t_info *info, int argc, char **argv);
 
 /*************
 ** built-in **
@@ -360,6 +354,13 @@ int			ft_cinset(const char c, const char *set);
 ** shell_init **
 ***************/
 
+// begin_shell
+int			delete_empty_history(void *data, void *data_ref);
+int			shell_loop(t_info *info);
+void		print_prompt(t_info *info);
+void		update_cmd_status(t_info *info, int new_code);
+int			check_exec_options(t_info *info, int argc, char **argv);
+
 // init_info
 void		reset_info(t_info *info);
 int			init_info(t_info *info, char **envp);
@@ -412,6 +413,7 @@ void		ft_sigquit(int sig);
 ** test **
 *********/
 
+// testing_func
 void		print_cmd_info(t_cmd *cmd);
 
 #endif
