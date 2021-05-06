@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/05 17:20:28 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:53:14 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,15 +253,19 @@ int			directories(char *path, char *cmd);
 // parsing_space
 int			is_whitespace(char c);
 
-// char_and_key
-void    	move_left(t_info *info);
-void    	move_right(t_info *info, char *dest);
-void		add_char(char *dest, char key, int index);
-int		*sublint(int *src, int index);
-void	intcat(int *dest, int start, int *src);
+// char_and_int
+void		intcat(int *dest, int start, int *src);
 void		remove_int(int	*lint, int index);
 void		remove_char(char *line, int index);
 void		add_int(int *dest, int key, int index);
+void		add_char(char *dest, char key, int index);
+
+// key_move
+void		move_left(t_info *info);
+void		move_right(t_info *info, char *dest);
+
+// char_and_key
+int			*sublint(int *src, int index);
 void		add_key(t_info *info, char *dest, char key);
 void		delete_key(t_info *info, char *dest);
 
@@ -312,8 +316,10 @@ void		toggle(int *bo, int *index);
 int			backslash(t_info *info, int *index, int dquote);
 int			quote(t_info *info, int *index);
 int			dquote(t_info *info, int *index);
-int             is_empty_or_void(int lint);
-void    	add_empty_char(t_info *info, int count, int index);
+int			is_empty_or_void(int lint);
+void		add_empty_char(t_info *info, int count, int index);
+
+// transform
 int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
 
 // control_and_dollar

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   backsl_and_quote.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/01 18:00:25 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:52:31 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ int	backslash(t_info *info, int *index, int dquote)
 	}
 	else if (dquote)
 	{
-		if (info->line[*index + 1] && (info->line[*index + 1] == BSLASH || \
-			info->line[*index + 1] == DOLLAR || info->line[*index + 1] == DQUOTE))
+		if (info->line[*index + 1] && (info->line[*index + 1] == \
+			BSLASH || info->line[*index + 1] == DOLLAR || \
+			info->line[*index + 1] == DQUOTE))
 		{
 			remove_char(info->line, *index);
 			info->lint[*index] = _BSPACED;
@@ -33,7 +34,7 @@ int	backslash(t_info *info, int *index, int dquote)
 	return (SUCCESS);
 }
 
-int		is_empty_or_void(int lint)
+int	is_empty_or_void(int lint)
 {
 	if (lint == _EMPTY || lint == _EMPTY_CHAR || lint == -1)
 		return (SUCCESS);
@@ -95,47 +96,4 @@ int	dquote(t_info *info, int *index)
 		return (0);
 	}
 	return (1);
-}
-
-int	transform_line(t_info *info, int index, int quote_nb, int dquote_nb)
-{
-	int		ret;
-
-	ret = 0;
-	while (info->line[index] && info->line[index] != BSLASH && \
-		info->line[index] != QUOTE && info->line[index] != DQUOTE)
-	{
-		if (info->lint[index] == -1 && info->line[index] == 32)
-			info->lint[index] = _EMPTY;
-		else if (!ft_cinset(info->line[index], SEPARATOR))
-			info->lint[index] = _SEP;
-		else if (info->line[index] == '$')
-			info->lint[index] = _DOLLAR;
-		else if (info->lint[index] == -1)
-			info->lint[index] = _CHAR;
-		if (index > 0 && info->line[index - 1] != 32 && info->lint[index - 1] != _SEP && \
-			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _SEP)
-		{
-			info->lint[index] = _EMPTY;
-			add_char(info->line, 32, index);
-		}
-		if (info->line[index + 1] != 32 && info->line[index + 1] != '>' && \
-			!ft_cinset(info->line[index], SEPARATOR) && info->lint[index] == _SEP)
-		{
-			info->lint[index + 1] = _EMPTY;
-			add_char(info->line, 32, index + 1);
-		}
-		index++;
-	}
-	if (info->line[index] == QUOTE)
-		quote_nb += quote(info, &index);
-	else if (info->line[index] == DQUOTE)
-		dquote_nb += dquote(info, &index);
-	else if (info->line[index] == BSLASH)
-		backslash(info, &index, 0);
-	if (info->line[index])
-		ret = transform_line(info, index, quote_nb, dquote_nb);
-	else
-		ret = count_exceptions(quote_nb, dquote_nb);
-	return (ret);
 }

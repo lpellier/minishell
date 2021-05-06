@@ -6,7 +6,7 @@
 #    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/05/05 17:19:33 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/05/06 11:51:06 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,18 +31,20 @@ SRCS = srcs/main.c \
 		srcs/built_in/pure_shell.c \
 		srcs/free/free.c \
 		srcs/parsing/backsl_and_quote.c \
+		srcs/parsing/char_and_int.c \
 		srcs/parsing/char_and_key.c \
 		srcs/parsing/colon_and_count.c \
 		srcs/parsing/colon_count_split.c \
 		srcs/parsing/control_and_dollar.c \
 		srcs/parsing/directories.c \
-		srcs/parsing/move_remove_add.c \
+		srcs/parsing/key_move.c \
 		srcs/parsing/parsing_space.c \
 		srcs/parsing/parsing_utils.c \
 		srcs/parsing/parsing.c \
 		srcs/parsing/error_handling.c \
 		srcs/parsing/read_everything_suite.c \
 		srcs/parsing/read_everything.c \
+		srcs/parsing/transform.c \
 		srcs/redir/do_pipe.c \
 		srcs/redir/do_redir.c \
 		srcs/redir/redir_std.c \

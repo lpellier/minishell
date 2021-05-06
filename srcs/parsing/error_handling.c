@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 14:56:04 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/03 17:33:41 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:57:22 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	pipe_error_syntax(t_info *info, int i)
 {
-	int count;
+	int	count;
 
 	count = i;
 	if (info->line[i] == 124)
@@ -23,7 +23,8 @@ int	pipe_error_syntax(t_info *info, int i)
 		while (info->line[count])
 		{
 			if (info->line[count] == COLON)
-				return (print_error(NULL, NULL, "syntax error near unexpected token `;'", 1));
+				return (print_error(NULL, NULL, \
+					"syntax error near unexpected token `;'", 1));
 			if (is_whitespace(info->line[count]))
 				return (SUCCESS);
 			count++;
@@ -49,33 +50,23 @@ int	double_error_syntax(t_info *info, int i, char token)
 int	double_redir(t_info *info, int i)
 {
 	if (info->line[i] == '>' && info->line[i + 1] && info->line[i + 1] == '>')
-	{
 		i += 2;
-		while (!is_whitespace(info->line[i]))
-			i++;
-		if (info->line[i] == '>' && info->line[i + 1] && info->line[i + 1] == '>')
-			return (print_error(NULL, NULL, "syntax error near unexpected token `>>'", 1));
-		else if (info->line[i] == '>')
-			return (print_error(NULL, NULL, "syntax error near unexpected token `>'", 1));
-		else if (info->line[i] == '<')
-			return (print_error(NULL, NULL, "syntax error near unexpected token `<'", 1));
-		else if (!info->line[i])
-			return (print_error(NULL, NULL, "syntax error near unexpected token `newline'", 1));
-	}
-	if (info->line[i] == '>' || info->line[i] == '<')
-	{
+	while (!is_whitespace(info->line[i]))
 		i++;
-		while (!is_whitespace(info->line[i]))
-			i++;
-		if (info->line[i] == '>' && info->line[i + 1] && info->line[i + 1] == '>')
-			return (print_error(NULL, NULL, "syntax error near unexpected token `>>'", 1));
-		else if (info->line[i] == '>')
-			return (print_error(NULL, NULL, "syntax error near unexpected token `>'", 1));
-		else if (info->line[i] == '<')
-			return (print_error(NULL, NULL, "syntax error near unexpected token `<'", 1));
-		else if (!info->line[i])
-			return (print_error(NULL, NULL, "syntax error near unexpected token `newline'", 1));
-	}
+	if (info->line[i] == '>' && info->line[i + 1] && info->line[i + 1] == '>')
+		return (print_error(NULL, NULL, \
+			"syntax error near unexpected token `>>'", 1));
+	else if (info->line[i] == '>')
+		return (print_error(NULL, NULL, \
+			"syntax error near unexpected token `>'", 1));
+	else if (info->line[i] == '<')
+		return (print_error(NULL, NULL, \
+			"syntax error near unexpected token `<'", 1));
+	else if (!info->line[i])
+		return (print_error(NULL, NULL, \
+			"syntax error near unexpected token `newline'", 1));
+	if (info->line[i] == '>' || info->line[i] == '<')
+		i++;
 	return (SUCCESS);
 }
 
@@ -111,4 +102,3 @@ int	check_syntax(t_info *info)
 	}
 	return (SUCCESS);
 }
-

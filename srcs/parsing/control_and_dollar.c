@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control_and_dollar.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/04 19:27:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:54:30 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int	control_d(t_info *info)
 {
 	int		cursor;
 
-	cursor = info->cursor.posx + info->cursor.posy * info->terminfo.col - info->terminfo.prompt_len;
+	cursor = info->cursor.posx + info->cursor.posy * \
+		info->terminfo.col - info->terminfo.prompt_len;
 	if (info->line && info->line[cursor])
 	{
 		remove_char(info->line, cursor);
@@ -39,7 +40,8 @@ int	ft_isalpha_ordollar(int c)
 		return (0);
 }
 
-void	dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote)
+void
+	dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote)
 {
 	int		i;
 	int		li;
@@ -89,7 +91,7 @@ int	dollar(t_info *info, char *cmd_line, int start)
 	li = info->lint_index + start;
 	if ((cmd_line[start + 1] && !ft_isalpha(cmd_line[start + 1]) && \
 		cmd_line[start + 1] != '?') || !cmd_line[start + 1])
-			return (FAILURE);
+		return (FAILURE);
 	remove_char(cmd_line, start);
 	remove_int(info->lint, li);
 	if (!cmd_line)

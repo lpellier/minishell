@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   colon_count_split.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 17:02:55 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/04 14:01:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:34:21 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		count_cmd(char *line, int *lint)
+int	count_cmd(char *line, int *lint)
 {
 	int		count;
 	int		i;
@@ -71,7 +71,7 @@ char	**split_by_colon(t_info *info, char *line, int *lint)
 			tmp = ft_substr(line, line_index, word_index - line_index);
 			if (ft_calloc((void **)&split[word_count], LINE_MAX, sizeof(char)))
 				return (NULL);
-			ft_strcpy(split[word_count], tmp); 
+			ft_strcpy(split[word_count], tmp);
 			secure_free(tmp);
 			line_index += word_index - line_index;
 			word_count++;
