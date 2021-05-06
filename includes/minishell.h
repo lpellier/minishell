@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/05 17:53:14 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/06 14:33:22 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,10 +202,10 @@ int     	str_is_alpha(char *str);
 int			print_error(char *cmd, char *arg, char *error, int code);
 
 // built_in2
-void    	update_pwd(t_info *info);
 char		*define_path(t_info *info, t_cmd *cmd, int arg_index);
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
+void    	update_pwd(t_info *info);
 
 // cd_things
 int			ft_cd(t_info *info, t_cmd *cmd);
@@ -270,19 +270,19 @@ void		add_key(t_info *info, char *dest, char key);
 void		delete_key(t_info *info, char *dest);
 
 // parsing
-int     str_isalpha_withminus(char *str);
-int             count_args(t_info *info, char *line, int *lint);
-void    bzero_lint(int *lint, int size);
-void    init_cmd_lint(t_info *info, t_cmd *cmd);
-void    split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
-int		pipe_in_args(t_cmd *cmd, int start);
-int		redir_in_args(t_cmd *cmd, int start);
-int             sep_in_args(t_cmd *cmd, int start);
-void    update_arg_index(t_cmd *cmd, int start);
-int     exec_cmd(t_info *info, t_cmd *cmd, int piped);
-int         redir_in_cmd(t_cmd *cmd);
+int			str_isalpha_withminus(char *str);
+int			count_args(t_info *info, char *line, int *lint);
+int			pipe_in_args(t_cmd *cmd, int start);
+int			redir_in_args(t_cmd *cmd, int start);
+int			sep_in_args(t_cmd *cmd, int start);
+int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
+int			redir_in_cmd(t_cmd *cmd);
 int			multiple_args_after_redir(t_cmd *cmd);
 int			str_isalpha_withminus(char *str);
+void		update_arg_index(t_cmd *cmd, int start);
+void		bzero_lint(int *lint, int size);
+void		init_cmd_lint(t_info *info, t_cmd *cmd);
+void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
 void		read_cmd(t_info *info, char *line);
 
 // error_handling
@@ -291,17 +291,21 @@ int			pipe_error_syntax(t_info *info, int i);
 int			double_error_syntax(t_info *info, int i, char token);
 
 // colon_count_split
-void		create_cmd_list(t_info *info, int nbr);
-int			count_cmd(char *line, int *lint);
 char		**split_by_colon(t_info *info, char *line, int *lint);
+int			count_cmd(char *line, int *lint);
+void		create_cmd_list(t_info *info, int nbr);
 
 // read_everything
 int			read_line(t_info *info);
 int			read_keys(t_info *info, char key, t_history *cur);
 void		process_line(t_info *info, int first);
-void    swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two);
-int                     is_redir(t_cmd *cmd, int i);
-int                     is_pipe(t_cmd *cmd, int i);
+void		set_n_first(t_info *info, int first);
+void		init_info_n_term(t_info *info);
+
+// redir_and_swap
+int			is_redir(t_cmd *cmd, int i);
+int			is_pipe(t_cmd *cmd, int i);
+void		swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two);
 void		modify_line_redir(t_cmd *cmd, int i);
 void		move_first_redir(t_cmd *cmd);
 
@@ -336,18 +340,18 @@ int			count_exceptions(int quote, int dquote);
 **********/
 
 // do_pipe
-void		free_in_children(t_info *info);
 int			pipe_for_exec(t_info *info, t_cmd *cmd);
 int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
 int			get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
+void		free_in_children(t_info *info);
 void		interpret_errors(t_info *info);
 
 // do_redir
-void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
 int			create_next_file(t_cmd *cmd, int start);
 int			redir(t_info *info, t_cmd *cmd);
 int			create_files(t_cmd *cmd);
+void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 
 // redir_std
 int			arg_is_dollared(t_cmd *cmd, int index);
@@ -363,18 +367,18 @@ int			ft_cinset(const char c, const char *set);
 // begin_shell
 int			delete_empty_history(void *data, void *data_ref);
 int			shell_loop(t_info *info);
+int			check_exec_options(t_info *info, int argc, char **argv);
 void		print_prompt(t_info *info);
 void		update_cmd_status(t_info *info, int new_code);
-int			check_exec_options(t_info *info, int argc, char **argv);
 
 // init_info
-void		reset_info(t_info *info);
 int			init_info(t_info *info, char **envp);
+void		reset_info(t_info *info);
 
 // init
 int			init_terminal(t_info *info);
-void		set_lint(t_info *info, int *lint);
 int			init_env(t_info *info, char **envp);
+void		set_lint(t_info *info, int *lint);
 void		reset_dir_paths(t_info *info);
 void		init_built_in(t_info *info);
 
@@ -383,8 +387,8 @@ void		init_built_in(t_info *info);
 *************/
 
 // struc_env
-t_env		*get_env_custom(t_info *info, char *key);
 int			modify_env(t_info *info, char *key, char *new_value, int concat);
+t_env		*get_env_custom(t_info *info, char *key);
 
 // structs
 t_cmd		*create_cmd_struct(void);
@@ -407,7 +411,7 @@ void		init_termcap(t_info *info);
 // termcap_utils
 void		check_for_arrows(t_info *info, char *line);
 void		restore_term(t_info *info);
-void    clear_line(t_info *info);
+void		clear_line(t_info *info);
 void		print_last_cmd(t_info *info, char *line);
 void		print_prev_cmd(t_info *info, char *line);
 

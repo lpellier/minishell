@@ -16,6 +16,14 @@
 //	   lets me checkout where cursor is on string
 // may be useful to insert or delete characters
 
+void	init_info_n_term(t_info *info)
+{
+	info->terminfo.echo_padding = 0;
+	info->cursor.posy = 0;
+	info->cursor.posx = info->terminfo.prompt_len + \
+		info->terminfo.echo_padding;
+}
+
 int	read_keys(t_info *info, char key, t_history *cur)
 {
 	while (key != '\n')
@@ -26,9 +34,7 @@ int	read_keys(t_info *info, char key, t_history *cur)
 		{
 			update_cmd_status(info, g_signal->kill);
 			g_signal->kill = FALSE;
-			info->terminfo.echo_padding = 0;
-			info->cursor.posy = 0;
-			info->cursor.posx = info->terminfo.prompt_len + info->terminfo.echo_padding;
+			init_info_n_term(info);
 			ft_bzero(info->line, ft_strlen(info->line));
 			ft_bzero(cur->line, ft_strlen(cur->line));
 		}
@@ -74,75 +80,6 @@ int	read_line(t_info *info)
 //	command in line under current one. 
 // should i implement this ?
 
-
-int			is_pipe(t_cmd *cmd, int i)
-{
-	if (!cmd->args || i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i])
-		return (FAILURE);
-	if (cmd->lint[i][0] == _SEP && \
-		!compare_size(cmd->args[i], "|"))
-		return (SUCCESS);
-	return (FAILURE);
-}
-
-int			is_redir(t_cmd *cmd, int i)
-{
-	if (!cmd->args || i >= cmd->arg_nbr || !cmd->args[i] || !cmd->lint[i])
-		return (FAILURE);
-	if (cmd->lint[i][0] == _SEP && \
-		(!compare_size(cmd->args[i], "<") || cmd->args[i][0] == '>'))
-		return (SUCCESS);
-	return (FAILURE);
-}
-
-void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
-{
-	char	*c_tmp;
-	int		*i_tmp;
-	
-	c_tmp = cmd->args[arg_index_one];
-	i_tmp = cmd->lint[arg_index_one];
-	cmd->args[arg_index_one] = cmd->args[arg_index_two];
-	cmd->lint[arg_index_one] = cmd->lint[arg_index_two];
-	cmd->args[arg_index_two] = c_tmp;
-	cmd->lint[arg_index_two] = i_tmp;
-}
-
-void		move_first_redir(t_cmd *cmd)
-{
-	int		i;
-
-	i = cmd->arg_index;
-	while (cmd->args && !is_redir(cmd, i))
-		i += 2;
-	if (i == 0)
-		return ;
-	while (i > 0)
-	{
-		swap_args(cmd, i, i - 1);
-		i--;
-	}
-}
-
-void		modify_line_redir(t_cmd *cmd, int i)
-{
-	int		redir_pos;
-
-	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
-		i++;
-	redir_pos = i;
-	i += 2;
-	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
-	{
-		swap_args(cmd, redir_pos, i);
-		swap_args(cmd, i, i - 1);
-		redir_pos++;
-		i++;
-	}
-	if (cmd->args && cmd->args[i])
-		modify_line_redir(cmd, i);
-}
-
 /* 
  ** reads line using gnl and feeds t_cmd linked lists 
  ** i might modify our line in this function, as in removing 
@@ -155,11 +92,8 @@ void		modify_line_redir(t_cmd *cmd, int i)
 // currently building a way to know if blocks exist
 // colons won't work right now BECUASE OF THE SPLIT
 
-void	process_line(t_info *info, int first)
+void	set_n_first(t_info *info, int first)
 {
-	int		crashed;
-
-	crashed = FALSE;
 	if (first)
 		info->history_head = ft_create_elem(create_history_struct());
 	else
@@ -167,6 +101,14 @@ void	process_line(t_info *info, int first)
 	read_line(info);
 	set_lint(info, info->lint);
 	ft_printf("\n");
+}
+
+void	process_line(t_info *info, int first)
+{
+	int		crashed;
+
+	crashed = FALSE;
+	set_n_first(info, first);
 	if (check_syntax(info))
 	{
 		update_cmd_status(info, 2);
@@ -174,7 +116,8 @@ void	process_line(t_info *info, int first)
 	}
 	if (transform_line(info, 0, 0, 0))
 	{
-		update_cmd_status(info, print_error(NULL, "parsing error", "number of quotes should be even", 1));
+		update_cmd_status(info, print_error(NULL, \
+			"parsing error", "number of quotes should be even", 1));
 		return ;
 	}
 	info->cmd_tab = split_by_colon(info, info->line, info->lint);

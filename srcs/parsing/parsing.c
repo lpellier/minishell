@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/04 19:31:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/06 12:16:43 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	str_isalpha_withminus(char *str)
 	return (SUCCESS);
 }
 
-int		count_args(t_info *info, char *line, int *lint)
+int	count_args(t_info *info, char *line, int *lint)
 {
 	int		count;
 	int		i;
@@ -72,7 +72,7 @@ void	init_cmd_lint(t_info *info, t_cmd *cmd)
 	if (ft_calloc((void **)&cmd->lint, cmd->arg_nbr, sizeof(int *)))
 		return ;
 	i = 0;
-	j  = info->lint_index;
+	j = info->lint_index;
 	while (cmd->args && cmd->args[i] && i < cmd->arg_nbr)
 	{
 		cmd->lint[i] = NULL;
@@ -139,7 +139,7 @@ void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 	info->line_index = line_index;
 }
 
-int		redir_in_args(t_cmd *cmd, int start)
+int	redir_in_args(t_cmd *cmd, int start)
 {
 	while (cmd->args && cmd->args[start])
 	{
@@ -150,7 +150,7 @@ int		redir_in_args(t_cmd *cmd, int start)
 	return (cmd->arg_nbr);
 }
 
-int		pipe_in_args(t_cmd *cmd, int start)
+int	pipe_in_args(t_cmd *cmd, int start)
 {
 	while (cmd->args && cmd->args[start])
 	{
@@ -161,7 +161,7 @@ int		pipe_in_args(t_cmd *cmd, int start)
 	return (cmd->arg_nbr);
 }
 
-int		sep_in_args(t_cmd *cmd, int start)
+int	sep_in_args(t_cmd *cmd, int start)
 {
 	while (cmd->args && cmd->args[start])
 	{
@@ -206,10 +206,13 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 		update_arg_index(cmd, FALSE);
 	compare_cmd(info, cmd);
 	next_redir = redir_in_args(cmd, cmd->arg_index);
-	if (cmd->args && cmd->args[cmd->arg_index] && !compare_size(cmd->args[cmd->arg_index], "."))
+	if (cmd->args && cmd->args[cmd->arg_index] && \
+		!compare_size(cmd->args[cmd->arg_index], "."))
 		code = print_error(NULL, ".", "filename argument required", 2);
-	else if (cmd->args && cmd->args[cmd->arg_index] && cmd->bui == 9 && is_redir(cmd, cmd->arg_index))
-		code = print_error(NULL, cmd->args[cmd->arg_index], "command not found", 127);
+	else if (cmd->args && cmd->args[cmd->arg_index] && \
+		cmd->bui == 9 && is_redir(cmd, cmd->arg_index))
+		code = print_error(NULL, cmd->args[cmd->arg_index], \
+			"command not found", 127);
 	else if (cmd->limit_index && !is_pipe(cmd, cmd->limit_index))
 		code = pipe_for_exec(info, cmd);
 	else if (cmd->limit_index && !is_redir(cmd, cmd->limit_index))
@@ -221,9 +224,9 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 	return (code);
 }
 
-int		redir_in_cmd(t_cmd *cmd)
+int	redir_in_cmd(t_cmd *cmd)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (cmd->args && cmd->args[i])
@@ -235,7 +238,7 @@ int		redir_in_cmd(t_cmd *cmd)
 	return (FAILURE);
 }
 
-int		multiple_args_after_redir(t_cmd *cmd)
+int	multiple_args_after_redir(t_cmd *cmd)
 {
 	int		i;
 
@@ -249,11 +252,13 @@ int		multiple_args_after_redir(t_cmd *cmd)
 	return (FAILURE);
 }
 
-int		dollar_in_arg(t_cmd *cmd, int i, int *start)
+int	dollar_in_arg(t_cmd *cmd, int i, int *start)
 {
 	while (cmd->args[i] && cmd->args[i][*start])
 	{
-		if (cmd->args[i][*start] == DOLLAR && (cmd->lint[i][*start] == _DOLLAR || cmd->lint[i][*start] == _DQUOTED))
+		if (cmd->args[i][*start] == DOLLAR && \
+			(cmd->lint[i][*start] == _DOLLAR || \
+			cmd->lint[i][*start] == _DQUOTED))
 			return (*start);
 		*start += 1;
 	}
@@ -269,14 +274,15 @@ void	check_for_dollars(t_info *info, char *cmd_line)
 	li = info->lint_index;
 	while (cmd_line[i])
 	{
-		if (cmd_line[i] == DOLLAR && (info->lint[li] == _DOLLAR || info->lint[li] == _DQUOTED))
+		if (cmd_line[i] == DOLLAR && \
+			(info->lint[li] == _DOLLAR || info->lint[li] == _DQUOTED))
 			dollar(info, cmd_line, i);
 		i++;
 		li++;
 	}
 }
 
-int		only_redirs(t_cmd *cmd)
+int	only_redirs(t_cmd *cmd)
 {
 	int		i;
 
