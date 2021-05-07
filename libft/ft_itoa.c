@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 10:48:12 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 13:24:10 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:30:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,11 @@ char	*ft_itoa(int nbr)
 	char	*str;
 
 	n = nbr;
-	len = (n > 0) ? 0 : 1;
-	n = (n > 0) ? n : -n;
+	len = 0;
+	if (n < 0)
+		len = 1;
+	if (n < 0)
+		n = -n;
 	while (nbr)
 		nbr = len++ ? nbr / 10 : nbr / 10;
 	str = (char *)malloc(sizeof(str) * len + 1);

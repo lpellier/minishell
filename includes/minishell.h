@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 15:24:26 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:30:29 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@
 ** the option part of the command -- i.e. "-n"
 ** path of binary if it is is one
 */
+
+// int	arg_index; -> keeps track of current position in cmd
+// int	limit_index; -> is set to wherever next pipe or end of cmd is
 
 typedef struct s_cmd
 {
@@ -274,16 +277,17 @@ void		delete_key_suite(t_info *info, int count, char *dest);
 
 // parsing
 int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
-int			redir_in_cmd(t_cmd *cmd);
 void		bzero_lint(int *lint, int size);
 void		init_cmd_lint(t_info *info, t_cmd *cmd);
 void		read_cmd(t_info *info, char *line);
+void		save_n_dup(t_info *info, t_cmd *cmd);
 
 // split_by_empty
 int			calc_line_index(t_info *info, int line_index, char **split);
 int			split_by_empty_suite(t_info *info, char **split, \
 				int line_index, char *line);
-int			test(char **split, t_info *info, char *line, int line_index);
+int			bzero_n_secure(char **split, t_info *info, \
+				char *line, int line_index);
 void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
 
 // space_dollar_args
@@ -312,6 +316,8 @@ int			double_error_syntax(t_info *info, int i, char token);
 
 // colon_count_split
 char		**split_by_colon(t_info *info, char *line, int *lint);
+int			split_by_colon_suite(t_info *info, int line_index, \
+				char *line, char **split);
 int			count_cmd(char *line, int *lint);
 void		create_cmd_list(t_info *info, int nbr);
 
@@ -344,8 +350,8 @@ int			is_empty_or_void(int lint);
 void		add_empty_char(t_info *info, int count, int index);
 
 // transform
-int			transform_line(t_info *info, int index, int quote_nb, \
-				int dquote_nb);
+int			transform_line(t_info *info, int index, \
+				int quote_nb, int dquote_nb);
 void		what_is_this_lint(t_info *info, int index);
 void		what_is_this_line(t_info *info, int index);
 
@@ -363,6 +369,7 @@ void		add_something(char *cmd_line, int start, t_info *info, int li);
 void		combine_secure_free(t_env *data_ref, char *var);
 
 // colon_and_count
+int			redir_in_cmd(t_cmd *cmd);
 int			only_redirs(t_cmd *cmd);
 int			count_exceptions(int quote, int dquote);
 

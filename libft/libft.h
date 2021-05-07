@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 15:15:06 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 13:25:22 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:31:07 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void				check_padding_case_adress(t_printf *printf, void *res, \
 void				check_padding_case_hex(t_printf *printf, void *ret);
 void				check_padding_case(t_printf *printf);
 void				ft_output(t_printf *printf, va_list ap);
-int					get_next_line(int fd, char **line);
 int					check_n(char *stock);
 int					ft_printf(const char *format, ...);
 int					ft_list_size(t_list *list);

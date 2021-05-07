@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/06 20:43:16 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:19:50 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,25 +81,28 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 	return (code);
 }
 
-int	redir_in_cmd(t_cmd *cmd)
+void	save_n_dup(t_info *info, t_cmd *cmd)
 {
-	int	i;
+	pid_t	saved_stdin;
+	pid_t	saved_stdout;
 
-	i = 0;
-	while (cmd->args && cmd->args[i])
-	{
-		if (!is_redir(cmd, i))
-			return (SUCCESS);
-		i++;
-	}
-	return (FAILURE);
+	save_std(&saved_stdin, &saved_stdout);
+	if (create_files(cmd) <= -1)
+		update_cmd_status(info, FAILURE);
+	else
+		update_cmd_status(info, SUCCESS);
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	while (cmd->args && !is_redir(cmd, cmd->arg_index))
+		cmd->arg_index += 2;
+	if (cmd->args && !is_pipe(cmd, cmd->arg_index))
+		cmd->arg_index += 1;
+	cmd->limit_index = sep_in_args(cmd, cmd->arg_index);
 }
 
 void	read_cmd(t_info *info, char *cmd_line)
 {
 	t_cmd	*cmd;
-	pid_t	saved_stdin;
-	pid_t	saved_stdout;
 
 	cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
 	check_for_dollars(info, cmd_line);
@@ -116,20 +119,7 @@ void	read_cmd(t_info *info, char *cmd_line)
 	if (info->debug_option)
 		print_cmd_info(cmd);
 	if (!only_redirs(cmd))
-	{
-		save_std(&saved_stdin, &saved_stdout);
-		if (create_files(cmd) <= -1)
-			update_cmd_status(info, FAILURE);
-		else
-			update_cmd_status(info, SUCCESS);
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
-		while (cmd->args && !is_redir(cmd, cmd->arg_index))
-			cmd->arg_index += 2;
-		if (cmd->args && !is_pipe(cmd, cmd->arg_index))
-			cmd->arg_index += 1;
-		cmd->limit_index = sep_in_args(cmd, cmd->arg_index);
-	}
+		save_n_dup(info, cmd);
 	update_cmd_status(info, exec_cmd(info, cmd, FALSE));
 	interpret_errors(info);
 }
