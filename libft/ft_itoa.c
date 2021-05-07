@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 10:48:12 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/07 12:11:57 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/07 13:24:10 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char		*ft_itoa(int nbr)
+char	*ft_itoa(int nbr)
 {
 	long	n;
 	size_t	len;

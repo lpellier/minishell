@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/06 20:54:14 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/07 13:27:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ typedef struct s_cmd
 	char			*saved_env_arg;
 	int				**lint;
 	int				bui;
-	int				arg_index; // keeps track of current position in cmd
-	int				limit_index; // is set to wherever next pipe or end of cmd is
+	int				arg_index;
+	int				limit_index;
 	int				arg_nbr;
 }					t_cmd;
 
@@ -146,7 +146,7 @@ enum				e_line_indicators
 	_EMPTY,
 	_CHAR,
 	_SEP,
-	_QUOTED, 
+	_QUOTED,
 	_DQUOTED,
 	_DOLLAR,
 	_BSPACED,
@@ -202,14 +202,14 @@ int			only_n(char *str);
 int			ft_pwd(t_info *info, t_cmd *cmd);
 int			ft_exit(t_info *info, t_cmd *cmd);
 int			arg_is_option(char *arg);
-int     	str_is_alpha(char *str);
+int			str_is_alpha(char *str);
 int			print_error(char *cmd, char *arg, char *error, int code);
 
 // built_in2
 char		*define_path(t_info *info, t_cmd *cmd, int arg_index);
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
-void    	update_pwd(t_info *info);
+void		update_pwd(t_info *info);
 
 // cd_things
 int			ft_cd(t_info *info, t_cmd *cmd);
@@ -241,7 +241,7 @@ int			key_error(char *key);
 
 // free
 void		free_tab(char ***tab);
-void    	free_lint_tab(int arg_nbr, int ***tab);
+void		free_lint_tab(int arg_nbr, int ***tab);
 void		free_history_struct(void *data);
 void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);
@@ -281,7 +281,8 @@ void		read_cmd(t_info *info, char *line);
 
 // split_by_empty
 int			calc_line_index(t_info *info, int line_index, char **split);
-int			split_by_empty_suite(t_info *info, char **split, int line_index, char *line);
+int			split_by_empty_suite(t_info *info, char **split, \
+	int line_index, char *line);
 int			test(char **split, t_info *info, char *line, int line_index);
 void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
 
@@ -343,7 +344,8 @@ int			is_empty_or_void(int lint);
 void		add_empty_char(t_info *info, int count, int index);
 
 // transform
-int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
+int			transform_line(t_info *info, int index, int quote_nb, \
+				int dquote_nb);
 void		what_is_this_lint(t_info *info, int index);
 void		what_is_this_line(t_info *info, int index);
 
@@ -421,7 +423,6 @@ t_env		*get_env_custom(t_info *info, char *key);
 t_cmd		*create_cmd_struct(void);
 t_env		*create_env_struct(char *key, char *value);
 t_history	*create_history_struct(void);
-
 
 // print_and_cmp
 int			cmp_env(void *data, void *data_ref);
