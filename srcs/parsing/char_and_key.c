@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 17:44:15 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/06 18:35:53 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,22 @@ void	add_key(t_info *info, char *dest, char key)
 	tputs(tgetstr("rc", NULL), 1, ft_putchar);
 }
 
+void	delete_key_suite(t_info *info, int count, char *dest)
+{
+	info->cursor.posy += count;
+	clear_line(info);
+	info->cursor.posy -= count;
+	ft_putstr_fd(dest, STDOUT_FILENO);
+	tputs(tgetstr("rc", NULL), 1, ft_putchar);
+}
+
+void	move_and_remove(char *dest, t_info *info, int i)
+{
+	remove_char(dest, i);
+	move_left(info);
+	tputs(tgetstr("sc", NULL), 1, ft_putchar);
+}
+
 void	delete_key(t_info *info, char *dest)
 {
 	int		i;
@@ -61,9 +77,7 @@ void	delete_key(t_info *info, char *dest)
 			i++;
 		if (dest && dest[i - 1])
 			i--;
-		remove_char(dest, i);
-		move_left(info);
-		tputs(tgetstr("sc", NULL), 1, ft_putchar);
+		move_and_remove(dest, info, i);
 		j = info->terminfo.prompt_len + ft_strlen(dest);
 		while (j >= info->terminfo.col && info->cursor.posy != count + 1)
 		{
@@ -71,10 +85,6 @@ void	delete_key(t_info *info, char *dest)
 			tputs(tgetstr("do", NULL), 1, ft_putchar);
 			j -= info->terminfo.col;
 		}
-		info->cursor.posy += count;
-		clear_line(info);
-		info->cursor.posy -= count;
-		ft_putstr_fd(dest, STDOUT_FILENO);
-		tputs(tgetstr("rc", NULL), 1, ft_putchar);
+		delete_key_suite(info, count, dest);
 	}
 }

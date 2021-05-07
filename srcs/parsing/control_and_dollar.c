@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 17:54:30 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/06 20:54:45 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_isalpha_ordollar(int c)
 }
 
 void
-	dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote)
+	dollar_suite(t_info *info, char *cmd_line, char *var, int start)
 {
 	int		i;
 	int		li;
@@ -52,15 +52,11 @@ void
 	li = info->lint_index + start;
 	data_ref = create_env_struct(var, NULL);
 	var_list = ft_list_find(info->env_head, data_ref, cmp_env);
-	secure_free(data_ref);
-	secure_free(var);
+	combine_secure_free(data_ref, var);
 	if (!var_list)
 	{
-		if (quote == TRUE && info->lint[li] == _EMPTY)
-		{
-			add_char(cmd_line, 32, start);
-			add_int(info->lint, _EMPTY_CHAR, li);
-		}
+		if (info->quote == TRUE && info->lint[li] == _EMPTY)
+			add_something(cmd_line, start, info, li);
 		return ;
 	}
 	var_key = (t_env *)var_list->data;
@@ -68,14 +64,8 @@ void
 	while (var_key->value[i])
 	{
 		add_char(cmd_line, var_key->value[i], start);
-		if (quote)
-			add_int(info->lint, _DQUOTED, li);
-		else if (var_key->value[i] == 32)
-			add_int(info->lint, _EMPTY, li);
-		else
-			add_int(info->lint, _DOLLARED, li);
+		li += add_if_something(li, info, i, var_key);
 		start++;
-		li++;
 		i++;
 	}
 }
@@ -85,7 +75,6 @@ int	dollar(t_info *info, char *cmd_line, int start)
 	char	*var;
 	int		j;
 	int		li;
-	int		quote;
 
 	j = 0;
 	li = info->lint_index + start;
@@ -98,10 +87,10 @@ int	dollar(t_info *info, char *cmd_line, int start)
 		return (FAILURE);
 	if (ft_calloc((void **)&var, 256, sizeof(char)))
 		return (FAILURE);
-	quote = FALSE;
+	info->quote = FALSE;
 	if (info->lint[li] == _DQUOTED)
-		quote = TRUE;
-	if (quote)
+		info->quote = TRUE;
+	if (info->quote)
 	{
 		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
 		cmd_line[start] == '?') && info->lint[li] == _DQUOTED)
@@ -123,6 +112,6 @@ int	dollar(t_info *info, char *cmd_line, int start)
 			j++;
 		}
 	}
-	dollar_suite(info, cmd_line, var, start, quote);
+	dollar_suite(info, cmd_line, var, start);
 	return (SUCCESS);
 }

@@ -6,13 +6,13 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:52:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 11:55:48 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/06 15:38:31 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	test(t_info *info, int index)
+void	what_is_this_lint(t_info *info, int index)
 {
 	if (info->lint[index] == -1 && info->line[index] == 32)
 		info->lint[index] = _EMPTY;
@@ -24,7 +24,7 @@ void	test(t_info *info, int index)
 		info->lint[index] = _CHAR;
 }
 
-void	test2(t_info *info, int index)
+void	what_is_this_line(t_info *info, int index)
 {
 	if (index > 0 && info->line[index - 1] != 32 && \
 		info->lint[index - 1] != _SEP && !ft_cinset(info->line[index], \
@@ -50,8 +50,8 @@ int	transform_line(t_info *info, int index, int quote_nb, int dquote_nb)
 	while (info->line[index] && info->line[index] != BSLASH && \
 		info->line[index] != QUOTE && info->line[index] != DQUOTE)
 	{
-		test(info, index);
-		test2(info, index);
+		what_is_this_lint(info, index);
+		what_is_this_line(info, index);
 		index++;
 	}
 	if (info->line[index] == QUOTE)

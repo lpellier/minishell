@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:09:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:09:55 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/06 18:27:16 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	reset_info(t_info *info)
 	info->terminfo.lin = tgetnum("li");
 	g_signal->kill = FALSE;
 	info->cursor.posy = 0;
+	info->w_cnt = 0;
+	info->w_ind = 0;
 	g_signal->bin_running = FALSE;
 }
 

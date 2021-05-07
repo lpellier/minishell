@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/06 14:33:22 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/06 20:54:14 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,11 +118,15 @@ typedef struct s_info
 	int				*lint;
 	int				lint_index;
 	int				line_index;
+	int				lnt_ind;
+	int				w_ind;
+	int				w_cnt;
 	int				index_cmd;
 	int				cur_in_history;
 	int				crashed;
 	int				debug_option;
 	int				exit_code;
+	int				quote;
 	int				(*built_in[10])();
 }					t_info;
 
@@ -250,9 +254,6 @@ void		free_env_struct(void *data);
 char		*get_cur_dir(void);
 int			directories(char *path, char *cmd);
 
-// parsing_space
-int			is_whitespace(char c);
-
 // char_and_int
 void		intcat(int *dest, int start, int *src);
 void		remove_int(int	*lint, int index);
@@ -268,26 +269,44 @@ void		move_right(t_info *info, char *dest);
 int			*sublint(int *src, int index);
 void		add_key(t_info *info, char *dest, char key);
 void		delete_key(t_info *info, char *dest);
+void		move_and_remove(char *dest, t_info *info, int i);
+void		delete_key_suite(t_info *info, int count, char *dest);
 
 // parsing
+int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
+int			redir_in_cmd(t_cmd *cmd);
+void		bzero_lint(int *lint, int size);
+void		init_cmd_lint(t_info *info, t_cmd *cmd);
+void		read_cmd(t_info *info, char *line);
+
+// split_by_empty
+int			calc_line_index(t_info *info, int line_index, char **split);
+int			split_by_empty_suite(t_info *info, char **split, int line_index, char *line);
+int			test(char **split, t_info *info, char *line, int line_index);
+void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
+
+// space_dollar_args
+int			is_whitespace(char c);
+int			multiple_args_after_redir(t_cmd *cmd);
 int			str_isalpha_withminus(char *str);
+int			dollar_in_arg(t_cmd *cmd, int i, int *start);
+void		check_for_dollars(t_info *info, char *cmd_line);
+
+// parsing_args
 int			count_args(t_info *info, char *line, int *lint);
 int			pipe_in_args(t_cmd *cmd, int start);
 int			redir_in_args(t_cmd *cmd, int start);
 int			sep_in_args(t_cmd *cmd, int start);
-int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
-int			redir_in_cmd(t_cmd *cmd);
-int			multiple_args_after_redir(t_cmd *cmd);
-int			str_isalpha_withminus(char *str);
 void		update_arg_index(t_cmd *cmd, int start);
-void		bzero_lint(int *lint, int size);
-void		init_cmd_lint(t_info *info, t_cmd *cmd);
-void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
-void		read_cmd(t_info *info, char *line);
 
 // error_handling
 int			check_syntax(t_info *info);
+int			print_err_sep(t_info *info, int i);
+int			syntax_fail(t_info *info, int i);
 int			pipe_error_syntax(t_info *info, int i);
+
+// double_error_handling
+int			double_redir(t_info *info, int i);
 int			double_error_syntax(t_info *info, int i, char token);
 
 // colon_count_split
@@ -325,14 +344,22 @@ void		add_empty_char(t_info *info, int count, int index);
 
 // transform
 int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
+void		what_is_this_lint(t_info *info, int index);
+void		what_is_this_line(t_info *info, int index);
 
 // control_and_dollar
 int			control_d(t_info *info);
 int			ft_isalpha_ordollar(int c);
 int			dollar(t_info *info, char *cmd_line, int start);
-void		dollar_suite(t_info *info, char *cmd_line, char *var, int start, int quote);
+void		dollar_suite(t_info *info, char *cmd_line, char *var, int start);
+
+// ctrl_n_doll_utils
+int			add_if_something(int li, t_info *info, int i, t_env *var);
+void		add_something(char *cmd_line, int start, t_info *info, int li);
+void		combine_secure_free(t_env *data_ref, char *var);
 
 // colon_and_count
+int			only_redirs(t_cmd *cmd);
 int			count_exceptions(int quote, int dquote);
 
 /**********
