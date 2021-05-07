@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 20:33:07 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 20:34:33 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:15:11 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	calc_line_index(t_info *info, int line_index, char **split)
 	return (line_index);
 }
 
-int	test(char **split, t_info *info, char *line, int line_index)
+int	bzero_n_secure(char **split, t_info *info, char *line, int line_index)
 {
 	char	*tmp;
 
@@ -63,7 +63,7 @@ void	split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr)
 		{
 			if (ft_calloc((void **)&split[info->w_cnt], LINE_MAX, sizeof(char)))
 				return ;
-			line_index = test(split, info, line, line_index);
+			line_index = bzero_n_secure(split, info, line, line_index);
 		}
 		line_index++;
 	}

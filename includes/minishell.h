@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 14:32:45 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:20:53 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@
 ** path of binary if it is is one
 */
 
+// int	arg_index; -> keeps track of current position in cmd
+// int	limit_index; -> is set to wherever next pipe or end of cmd is
+
 typedef struct s_cmd
 {
 	char			**args;
@@ -54,8 +57,8 @@ typedef struct s_cmd
 	char			*saved_env_arg;
 	int				**lint;
 	int				bui;
-	int				arg_index; // keeps track of current position in cmd
-	int				limit_index; // is set to wherever next pipe or end of cmd is
+	int				arg_index;
+	int				limit_index;
 	int				arg_nbr;
 }					t_cmd;
 
@@ -146,7 +149,7 @@ enum				e_line_indicators
 	_EMPTY,
 	_CHAR,
 	_SEP,
-	_QUOTED, 
+	_QUOTED,
 	_DQUOTED,
 	_DOLLAR,
 	_BSPACED,
@@ -202,14 +205,14 @@ int			only_n(char *str);
 int			ft_pwd(t_info *info, t_cmd *cmd);
 int			ft_exit(t_info *info, t_cmd *cmd);
 int			arg_is_option(char *arg);
-int     	str_is_alpha(char *str);
+int			str_is_alpha(char *str);
 int			print_error(char *cmd, char *arg, char *error, int code);
 
 // built_in2
 char		*define_path(t_info *info, t_cmd *cmd, int arg_index);
 char		**list_to_tab(t_list *begin_list);
 char		*get_actual_cmd(char *cmd, char **path);
-void    	update_pwd(t_info *info);
+void		update_pwd(t_info *info);
 
 // cd_things
 int			ft_cd(t_info *info, t_cmd *cmd);
@@ -241,7 +244,7 @@ int			key_error(char *key);
 
 // free
 void		free_tab(char ***tab);
-void    	free_lint_tab(int arg_nbr, int ***tab);
+void		free_lint_tab(int arg_nbr, int ***tab);
 void		free_history_struct(void *data);
 void		free_cmd_struct(void *data);
 void		free_env_struct(void *data);
@@ -274,15 +277,17 @@ void		delete_key_suite(t_info *info, int count, char *dest);
 
 // parsing
 int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
-int			redir_in_cmd(t_cmd *cmd);
 void		bzero_lint(int *lint, int size);
 void		init_cmd_lint(t_info *info, t_cmd *cmd);
 void		read_cmd(t_info *info, char *line);
+void		save_n_dup(t_info *info, t_cmd *cmd);
 
 // split_by_empty
 int			calc_line_index(t_info *info, int line_index, char **split);
-int			split_by_empty_suite(t_info *info, char **split, int line_index, char *line);
-int			test(char **split, t_info *info, char *line, int line_index);
+int			split_by_empty_suite(t_info *info, char **split, \
+				int line_index, char *line);
+int			bzero_n_secure(char **split, t_info *info, \
+				char *line, int line_index);
 void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
 
 // space_dollar_args
@@ -311,6 +316,8 @@ int			double_error_syntax(t_info *info, int i, char token);
 
 // colon_count_split
 char		**split_by_colon(t_info *info, char *line, int *lint);
+int			split_by_colon_suite(t_info *info, int line_index, \
+				char *line, char **split);
 int			count_cmd(char *line, int *lint);
 void		create_cmd_list(t_info *info, int nbr);
 
@@ -343,7 +350,8 @@ int			is_empty_or_void(int lint);
 void		add_empty_char(t_info *info, int count, int index);
 
 // transform
-int			transform_line(t_info *info, int index, int quote_nb, int dquote_nb);
+int			transform_line(t_info *info, int index, \
+				int quote_nb, int dquote_nb);
 void		what_is_this_lint(t_info *info, int index);
 void		what_is_this_line(t_info *info, int index);
 
@@ -359,6 +367,7 @@ void		add_something(char *cmd_line, int start, t_info *info, int li);
 void		combine_secure_free(t_env *data_ref, char *var);
 
 // colon_and_count
+int			redir_in_cmd(t_cmd *cmd);
 int			only_redirs(t_cmd *cmd);
 int			count_exceptions(int quote, int dquote);
 
@@ -421,7 +430,6 @@ t_env		*get_env_custom(t_info *info, char *key);
 t_cmd		*create_cmd_struct(void);
 t_env		*create_env_struct(char *key, char *value);
 t_history	*create_history_struct(void);
-
 
 // print_and_cmp
 int			cmp_env(void *data, void *data_ref);

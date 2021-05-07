@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   secure_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/29 16:39:43 by lpellier          #+#    #+#             */
-/*   Updated: 2021/04/29 16:40:13 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/07 14:34:11 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	secure_free(void *ptr)
 {
-		if (ptr)
-			free(ptr);
-		ptr = NULL;
+	if (ptr)
+		free(ptr);
+	ptr = NULL;
 }

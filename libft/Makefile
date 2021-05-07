@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
+#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/06 14:29:46 by tefroiss          #+#    #+#              #
-#    Updated: 2021/04/29 16:40:38 by lpellier         ###   ########.fr        #
+#    Updated: 2021/05/07 14:40:14 by tefroiss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,8 +58,6 @@ SRCS	=		./ft_isalpha.c \
 				./ft_fill_struct.c \
 				./ft_list_one.c \
 				./ft_list_two.c \
-				./get_next_line.c \
-				./get_next_line_utils.c \
 				./secure_free.c
 
 
