@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 15:30:29 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:38:37 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -462,5 +462,6 @@ void		ft_sigquit(int sig);
 
 // testing_func
 void		print_cmd_info(t_cmd *cmd);
+void		testing_suite(t_cmd *cmd, int arg_index);
 
 #endif
