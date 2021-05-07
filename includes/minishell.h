@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 13:27:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:24:26 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,7 +282,7 @@ void		read_cmd(t_info *info, char *line);
 // split_by_empty
 int			calc_line_index(t_info *info, int line_index, char **split);
 int			split_by_empty_suite(t_info *info, char **split, \
-	int line_index, char *line);
+				int line_index, char *line);
 int			test(char **split, t_info *info, char *line, int line_index);
 void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
 
@@ -351,6 +351,8 @@ void		what_is_this_line(t_info *info, int index);
 
 // control_and_dollar
 int			control_d(t_info *info);
+char		delete_dollar(t_info *info, char *cmd_line, int start, int *j);
+void		dollar_removal(t_info *info, char *cmd_line, char *var, int start);
 int			ft_isalpha_ordollar(int c);
 int			dollar(t_info *info, char *cmd_line, int start);
 void		dollar_suite(t_info *info, char *cmd_line, char *var, int start);

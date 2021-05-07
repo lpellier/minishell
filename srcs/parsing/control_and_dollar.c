@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control_and_dollar.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:11:21 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 20:54:45 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:23:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ int	control_d(t_info *info)
 		return (FAILURE);
 	}
 	return (SUCCESS);
-}
-
-int	ft_isalpha_ordollar(int c)
-{
-	if (c == '?' || (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	else
-		return (0);
 }
 
 void
@@ -70,13 +62,48 @@ void
 	}
 }
 
+char	delete_dollar(t_info *info, char *cmd_line, int start, int *j)
+{
+	int		li;
+	char	tmp;
+
+	li = info->lint_index + start;
+	tmp = cmd_line[start];
+	remove_char(cmd_line, start);
+	remove_int(info->lint, li);
+	(*j)++;
+	return (tmp);
+}
+
+void	dollar_removal(t_info *info, char *cmd_line, char *var, int start)
+{
+	int	li;
+	int	j;
+
+	j = 0;
+	li = info->lint_index + start;
+	info->quote = FALSE;
+	if (info->lint[li] == _DQUOTED)
+		info->quote = TRUE;
+	if (info->quote)
+	{
+		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
+			cmd_line[start] == '?') && info->lint[li] == _DQUOTED)
+			var[j - 1] = delete_dollar(info, cmd_line, start, &j);
+	}
+	else
+	{
+		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
+			cmd_line[start] == '?'))
+			var[j - 1] = delete_dollar(info, cmd_line, start, &j);
+	}
+}
+
 int	dollar(t_info *info, char *cmd_line, int start)
 {
 	char	*var;
-	int		j;
 	int		li;
 
-	j = 0;
 	li = info->lint_index + start;
 	if ((cmd_line[start + 1] && !ft_isalpha(cmd_line[start + 1]) && \
 		cmd_line[start + 1] != '?') || !cmd_line[start + 1])
@@ -87,31 +114,7 @@ int	dollar(t_info *info, char *cmd_line, int start)
 		return (FAILURE);
 	if (ft_calloc((void **)&var, 256, sizeof(char)))
 		return (FAILURE);
-	info->quote = FALSE;
-	if (info->lint[li] == _DQUOTED)
-		info->quote = TRUE;
-	if (info->quote)
-	{
-		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
-		cmd_line[start] == '?') && info->lint[li] == _DQUOTED)
-		{
-			var[j] = cmd_line[start];
-			remove_char(cmd_line, start);
-			remove_int(info->lint, li);
-			j++;
-		}
-	}
-	else
-	{
-		while (cmd_line[start] && (ft_isalnum(cmd_line[start]) || \
-			cmd_line[start] == '?'))
-		{
-			var[j] = cmd_line[start];
-			remove_char(cmd_line, start);
-			remove_int(info->lint, li);
-			j++;
-		}
-	}
+	dollar_removal(info, cmd_line, var, start);
 	dollar_suite(info, cmd_line, var, start);
 	return (SUCCESS);
 }
