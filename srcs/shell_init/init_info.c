@@ -6,7 +6,7 @@
 /*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:09:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 18:27:16 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/08 15:41:57 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	reset_info(t_info *info)
 	info->cursor.posy = 0;
 	info->w_cnt = 0;
 	info->w_ind = 0;
+	info->lnt_ind = 0;
+	info->quote = FALSE;
 	g_signal->bin_running = FALSE;
 }
 
