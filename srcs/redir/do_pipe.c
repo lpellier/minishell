@@ -47,16 +47,13 @@ void	interpret_errors(t_info *info)
 int	get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
 	int	saved_status;
-	int	c_status;
+	(void)cpid;
 
-	(void)cmd;
-	// (void)cpid;
 	saved_status = 0;
 	info->pipeception += 1;
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
-	waitpid(cpid, &c_status, 0);
-	// saved_status = exec_cmd(info, cmd, TRUE);
+	saved_status = exec_cmd(info, cmd, TRUE);
 	g_signal->bin_running = FALSE;
 	init_termcap(info);
 	return (saved_status % 255);
@@ -80,8 +77,7 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
-	status = exec_cmd(info, cmd, TRUE);
-	// status = (info->built_in[cmd->bui])(info, cmd);
+	status = (info->built_in[cmd->bui])(info, cmd);
 	free_in_children(info);
 	return (status);
 }
