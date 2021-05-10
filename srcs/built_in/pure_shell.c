@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pure_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:27:20 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:25:52 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	ft_exit(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	arg_index = cmd->arg_index + 1;
+	if (info->piped)
+		return (SUCCESS);
 	if (cmd->limit_index - arg_index <= 1)
 	{
 		info->crashed = TRUE;

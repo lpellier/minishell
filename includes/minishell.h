@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/10 15:44:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:50:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_info
 {
 	struct termios	termios_p;
 	struct termios	saved_term;
+	pid_t			*child_processes;
 	t_cursor		cursor;
 	t_terminfo		terminfo;
 	t_list			*cmd_head;
@@ -119,6 +120,7 @@ typedef struct s_info
 	char			**dir_paths;
 	char			*line;
 	int				*lint;
+	int				piped;
 	int				lint_index;
 	int				line_index;
 	int				lnt_ind;
@@ -130,7 +132,6 @@ typedef struct s_info
 	int				debug_option;
 	int				exit_code;
 	int				quote;
-	int				pipeception;
 	int				(*built_in[9])();
 }					t_info;
 

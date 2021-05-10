@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:09:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 15:46:58 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:53:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	reset_info(t_info *info)
 	info->w_ind = 0;
 	info->lnt_ind = 0;
 	info->quote = FALSE;
-	info->pipeception = 0;
+	info->piped = FALSE;
 	g_signal->bin_running = FALSE;
 }
 
