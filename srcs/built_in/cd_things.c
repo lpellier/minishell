@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_things.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:44:07 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:53:40 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:07:14 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 		return (print_error(cmd->args[arg_index - 1], \
 			cmd->args[arg_index], "invalid option", 1));
 	if (cmd->args && cmd->args[arg_index] && \
-		cmd->args[arg_index + 1])
+		cmd->args[arg_index + 1] && arg_index + 1 < cmd->limit_index)
 		return (print_error(NULL, "cd", "too many arguments", 1));
 	path = define_path(info, cmd, arg_index);
 	if (!path)

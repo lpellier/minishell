@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:21:36 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:59:54 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,20 @@ void	interpret_errors(t_info *info)
 
 int	get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
-	int	c_status;
 	int	saved_status;
+	int	c_status;
 
+	(void)cmd;
+	// (void)cpid;
+	saved_status = 0;
+	info->pipeception += 1;
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
-	saved_status = exec_cmd(info, cmd, TRUE);
 	waitpid(cpid, &c_status, 0);
-	if (saved_status)
-		c_status = saved_status;
+	// saved_status = exec_cmd(info, cmd, TRUE);
 	g_signal->bin_running = FALSE;
 	init_termcap(info);
-	return (c_status % 255);
+	return (saved_status % 255);
 }
 
 void	free_in_children(t_info *info)
@@ -78,7 +80,8 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
-	status = (info->built_in[cmd->bui])(info, cmd);
+	status = exec_cmd(info, cmd, TRUE);
+	// status = (info->built_in[cmd->bui])(info, cmd);
 	free_in_children(info);
 	return (status);
 }

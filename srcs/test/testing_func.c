@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   testing_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:45:07 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 15:39:26 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:10:28 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	testing_suite(t_cmd *cmd, int arg_index)
 {
 	int	j;
 
-	j = 0;
-	ft_printf(" ");
 	while (cmd->args && cmd->args[arg_index])
 	{
+		ft_printf(" ");
+		j = 0;
 		while (cmd->args[arg_index][j])
 		{
 			ft_printf(CYAN "%d" RESET, cmd->lint[arg_index][j]);

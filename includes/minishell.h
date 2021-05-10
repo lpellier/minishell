@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/10 14:00:10 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:44:49 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,8 @@ typedef struct s_info
 	int				debug_option;
 	int				exit_code;
 	int				quote;
-	int				(*built_in[10])();
+	int				pipeception;
+	int				(*built_in[9])();
 }					t_info;
 
 t_signal			*g_signal;

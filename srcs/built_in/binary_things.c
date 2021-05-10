@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary_things.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 17:09:54 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:30:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int	check_in_path(t_info *info, t_cmd *cmd, int arg_index)
 		if (!directories(info->dir_paths[i], cmd->args[arg_index]))
 		{
 			strjoin = ft_strjoin(info->dir_paths[i], "/");
-			if (!cmd->path)
-				cmd->path = ft_strjoin(strjoin, cmd->args[arg_index]);
+			secure_free(cmd->path);
+			cmd->path = ft_strjoin(strjoin, cmd->args[arg_index]);
 			secure_free(strjoin);
 			return (SUCCESS);
 		}

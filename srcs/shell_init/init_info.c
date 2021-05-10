@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_info.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:09:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/08 15:41:57 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:46:58 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	reset_info(t_info *info)
 	info->w_ind = 0;
 	info->lnt_ind = 0;
 	info->quote = FALSE;
+	info->pipeception = 0;
 	g_signal->bin_running = FALSE;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_std.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 12:07:45 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:38:43 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	space_in_arg(t_cmd *cmd, int index)
 	int	next_redir;
 
 	next_redir = redir_in_args(cmd, index);
-	if (next_redir - index > 1)
+	if (next_redir - index > 1 && next_redir != cmd->arg_nbr)
 		return (SUCCESS);
 	if (!cmd->args[index] || !arg_is_empty(cmd, index))
 		return (SUCCESS);

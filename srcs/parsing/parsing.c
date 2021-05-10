@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 15:19:50 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:28:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 			"command not found", 127);
 	else if (cmd->limit_index && !is_pipe(cmd, cmd->limit_index))
 		code = pipe_for_exec(info, cmd);
-	else if (cmd->limit_index && !is_redir(cmd, cmd->limit_index))
+	else if (next_redir && !is_redir(cmd, next_redir))
 		code = redir(info, cmd);
 	else if (!cmd->args || !cmd->args[cmd->arg_index])
 		code = 1;
