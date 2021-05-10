@@ -38,7 +38,6 @@ SRCS = srcs/main.c \
 		srcs/parsing/control_and_dollar.c \
 		srcs/parsing/ctrl_n_doll_utils.c \
 		srcs/parsing/directories.c \
-		srcs/parsing/double_error_handling.c \
 		srcs/parsing/key_move.c \
 		srcs/parsing/parsing_args.c \
 		srcs/parsing/parsing_utils.c \

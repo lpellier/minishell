@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 15:38:37 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:00:10 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,11 +306,8 @@ void		update_arg_index(t_cmd *cmd, int start);
 
 // error_handling
 int			check_syntax(t_info *info);
-int			print_err_sep(t_info *info, int i);
 int			syntax_fail(t_info *info, int i);
 int			pipe_error_syntax(t_info *info, int i);
-
-// double_error_handling
 int			double_redir(t_info *info, int i);
 int			double_error_syntax(t_info *info, int i, char token);
 
