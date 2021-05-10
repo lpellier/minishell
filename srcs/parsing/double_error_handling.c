@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   double_error_handling.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 18:30:24 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 18:30:57 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:49:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int	double_error_syntax(t_info *info, int i, char token)
 {
-	if (info->line[i] == token && info->line[i + 1] && \
-		info->line[i + 1] == token)
+	i++;
+	while (info->lint[i] == _EMPTY)
+		i++;
+	if (info->lint[i] == _SEP && info->line[i] == token)
 	{
 		ft_printf("minisheh: syntax error near");
 		ft_printf(" unexpected token `%c%c'\n", token, token);
@@ -26,19 +28,27 @@ int	double_error_syntax(t_info *info, int i, char token)
 
 int	double_redir(t_info *info, int i)
 {
-	if (info->line[i] == '>' && info->line[i + 1] && info->line[i + 1] == '>')
-	{
-		i += 2;
-		while (!is_whitespace(info->line[i]))
-			i++;
-		return (print_err_sep(info, i));
-	}
-	if (info->line[i] == '>' || info->line[i] == '<')
+	if (info->line[i] && info->lint[i] == _SEP && \
+		(info->line[i] == '>' || info->line[i] == '<'))
 	{
 		i++;
-		while (!is_whitespace(info->line[i]))
+		if (info->line[i] && info->line[i] == '>' && info->lint[i] == _SEP)
 			i++;
-		return (print_err_sep(info, i));
+		while (info->lint[i] == _EMPTY)
+			i++;
+		if (info->lint[i] == _SEP && info->lint[i + 1] == _SEP && \
+			info->line[i] == '>' && info->line[i +1] && info->line[i +1] == '>')
+			return (print_error(NULL, NULL, \
+				"syntax error near unexpected token `>>'", 1));
+		else if (info->lint[i] == _SEP && info->line[i] == '>')
+			return (print_error(NULL, NULL, \
+				"syntax error near unexpected token `>'", 1));
+		else if (info->lint[i] == _SEP && info->line[i] == '<')
+			return (print_error(NULL, NULL, \
+				"syntax error near unexpected token `<'", 1));
+		else if (!info->line[i])
+			return (print_error(NULL, NULL, \
+				"syntax error near unexpected token `newline'", 1));
 	}
 	return (SUCCESS);
 }

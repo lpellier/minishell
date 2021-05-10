@@ -109,15 +109,15 @@ void	process_line(t_info *info, int first)
 
 	crashed = FALSE;
 	set_n_first(info, first);
-	if (check_syntax(info))
-	{
-		update_cmd_status(info, 2);
-		return ;
-	}
 	if (transform_line(info, 0, 0, 0))
 	{
 		update_cmd_status(info, print_error(NULL, \
 			"parsing error", "number of quotes should be even", 1));
+		return ;
+	}
+	if (check_syntax(info))
+	{
+		update_cmd_status(info, 2);
 		return ;
 	}
 	info->cmd_tab = split_by_colon(info, info->line, info->lint);
