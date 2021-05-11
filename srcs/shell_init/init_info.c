@@ -30,6 +30,7 @@ void	reset_info(t_info *info)
 
 int	init_info(t_info *info, char **envp)
 {
+	char	*tmp;
 	t_env	*shlvl;
 
 	info->env_head = ft_create_elem(create_env_struct(ft_strdup("?"), \
@@ -49,7 +50,12 @@ int	init_info(t_info *info, char **envp)
 	info->crashed = FALSE;
 	shlvl = get_env_custom(info, "SHLVL");
 	if (shlvl)
-		shlvl->value = ft_itoa(ft_atoi(shlvl->value) + 1);
+	{
+		tmp = ft_strdup(shlvl->value);
+		secure_free(shlvl->value);
+		shlvl->value = ft_itoa(ft_atoi(tmp) + 1);
+		secure_free(tmp);
+	}
 	reset_info(info);
 	return (SUCCESS);
 }
