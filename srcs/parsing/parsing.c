@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/10 14:28:44 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 14:42:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 
 	code = 0;
 	if (piped)
+	{
+		info->pipelvl += 1;
 		update_arg_index(cmd, FALSE);
+	}
 	compare_cmd(info, cmd);
 	next_redir = redir_in_args(cmd, cmd->arg_index);
 	if (cmd->args && cmd->args[cmd->arg_index] && \
@@ -71,7 +74,7 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 		code = print_error(NULL, cmd->args[cmd->arg_index], \
 			"command not found", 127);
 	else if (cmd->limit_index && !is_pipe(cmd, cmd->limit_index))
-		code = pipe_for_exec(info, cmd);
+		code = pipe_for_exec(info, cmd, info->pipelvl);
 	else if (next_redir && !is_redir(cmd, next_redir))
 		code = redir(info, cmd);
 	else if (!cmd->args || !cmd->args[cmd->arg_index])
@@ -94,7 +97,11 @@ void	save_n_dup(t_info *info, t_cmd *cmd)
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	while (cmd->args && !is_redir(cmd, cmd->arg_index))
+	{
 		cmd->arg_index += 2;
+		while (cmd->args && cmd->args[cmd->arg_index] && !arg_is_dollared(cmd, cmd->arg_index))
+			cmd->arg_index++;
+	}
 	if (cmd->args && !is_pipe(cmd, cmd->arg_index))
 		cmd->arg_index += 1;
 	cmd->limit_index = sep_in_args(cmd, cmd->arg_index);

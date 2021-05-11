@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_things.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:27:20 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/11 16:48:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_echo(t_info *info, t_cmd *cmd)
 		arg_index++;
 	}
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	info->terminfo.echo_padding = 0;
+	info->terminfo.echo_padding_x = 0;
 	return (SUCCESS);
 }
 
@@ -52,7 +52,7 @@ int	ft_echo(t_info *info, t_cmd *cmd)
 // ** outputs input without \n
 // */
 
-// info->terminfo.echo_padding = padding; 
+// info->terminfo.echo_padding_x = padding; 
 // 	->need to find a formula to adjust padding in case line is carried down
 
 int	ft_echo_n(t_info *info, t_cmd *cmd)
@@ -76,6 +76,6 @@ int	ft_echo_n(t_info *info, t_cmd *cmd)
 		}
 		arg_index++;
 	}
-	info->terminfo.echo_padding = padding;
+	info->terminfo.echo_padding_x = padding;
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 14:38:43 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 15:19:24 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	space_in_arg(t_cmd *cmd, int index)
 	int	next_redir;
 
 	next_redir = redir_in_args(cmd, index);
-	if (next_redir - index > 1 && next_redir != cmd->arg_nbr)
+	if (next_redir - index > 1)
 		return (SUCCESS);
 	if (!cmd->args[index] || !arg_is_empty(cmd, index))
 		return (SUCCESS);
@@ -78,7 +78,7 @@ int	open_file(t_cmd *cmd, int start, int separator)
 	file_fd = -1;
 	arg_index = redir_in_args(cmd, start) + 1;
 	if (!space_in_arg(cmd, arg_index))
-		return (print_error(NULL, cmd->saved_env_arg, \
+		return (print_error(NULL, NULL, \
 			"ambiguous redirect", -1));
 	if (separator == R_RIGHT)
 		file_fd = open(cmd->args[arg_index], \

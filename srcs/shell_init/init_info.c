@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:09:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 17:53:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 16:48:54 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	reset_info(t_info *info)
 	info->w_ind = 0;
 	info->lnt_ind = 0;
 	info->quote = FALSE;
+	info->pipelvl = 0;
 	info->piped = FALSE;
 	g_signal->bin_running = FALSE;
 }
@@ -45,7 +46,7 @@ int	init_info(t_info *info, char **envp)
 	if (ft_calloc((void **)&info->lint, LINE_MAX, sizeof(int)))
 		return (FAILURE);
 	init_built_in(info);
-	info->terminfo.echo_padding = 0;
+	info->terminfo.echo_padding_x = 0;
 	info->crashed = FALSE;
 	shlvl = get_env_custom(info, "SHLVL");
 	if (shlvl)

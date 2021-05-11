@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 18:13:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 14:12:57 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,13 @@ void	interpret_errors(t_info *info)
 
 int	get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
-	int	c_status;
 	int	saved_status;
 
+	(void)cpid;
 	saved_status = 0;
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
-	waitpid(cpid, &c_status, 1);
 	saved_status = exec_cmd(info, cmd, TRUE);
-	if (c_status)
-		saved_status = c_status;
-	g_signal->bin_running = FALSE;
-	init_termcap(info);
 	return (saved_status % 255);
 }
 
@@ -68,9 +63,9 @@ void	free_in_children(t_info *info)
 	secure_free(info->line);
 	secure_free(info->lint);
 	ft_list_clear(info->env_head, free_env_struct);
-	ft_list_clear(info->cmd_head, free_cmd_struct);
 	ft_list_clear(info->history_head, free_history_struct);
 	secure_free(info);
+	secure_free(g_signal);
 }
 
 int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
@@ -81,10 +76,11 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 	dup2(pipefd[1], STDOUT_FILENO);
 	status = (info->built_in[cmd->bui])(info, cmd);
 	free_in_children(info);
+	ft_list_clear(info->cmd_head, free_cmd_struct);
 	return (status);
 }
 
-int	pipe_for_exec(t_info *info, t_cmd *cmd)
+int	pipe_for_exec(t_info *info, t_cmd *cmd, int pipe_lvl)
 {
 	int		pipefd[2];
 	int		status;
@@ -106,10 +102,13 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 	else
 	{
 		status = get_child(info, cmd, cpid, pipefd);
-		while (wait(NULL) != -1);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(pipefd[0]);
+		if (pipe_lvl == 0)
+			while (wait(NULL) != -1);
+		g_signal->bin_running = FALSE;
+		init_termcap(info);
 		return (status);
 	}
 }

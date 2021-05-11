@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 17:25:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 14:13:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	ft_exit(t_info *info, t_cmd *cmd)
 			info->exit_code = ft_atoi(cmd->args[arg_index]);
 		return (SUCCESS);
 	}
-	return (FAILURE);
+	return (print_error("exit", NULL, "too many arguments", 1));
 }
 
 int	arg_is_option(char *arg)

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:15:26 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 17:53:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 16:47:21 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	print_prompt(t_info *info)
 	secure_free(strjoin);
 	ft_putstr_fd(prompt, STDERR_FILENO);
 	secure_free(prompt);
-	info->terminfo.prompt_len = (ft_strlen(cur_dir) % info->terminfo.col) + 5;
-	info->cursor.posx = info->terminfo.prompt_len + info->terminfo.echo_padding;
+	info->terminfo.prompt_len = (ft_strlen(cur_dir) + 5) % info->terminfo.col;
+	info->cursor.posx = (info->terminfo.prompt_len + info->terminfo.echo_padding_x) % info->terminfo.col;
 	info->cursor.posy = 0;
 	secure_free(cur_dir);
 }
@@ -80,13 +80,7 @@ int	shell_loop(t_info *info)
 	}
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	exit_code = info->exit_code;
-	free_tab(&info->dir_paths);
-	secure_free(info->line);
-	secure_free(info->lint);
-	ft_list_clear(info->env_head, free_env_struct);
-	ft_list_clear(info->history_head, free_history_struct);
-	secure_free(info);
-	secure_free(g_signal);
+	free_in_children(info);
 	return (exit_code);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/10 17:50:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 16:48:16 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct s_cmd
 {
 	char			**args;
 	char			*path;
-	char			*saved_env_arg;
 	int				**lint;
 	int				bui;
 	int				arg_index;
@@ -99,7 +98,7 @@ typedef struct s_cursor
 
 typedef struct s_terminfo
 {
-	int				echo_padding;
+	int				echo_padding_x;
 	int				prompt_len;
 	int				col;
 	int				lin;
@@ -121,6 +120,7 @@ typedef struct s_info
 	char			*line;
 	int				*lint;
 	int				piped;
+	int				pipelvl;
 	int				lint_index;
 	int				line_index;
 	int				lnt_ind;
@@ -377,7 +377,7 @@ int			count_exceptions(int quote, int dquote);
 **********/
 
 // do_pipe
-int			pipe_for_exec(t_info *info, t_cmd *cmd);
+int			pipe_for_exec(t_info *info, t_cmd *cmd, int pipe_lvl);
 int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
 int			get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
 void		free_in_children(t_info *info);

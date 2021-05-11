@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colon_and_count.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/07 15:19:50 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/11 14:42:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ int	only_redirs(t_cmd *cmd)
 
 	i = 0;
 	while (cmd->args && !is_redir(cmd, i))
+	{
 		i += 2;
+		while (cmd->args && cmd->args[i] && !arg_is_dollared(cmd, i))
+			i++;
+	}
 	if (cmd->args[i] && is_pipe(cmd, i))
 		return (FAILURE);
 	return (SUCCESS);

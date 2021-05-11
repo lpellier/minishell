@@ -18,10 +18,10 @@
 
 void	init_info_n_term(t_info *info)
 {
-	info->terminfo.echo_padding = 0;
+	info->terminfo.echo_padding_x = 0;
 	info->cursor.posy = 0;
 	info->cursor.posx = info->terminfo.prompt_len + \
-		info->terminfo.echo_padding;
+		info->terminfo.echo_padding_x;
 }
 
 int	read_keys(t_info *info, char key, t_history *cur)
@@ -61,14 +61,14 @@ int	read_line(t_info *info)
 	key = 0;
 	ft_bzero(info->line, ft_strlen(info->line));
 	cur = (t_history *)info->history_head->data;
-	info->terminfo.prompt_len += info->terminfo.echo_padding;
+	info->terminfo.prompt_len += info->terminfo.echo_padding_x % info->terminfo.col;
 	if (read_keys(info, key, cur))
 	{
 		update_cmd_status(info, 1);
 		return (FAILURE);
 	}
-	if (info->terminfo.echo_padding > 0)
-		info->terminfo.echo_padding = 0;
+	if (info->terminfo.echo_padding_x > 0)
+		info->terminfo.echo_padding_x = 0;
 	return (SUCCESS);
 }
 
