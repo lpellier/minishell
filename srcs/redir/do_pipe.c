@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 14:12:57 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 18:08:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,18 @@ void	interpret_errors(t_info *info)
 	}
 }
 
-int	get_child(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
+int	get_child(t_info *info, t_cmd *cmd, int pipefd[2])
 {
 	int	saved_status;
 
-	(void)cpid;
 	saved_status = 0;
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	saved_status = exec_cmd(info, cmd, TRUE);
+	wait(NULL);
+	close(pipefd[0]);
+	g_signal->bin_running = FALSE;
+	init_termcap(info);
 	return (saved_status % 255);
 }
 
@@ -80,7 +83,7 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 	return (status);
 }
 
-int	pipe_for_exec(t_info *info, t_cmd *cmd, int pipe_lvl)
+int	pipe_for_exec(t_info *info, t_cmd *cmd)
 {
 	int		pipefd[2];
 	int		status;
@@ -101,14 +104,9 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd, int pipe_lvl)
 		_exit(child_process(info, cmd, pipefd));
 	else
 	{
-		status = get_child(info, cmd, cpid, pipefd);
+		status = get_child(info, cmd, pipefd);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
-		close(pipefd[0]);
-		if (pipe_lvl == 0)
-			while (wait(NULL) != -1);
-		g_signal->bin_running = FALSE;
-		init_termcap(info);
 		return (status);
 	}
 }

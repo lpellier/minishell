@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:15:26 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 16:47:21 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 18:06:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	print_prompt(t_info *info)
 	ft_putstr_fd(prompt, STDERR_FILENO);
 	secure_free(prompt);
 	info->terminfo.prompt_len = (ft_strlen(cur_dir) + 5) % info->terminfo.col;
-	info->cursor.posx = (info->terminfo.prompt_len + info->terminfo.echo_padding_x) % info->terminfo.col;
+	info->cursor.posx = (info->terminfo.prompt_len + \
+							info->terminfo.echo_padding_x) % info->terminfo.col;
 	info->cursor.posy = 0;
 	secure_free(cur_dir);
 }
