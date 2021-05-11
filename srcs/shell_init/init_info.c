@@ -28,11 +28,23 @@ void	reset_info(t_info *info)
 	g_signal->bin_running = FALSE;
 }
 
-int	init_info(t_info *info, char **envp)
+void	increment_shlvl(t_info *info)
 {
 	char	*tmp;
 	t_env	*shlvl;
 
+	shlvl = get_env_custom(info, "SHLVL");
+	if (shlvl)
+	{
+		tmp = ft_strdup(shlvl->value);
+		secure_free(shlvl->value);
+		shlvl->value = ft_itoa(ft_atoi(tmp) + 1);
+		secure_free(tmp);
+	}
+}
+
+int	init_info(t_info *info, char **envp)
+{
 	info->env_head = ft_create_elem(create_env_struct(ft_strdup("?"), \
 		ft_strdup("0")));
 	init_env(info, envp);
@@ -48,14 +60,6 @@ int	init_info(t_info *info, char **envp)
 	init_built_in(info);
 	info->terminfo.echo_padding_x = 0;
 	info->crashed = FALSE;
-	shlvl = get_env_custom(info, "SHLVL");
-	if (shlvl)
-	{
-		tmp = ft_strdup(shlvl->value);
-		secure_free(shlvl->value);
-		shlvl->value = ft_itoa(ft_atoi(tmp) + 1);
-		secure_free(tmp);
-	}
 	reset_info(info);
 	return (SUCCESS);
 }
