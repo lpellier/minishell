@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 14:56:04 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/10 13:58:10 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 19:32:42 by tefroiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ int	double_redir(t_info *info, int i)
 		while (info->lint[i] == _EMPTY)
 			i++;
 		if (info->lint[i] == _SEP && info->lint[i + 1] == _SEP && \
-			info->line[i] == '>' && info->line[i +1] && info->line[i +1] == '>')
+			info->line[i] == '>' && info->line[i + 1] \
+			&& info->line[i + 1] == '>')
 			return (print_error(NULL, NULL, \
 				"syntax error near unexpected token `>>'", 1));
 		else if (info->lint[i] == _SEP && info->line[i] == '>')
