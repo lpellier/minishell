@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/11 18:02:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 22:41:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -433,6 +433,7 @@ t_history	*create_history_struct(void);
 
 // print_and_cmp
 int			cmp_env(void *data, void *data_ref);
+char		**ascii_sort(t_list *head, int len);
 void		print_env_struct(void *data);
 void		print_env_declare(void *data);
 

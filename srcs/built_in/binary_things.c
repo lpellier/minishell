@@ -16,6 +16,7 @@ int	free_for_children(char ***argv, char ***env, t_info *info)
 {
 	free_tab(argv);
 	free_tab(env);
+	ft_list_clear(info->cmd_head, free_cmd_struct);
 	free_in_children(info);
 	return (errno);
 }

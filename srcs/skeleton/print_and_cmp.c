@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 12:17:09 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/11 22:43:39 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,51 @@ int	cmp_env(void *data, void *data_ref)
 		return (SUCCESS);
 	else
 		return (FAILURE);
+}
+
+char	**list_to_char(t_list *head, int len)
+{
+	int		i;
+	t_env	*cur;
+	char	**ret;
+
+	i = 0;
+	if (ft_calloc((void **)&ret, len, sizeof(char *)))
+		return (NULL);
+	while (i < len)
+	{
+		cur = ft_list_at(head, i)->data;
+		ret[i] = ft_strdup(cur->key);
+		i++;
+	}
+	return (ret);
+}
+
+char	**ascii_sort(t_list *head, int len)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+	char	**keys;
+
+	i = 0;
+	keys = list_to_char(head, len);
+	while (i < len)
+	{
+		j = i + 1;
+		while (j < len)
+		{
+			if (ft_strncmp(keys[j], keys[i], ft_strlen(keys[j])) < 0)
+			{
+				tmp = ft_strdup(keys[i]);
+				keys[i] = keys[j];
+				keys[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (keys);
 }
 
 void	print_env_declare(void *data)

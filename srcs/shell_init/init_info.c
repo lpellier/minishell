@@ -58,6 +58,7 @@ int	init_info(t_info *info, char **envp)
 	if (ft_calloc((void **)&info->lint, LINE_MAX, sizeof(int)))
 		return (FAILURE);
 	init_built_in(info);
+	increment_shlvl(info);
 	info->terminfo.echo_padding_x = 0;
 	info->crashed = FALSE;
 	reset_info(info);

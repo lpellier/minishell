@@ -48,6 +48,20 @@ int	just_secure_free(char *path)
 	return (SUCCESS);
 }
 
+int	chdir_n_free(t_info *info, char *path)
+{
+	check_for_cdpath(info, &path);
+	if (chdir(path))
+	{
+		print_error("cd", path, "no such file or directory", 1);
+		secure_free(path);
+		return (FAILURE);
+	}
+	secure_free(path);
+	update_pwd(info);
+	return (SUCCESS);
+}
+
 int	ft_cd(t_info *info, t_cmd *cmd)
 {
 	char	*path;
@@ -66,13 +80,5 @@ int	ft_cd(t_info *info, t_cmd *cmd)
 		return (FAILURE);
 	else if (!compare_size(path, ""))
 		return (just_secure_free(path));
-	check_for_cdpath(info, &path);
-	if (chdir(path))
-	{
-		secure_free(path);
-		return (print_error("cd", path, "no such file or directory", 1));
-	}
-	secure_free(path);
-	update_pwd(info);
-	return (SUCCESS);
+	return (chdir_n_free(info, path));
 }

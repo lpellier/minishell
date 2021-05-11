@@ -43,7 +43,8 @@ int	is_empty_or_void(int lint)
 
 void	add_empty_char(t_info *info, int count, int index)
 {
-	if (count == index && !is_empty_or_void(info->lint[index - 1]) && \
+	if (count == index && index > 0 && \
+		!is_empty_or_void(info->lint[index - 1]) && \
 		(!info->line[index] || (info->line[index] && info->line[index] == 32)))
 	{
 		info->lint[index] = _EMPTY_CHAR;

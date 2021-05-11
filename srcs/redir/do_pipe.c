@@ -39,7 +39,7 @@ void	interpret_errors(t_info *info)
 	{
 		code = ft_atoi(code_env->value);
 		cmd = ft_list_at(info->cmd_head, info->index_cmd)->data;
-		if (code == EACCES)
+		if (code == 126)
 			ft_printf("minisheh: %s: permission denied\n", cmd->args[0]);
 	}
 }
@@ -78,8 +78,8 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	status = (info->built_in[cmd->bui])(info, cmd);
-	free_in_children(info);
 	ft_list_clear(info->cmd_head, free_cmd_struct);
+	free_in_children(info);
 	return (status);
 }
 

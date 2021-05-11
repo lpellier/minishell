@@ -38,7 +38,7 @@ int	count_args(t_info *info, char *line, int *lint)
 
 int	redir_in_args(t_cmd *cmd, int start)
 {
-	while (cmd->args && cmd->args[start])
+	while (start < cmd->arg_nbr && cmd->args && cmd->args[start])
 	{
 		if (!is_redir(cmd, start))
 			return (start);

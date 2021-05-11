@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:35:18 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/11 22:43:55 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	export_content(t_info *info, char *str)
 		key = ft_strndup(str, i);
 	else
 		return (FAILURE);
-	if (str[i - 1] && str[i - 1] == '=')
+	if (i > 0 && str[i - 1] && str[i - 1] == '=')
 		value = ft_strdup("");
 	else
 		value = ft_substr(str, i + 1, ft_strlen(str) - i - 1);
@@ -89,9 +89,20 @@ int	export_content(t_info *info, char *str)
 
 int	print_declare_env(t_info *info)
 {
+	char	**sorted;
+	int		i;
+	int		len;
+
+	i = 0;
 	if (!info->env_head || !info->env_head->next)
 		return (FAILURE);
-	ft_list_foreach(info->env_head->next, print_env_declare);
+	len = ft_list_size(info->env_head->next);
+	sorted = ascii_sort(info->env_head->next, len);
+	while (i < len)
+	{
+		print_env_declare(get_env_custom(info, sorted[i]));
+		i++;
+	}
 	return (SUCCESS);
 }
 
