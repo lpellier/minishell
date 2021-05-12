@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_and_swap.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 14:31:32 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/06 14:34:01 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/13 00:31:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,42 @@ void	swap_args(t_cmd *cmd, int arg_index_one, int arg_index_two)
 void	move_first_redir(t_cmd *cmd)
 {
 	int		i;
+	int		saved_i;
+	int		saved_count;
+	int		count;
+	int		limit;
 
 	i = cmd->arg_index;
 	while (cmd->args && !is_redir(cmd, i))
 		i += 2;
-	if (i == 0)
-		return ;
-	while (i > 0)
+	saved_i = i;
+	limit = sep_in_args(cmd, i);
+	count = 0;
+	while (cmd->args[i] && i < limit)
 	{
-		swap_args(cmd, i, i - 1);
-		i--;
+		count++;
+		i++;
+	}
+	if (saved_i == 0)
+		return ;
+	saved_count = count;
+	while (count)
+	{
+		i = saved_i;
+		while (i > 0)
+		{
+			swap_args(cmd, i, i - 1);
+			i--;
+		}
+		count--;
+		saved_i++;
+	}
+	i = 0;
+	while (saved_count / 2)
+	{
+		swap_args(cmd, i, saved_count - 1);
+		saved_count--;
+		i++;
 	}
 }
 
