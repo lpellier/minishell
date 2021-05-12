@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 11:16:23 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 11:23:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 	else
 	{
 		status = get_child(info, cmd, pipefd);
+		while (wait(NULL) != -1);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 		return (status);
