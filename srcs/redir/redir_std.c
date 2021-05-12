@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 15:19:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 11:18:52 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	space_in_arg(t_cmd *cmd, int index)
 	int	next_redir;
 
 	next_redir = redir_in_args(cmd, index);
-	if (next_redir - index > 1)
+	if (next_redir - index > 1 && next_redir <= cmd->limit_index)
 		return (SUCCESS);
 	if (!cmd->args[index] || !arg_is_empty(cmd, index))
 		return (SUCCESS);
