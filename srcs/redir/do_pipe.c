@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 14:01:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 23:26:57 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,10 @@ void	free_in_children(t_info *info)
 	secure_free(info->lint);
 	ft_list_clear(info->env_head, free_env_struct);
 	ft_list_clear(info->history_head, free_history_struct);
+	close(info->saved_stdin);
+	close(info->saved_stdout);
+	close(STDOUT_FILENO);
+	close(STDIN_FILENO);
 	secure_free(info);
 	secure_free(g_signal);
 }
@@ -68,6 +72,7 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 		status = (info->built_in[cmd->bui])(info, cmd);
 	ft_list_clear(info->cmd_head, free_cmd_struct);
 	free_in_children(info);
+	close(pipefd[1]);
 	return (status);
 }
 
