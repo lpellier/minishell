@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:22:28 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/12 15:05:12 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,16 @@ int	create_files(t_cmd *cmd)
 	int	index;
 	int	file_fd;
 	int	before_last;
+	int	limit;
 
 	index = redir_in_args(cmd, cmd->arg_index);
+	limit = pipe_in_args(cmd, cmd->arg_index);
 	file_fd = create_next_file(cmd, index);
 	if (file_fd == -2)
 		return (-1);
 	before_last = file_fd;
 	index = redir_in_args(cmd, index + 1);
-	while (file_fd != -1 && index < cmd->arg_nbr)
+	while (file_fd != -1 && index < limit)
 	{
 		close(file_fd);
 		file_fd = create_next_file(cmd, index);
@@ -84,20 +86,15 @@ int	create_files(t_cmd *cmd)
 int	redir(t_info *info, t_cmd *cmd)
 {
 	int		file_fd;
-	pid_t	saved_stdin;
-	pid_t	saved_stdout;
+	int		pipe;
 
-	save_std(&saved_stdin, &saved_stdout);
 	file_fd = create_files(cmd);
 	if (file_fd == -1)
-	{
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
 		return (FAILURE);
-	}
 	info->built_in[cmd->bui](info, cmd);
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
+	pipe = pipe_in_args(cmd, cmd->arg_index);
 	close(file_fd);
+	if (pipe < cmd->arg_nbr)
+		exec_cmd(info, cmd, TRUE);
 	return (SUCCESS);
 }
