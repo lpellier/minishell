@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_things.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:10:36 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 16:41:39 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:18:41 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ int	ft_unset(t_info *info, t_cmd *cmd)
 	while (cmd->args && cmd->args[arg_index] && arg_index < cmd->limit_index)
 	{
 		data_ref = create_env_struct(cmd->args[arg_index], NULL);
-		ft_list_remove_if(&info->env_head->next, data_ref, cmp_env, \
-			free_env_struct);
+		if (!info->piped)
+			ft_list_remove_if(&info->env_head->next, data_ref, cmp_env, \
+				free_env_struct);
 		secure_free(data_ref);
 		arg_index++;
 	}
