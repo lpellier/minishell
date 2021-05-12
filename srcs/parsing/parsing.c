@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/12 14:05:13 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:29:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,6 @@ void	read_cmd(t_info *info, char *cmd_line)
 	update_cmd_status(info, exec_cmd(info, cmd, FALSE));
 	dup2(info->saved_stdin, STDIN_FILENO);
 	dup2(info->saved_stdout, STDOUT_FILENO);
-	while (wait(NULL) >= 0);
+	wait_for_children();
 	interpret_errors(info);
 }

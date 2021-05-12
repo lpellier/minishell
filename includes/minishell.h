@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/12 14:01:20 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:29:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -413,6 +413,8 @@ void		update_cmd_status(t_info *info, int new_code);
 // init_info
 int			init_info(t_info *info, char **envp);
 void		reset_info(t_info *info);
+void		wait_for_children(void);
+void		increment_shlvl(t_info *info);
 
 // init
 int			init_terminal(t_info *info);

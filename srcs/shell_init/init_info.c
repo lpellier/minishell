@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:09:06 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 18:01:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:29:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ void	reset_info(t_info *info)
 	info->quote = FALSE;
 	info->piped = FALSE;
 	g_signal->bin_running = FALSE;
+}
+
+void	wait_for_children(void)
+{
+	while (wait(NULL) >= 0)
+	{
+	}
 }
 
 void	increment_shlvl(t_info *info)
