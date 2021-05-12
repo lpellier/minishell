@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/12 14:29:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 23:20:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ typedef struct s_cmd
 	int				arg_index;
 	int				limit_index;
 	int				arg_nbr;
-	pid_t			_stdin;
-	pid_t			_stdout;
 }					t_cmd;
 
 /*
