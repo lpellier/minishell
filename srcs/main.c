@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/05 17:15:52 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/12 13:05:45 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ int	main(int argc, char **argv, char **envp)
 		secure_free(info);
 		exit(FAILURE);
 	}
+	save_std(&info->saved_stdin, &info->saved_stdout);
 	exit(shell_loop(info));
 }

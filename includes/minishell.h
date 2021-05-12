@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/11 22:41:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:01:20 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ typedef struct s_cmd
 	int				arg_index;
 	int				limit_index;
 	int				arg_nbr;
+	pid_t			_stdin;
+	pid_t			_stdout;
 }					t_cmd;
 
 /*
@@ -108,7 +110,8 @@ typedef struct s_info
 {
 	struct termios	termios_p;
 	struct termios	saved_term;
-	pid_t			*child_processes;
+	pid_t			saved_stdin;
+	pid_t			saved_stdout;
 	t_cursor		cursor;
 	t_terminfo		terminfo;
 	t_list			*cmd_head;
@@ -378,7 +381,7 @@ int			count_exceptions(int quote, int dquote);
 // do_pipe
 int			pipe_for_exec(t_info *info, t_cmd *cmd);
 int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
-int			get_child(t_info *info, t_cmd *cmd, int pipefd[2]);
+int			parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
 void		free_in_children(t_info *info);
 void		interpret_errors(t_info *info);
 

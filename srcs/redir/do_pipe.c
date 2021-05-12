@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 11:23:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:01:27 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,6 @@ void	interpret_errors(t_info *info)
 	}
 }
 
-int	get_child(t_info *info, t_cmd *cmd, int pipefd[2])
-{
-	int	saved_status;
-
-	saved_status = 0;
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	saved_status = exec_cmd(info, cmd, TRUE);
-	wait(NULL);
-	close(pipefd[0]);
-	g_signal->bin_running = FALSE;
-	init_termcap(info);
-	return (saved_status % 255);
-}
-
 void	free_in_children(t_info *info)
 {
 	free_tab(&info->dir_paths);
@@ -77,7 +62,10 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
-	status = (info->built_in[cmd->bui])(info, cmd);
+	if (cmd->bui == 8)
+		status = binary_process(info, cmd);
+	else
+		status = (info->built_in[cmd->bui])(info, cmd);
 	ft_list_clear(info->cmd_head, free_cmd_struct);
 	free_in_children(info);
 	return (status);
@@ -88,11 +76,8 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 	int		pipefd[2];
 	int		status;
 	pid_t	cpid;
-	pid_t	saved_stdin;
-	pid_t	saved_stdout;
 
 	g_signal->bin_running = TRUE;
-	save_std(&saved_stdin, &saved_stdout);
 	restore_term(info);
 	info->piped = TRUE;
 	if (pipe(pipefd) == -1)
@@ -104,10 +89,21 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 		_exit(child_process(info, cmd, pipefd));
 	else
 	{
-		status = get_child(info, cmd, pipefd);
-		while (wait(NULL) != -1);
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
+		status = parent_process(info, cmd, cpid, pipefd);
 		return (status);
 	}
+}
+
+int	parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
+{
+	int	saved_status;
+
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	waitpid(cpid, NULL, 1);
+	saved_status = exec_cmd(info, cmd, TRUE);
+	close(pipefd[0]);
+	g_signal->bin_running = FALSE;
+	init_termcap(info);
+	return (saved_status % 255);
 }

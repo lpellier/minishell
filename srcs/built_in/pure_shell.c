@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 14:13:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:07:46 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,12 @@ int	ft_exit(t_info *info, t_cmd *cmd)
 	int		arg_index;
 
 	arg_index = cmd->arg_index + 1;
-	if (info->piped)
-		return (SUCCESS);
+	// if (info->piped)
+	// 	return (SUCCESS);
 	if (cmd->limit_index - arg_index <= 1)
 	{
-		info->crashed = TRUE;
+		if (!info->piped)
+			info->crashed = TRUE;
 		if (cmd->args[arg_index] && !str_is_alpha(cmd->args[arg_index]))
 			return (print_error("exit", cmd->args[arg_index], \
 				"numeric argument required", 1));
