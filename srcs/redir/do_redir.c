@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 15:05:12 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 15:56:35 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,6 @@ void	save_std(pid_t *saved_stdin, pid_t *saved_stdout)
 {
 	*saved_stdin = dup(STDIN_FILENO);
 	*saved_stdout = dup(STDOUT_FILENO);
-}
-
-int	restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd)
-{
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(file_fd);
-	return (SUCCESS);
 }
 
 int	create_next_file(t_cmd *cmd, int start)
@@ -91,7 +83,8 @@ int	redir(t_info *info, t_cmd *cmd)
 	file_fd = create_files(cmd);
 	if (file_fd == -1)
 		return (FAILURE);
-	info->built_in[cmd->bui](info, cmd);
+	if (cmd->bui <= 8)
+		info->built_in[cmd->bui](info, cmd);
 	pipe = pipe_in_args(cmd, cmd->arg_index);
 	close(file_fd);
 	if (pipe < cmd->arg_nbr)

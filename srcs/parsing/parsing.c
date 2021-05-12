@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/12 14:29:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 15:10:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,10 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 
 void	save_n_dup(t_info *info, t_cmd *cmd)
 {
-	pid_t	saved_stdin;
-	pid_t	saved_stdout;
-
-	save_std(&saved_stdin, &saved_stdout);
 	if (create_files(cmd) <= -1)
 		update_cmd_status(info, FAILURE);
 	else
 		update_cmd_status(info, SUCCESS);
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
 	while (cmd->args && !is_redir(cmd, cmd->arg_index))
 	{
 		cmd->arg_index += 2;
