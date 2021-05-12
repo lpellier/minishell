@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 23:25:50 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/12 23:28:34 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	redir(t_info *info, t_cmd *cmd)
 {
 	int		file_fd;
 	int		pipe;
+
 	file_fd = create_files(cmd);
 	if (file_fd == -1)
 	{
