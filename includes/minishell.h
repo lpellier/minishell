@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/13 00:19:24 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/15 16:22:48 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,7 +369,7 @@ void		combine_secure_free(t_env *data_ref, char *var);
 
 // colon_and_count
 int			redir_in_cmd(t_cmd *cmd);
-int			only_redirs(t_cmd *cmd);
+int			redirs_first(t_cmd *cmd);
 int			count_exceptions(int quote, int dquote);
 
 /**********

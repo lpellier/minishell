@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/13 00:26:55 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/15 16:45:36 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,6 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped)
 		code = pipe_for_exec(info, cmd);
 	else if (!is_redir(cmd, next_redir))
 		code = redir(info, cmd);
-	else if (!cmd->args || !cmd->args[cmd->arg_index])
-		code = 1;
 	else if (cmd->bui <= 8)
 		code = info->built_in[cmd->bui](info, cmd);
 	return (code);
@@ -103,7 +101,7 @@ void	read_cmd(t_info *info, char *cmd_line)
 	split_by_empty(info, cmd, cmd_line, cmd->arg_nbr);
 	if (!redir_in_cmd(cmd))
 	{
-		if (only_redirs(cmd))
+		while (!redirs_first(cmd))
 			move_first_redir(cmd);
 		while (!multiple_args_after_redir(cmd))
 			modify_line_redir(cmd, 0);
