@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   backsl_and_quote.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:15:49 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/05 17:52:31 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/17 11:13:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	is_empty_or_void(int lint)
 
 void	add_empty_char(t_info *info, int count, int index)
 {
-	if (count == index && index > 0 && \
+	if (count == index && \
 		!is_empty_or_void(info->lint[index - 1]) && \
 		(!info->line[index] || (info->line[index] && info->line[index] == 32)))
 	{

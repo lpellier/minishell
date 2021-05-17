@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/15 16:33:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/17 10:46:42 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	count_exceptions(int quote, int dquote)
 		return (0);
 }
 
-int	redirs_first(t_cmd *cmd) 
+int	redirs_first(t_cmd *cmd)
 {
 	int		i;
 
