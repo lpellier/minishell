@@ -61,8 +61,8 @@ int	read_line(t_info *info)
 	key = 0;
 	ft_bzero(info->line, ft_strlen(info->line));
 	cur = (t_history *)info->history_head->data;
-	info->terminfo.prompt_len += info->terminfo.echo_padding_x % \
-									info->terminfo.col;
+	info->terminfo.prompt_len += info->terminfo.echo_padding_x;
+	info->terminfo.prompt_len %= info->terminfo.col;
 	if (read_keys(info, key, cur))
 	{
 		update_cmd_status(info, 1);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/15 16:22:48 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/17 15:53:03 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,6 +368,7 @@ void		add_something(char *cmd_line, int start, t_info *info, int li);
 void		combine_secure_free(t_env *data_ref, char *var);
 
 // colon_and_count
+void		swap_first_redir(t_cmd *cmd, int i, int saved_i, int count);
 int			redir_in_cmd(t_cmd *cmd);
 int			redirs_first(t_cmd *cmd);
 int			count_exceptions(int quote, int dquote);

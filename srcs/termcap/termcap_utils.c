@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   termcap_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 11:23:19 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/05 16:19:37 by tefroiss         ###   ########.fr       */
+/*   Updated: 2021/05/17 15:49:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,10 @@ void	print_last_cmd(t_info *info, char *line)
 		info->cur_in_history++;
 	hist = (t_history *)cur->data;
 	clear_line(info);
-	info->cursor.posy = hist->posy;
 	info->cursor.posx = (ft_strlen(hist->line) + \
 		info->terminfo.prompt_len) % info->terminfo.col;
+	info->cursor.posy = (ft_strlen(hist->line) + \
+		info->terminfo.prompt_len) / info->terminfo.col;
 	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);
@@ -68,9 +69,10 @@ void	print_prev_cmd(t_info *info, char *line)
 		info->cur_in_history--;
 	hist = (t_history *)cur->data;
 	clear_line(info);
-	info->cursor.posy = hist->posy;
 	info->cursor.posx = (ft_strlen(hist->line) + \
 		info->terminfo.prompt_len) % info->terminfo.col;
+	info->cursor.posy = (ft_strlen(hist->line) + \
+		info->terminfo.prompt_len) / info->terminfo.col;
 	ft_putstr_fd(hist->line, STDOUT_FILENO);
 	ft_bzero(line, ft_strlen(line));
 	ft_strcpy(line, hist->line);

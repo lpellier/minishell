@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 14:31:32 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/13 00:36:42 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/17 15:53:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	move_first_redir(t_cmd *cmd)
 {
 	int		i;
 	int		saved_i;
-	int		saved_count;
 	int		count;
 	int		limit;
 
@@ -56,25 +55,7 @@ void	move_first_redir(t_cmd *cmd)
 	}
 	if (saved_i == 0)
 		return ;
-	saved_count = count;
-	while (count)
-	{
-		i = saved_i;
-		while (i > 0)
-		{
-			swap_args(cmd, i, i - 1);
-			i--;
-		}
-		count--;
-		saved_i++;
-	}
-	i = 0;
-	while (saved_count / 2)
-	{
-		swap_args(cmd, i, saved_count - 1);
-		saved_count--;
-		i++;
-	}
+	swap_first_redir(cmd, i, saved_i, count);
 }
 
 void	modify_line_redir(t_cmd *cmd, int i)
