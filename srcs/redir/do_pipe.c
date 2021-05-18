@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/18 19:23:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/18 20:16:18 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,7 @@ int	child_process(t_info *info, t_cmd *cmd, int *pipefd)
 
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
-	// ft_printf("test : %d", cmd->arg_index);
 	status = exec_cmd(info, cmd, FALSE, TRUE);
-	// if (cmd->bui == 8)
-	// 	status = binary_process(info, cmd);
-	// else
-	// 	status = (info->built_in[cmd->bui])(info, cmd);
 	ft_list_clear(info->cmd_head, free_cmd_struct);
 	free_in_children(info);
 	close(pipefd[1]);
