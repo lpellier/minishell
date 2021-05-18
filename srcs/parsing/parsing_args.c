@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 20:23:04 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/15 16:38:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/18 18:00:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	update_arg_index(t_cmd *cmd, int start)
 	saved_index = i;
 	while (cmd->args && cmd->args[i])
 	{
-		if (!is_pipe(cmd, i))
+		if (!is_pipe(cmd, i) || !is_redir(cmd, i))
 		{
 			cmd->arg_index = i + 1;
 			if (start)
