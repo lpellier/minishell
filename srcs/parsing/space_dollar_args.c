@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 20:37:56 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/13 00:19:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/18 18:37:22 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,20 @@ int	str_isalpha_withminus(char *str)
 	return (SUCCESS);
 }
 
-int	multiple_args_after_redir(t_cmd *cmd)
+int	multiple_args_after_redir(t_cmd *cmd, int i)
 {
-	int		i;
-
-	i = 0;
-	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
+	while (i < cmd->arg_nbr && cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
-	i += 2;
-	if (i < cmd->arg_nbr && cmd->args && cmd->args[i] && \
-		is_redir(cmd, i) && is_pipe(cmd, i) && arg_is_dollared(cmd, i))
+	if (cmd->args && cmd->args[i] && !is_redir(cmd, i))
+		i += 2;
+	while (i < cmd->arg_nbr && cmd->args && cmd->args[i] && !arg_is_dollared(cmd, i))
+		i++;
+	if (cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
 		return (SUCCESS);
-	return (FAILURE);
+	else if (cmd->args && cmd->args[i])
+		return (multiple_args_after_redir(cmd, i + 1));
+	else
+		return (FAILURE);
 }
 
 int	dollar_in_arg(t_cmd *cmd, int i, int *start)

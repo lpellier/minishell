@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 14:59:23 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 23:28:34 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/18 19:50:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,29 @@ int	create_files(t_cmd *cmd)
 	return (before_last);
 }
 
-int	redir(t_info *info, t_cmd *cmd)
+void	skip_redirs(t_cmd *cmd)
+{
+	int	next_pipe;
+	int	next_redir;
+
+	next_pipe = pipe_in_args(cmd, cmd->arg_index);
+	next_redir = redir_in_args(cmd, cmd->arg_index);
+	if (next_redir >= next_pipe)
+		return ;
+	while (cmd->arg_index < cmd->arg_nbr && cmd->args && \
+		cmd->args[cmd->arg_index] && is_redir(cmd, cmd->arg_index))
+		cmd->arg_index++;
+	while (cmd->arg_index < cmd->arg_nbr && cmd->args && \
+		cmd->args[cmd->arg_index] && !is_redir(cmd, cmd->arg_index))
+	{
+		cmd->arg_index += 2;
+		while (cmd->args && cmd->args[cmd->arg_index] && \
+			!arg_is_dollared(cmd, cmd->arg_index))
+			cmd->arg_index++;
+	}
+}
+
+int	redir(t_info *info, t_cmd *cmd, int child)
 {
 	int		file_fd;
 	int		pipe;
@@ -93,7 +115,7 @@ int	redir(t_info *info, t_cmd *cmd)
 	dup2(info->saved_stdin, STDIN_FILENO);
 	dup2(info->saved_stdin, STDOUT_FILENO);
 	close(file_fd);
-	if (pipe < cmd->arg_nbr)
-		exec_cmd(info, cmd, TRUE);
+	if (pipe < cmd->arg_nbr && !child)
+		exec_cmd(info, cmd, TRUE, child);
 	return (SUCCESS);
 }

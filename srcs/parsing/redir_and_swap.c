@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 14:31:32 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/17 15:53:06 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/18 20:13:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,21 @@ void	move_first_redir(t_cmd *cmd)
 void	modify_line_redir(t_cmd *cmd, int i)
 {
 	int		redir_pos;
+	int		next_pipe;
 
-	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
+	next_pipe = pipe_in_args(cmd, i);
+	while (i < next_pipe && cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
 	redir_pos = i;
 	i += 2;
-	while (cmd->args && cmd->args[i] && is_redir(cmd, i))
+	while (cmd->args && cmd->args[i] && i < next_pipe && is_redir(cmd, i))
 	{
 		swap_args(cmd, redir_pos, i);
 		swap_args(cmd, i, i - 1);
 		redir_pos++;
 		i++;
 	}
-	if (cmd->args && cmd->args[i])
+	if (cmd->args && cmd->args[i] && i < next_pipe)
 		modify_line_redir(cmd, i);
 }
 

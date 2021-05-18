@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/17 15:53:03 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/18 19:49:02 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,7 +278,7 @@ void		move_and_remove(char *dest, t_info *info, int i);
 void		delete_key_suite(t_info *info, int count, char *dest);
 
 // parsing
-int			exec_cmd(t_info *info, t_cmd *cmd, int piped);
+int			exec_cmd(t_info *info, t_cmd *cmd, int piped, int child);
 void		bzero_lint(int *lint, int size);
 void		init_cmd_lint(t_info *info, t_cmd *cmd);
 void		read_cmd(t_info *info, char *line);
@@ -294,7 +294,7 @@ void		split_by_empty(t_info *info, t_cmd *cmd, char *line, int arg_nbr);
 
 // space_dollar_args
 int			is_whitespace(char c);
-int			multiple_args_after_redir(t_cmd *cmd);
+int			multiple_args_after_redir(t_cmd *cmd, int i);
 int			str_isalpha_withminus(char *str);
 int			dollar_in_arg(t_cmd *cmd, int i, int *start);
 void		check_for_dollars(t_info *info, char *cmd_line);
@@ -385,9 +385,10 @@ void		free_in_children(t_info *info);
 void		interpret_errors(t_info *info);
 
 // do_redir
+void		skip_redirs(t_cmd *cmd);
 int			restore_std(pid_t saved_stdin, pid_t saved_stdout, int file_fd);
 int			create_next_file(t_cmd *cmd, int start);
-int			redir(t_info *info, t_cmd *cmd);
+int			redir(t_info *info, t_cmd *cmd, int child);
 int			create_files(t_cmd *cmd);
 void		save_std(pid_t *saved_stdin, pid_t *saved_stdout);
 
