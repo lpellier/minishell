@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 20:37:56 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/18 20:16:32 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/19 11:41:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,16 @@ int	multiple_args_after_redir(t_cmd *cmd, int i)
 	while (i < cmd->arg_nbr && cmd->args && cmd->args[i] && is_redir(cmd, i))
 		i++;
 	if (cmd->args && cmd->args[i] && !is_redir(cmd, i))
-		i += 2;
+		i += 1;
+	if (cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
+		i += 1;
 	while (i < cmd->arg_nbr && cmd->args && \
 		cmd->args[i] && !arg_is_dollared(cmd, i))
 		i++;
 	if (cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
 		return (SUCCESS);
 	else if (cmd->args && cmd->args[i])
-		return (multiple_args_after_redir(cmd, i + 1));
+		return (multiple_args_after_redir(cmd, i));
 	else
 		return (FAILURE);
 }

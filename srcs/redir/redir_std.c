@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 11:18:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/19 11:32:00 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,21 @@ int	arg_is_empty(t_cmd *cmd, int index)
 	return (SUCCESS);
 }
 
-int	space_in_arg(t_cmd *cmd, int index)
+int	space_in_arg(t_cmd *cmd, int i)
 {
-	int	next_redir;
-
-	next_redir = redir_in_args(cmd, index);
-	if (next_redir - index > 1 && next_redir <= cmd->limit_index)
+	while (i < cmd->arg_nbr && cmd->args && cmd->args[i] && is_redir(cmd, i))
+		i++;
+	if (cmd->args && cmd->args[i] && !is_redir(cmd, i))
+		i += 2;
+	if (cmd->args && cmd->args[i] && is_redir(cmd, i) && is_pipe(cmd, i))
 		return (SUCCESS);
-	if (!cmd->args[index] || !arg_is_empty(cmd, index))
-		return (SUCCESS);
-	return (FAILURE);
+	else if (cmd->args && cmd->args[i])
+		return (space_in_arg(cmd, i));
+	else
+		return (FAILURE);
 }
+
+
 
 int	open_file(t_cmd *cmd, int start, int separator)
 {
@@ -77,7 +81,7 @@ int	open_file(t_cmd *cmd, int start, int separator)
 
 	file_fd = -1;
 	arg_index = redir_in_args(cmd, start) + 1;
-	if (!space_in_arg(cmd, arg_index))
+	if (!space_in_arg(cmd, cmd->arg_index))
 		return (print_error(NULL, NULL, \
 			"ambiguous redirect", -1));
 	if (separator == R_RIGHT)
