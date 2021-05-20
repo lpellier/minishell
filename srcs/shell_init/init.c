@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:40:14 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/10 18:16:52 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/20 12:37:19 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int	init_env(t_info *info, char **envp)
 	if (!envp[i])
 		return (FAILURE);
 	key_value = ft_split(envp[i], '=');
-	info->env_head->next = ft_create_elem(create_env_struct(ft_strdup(key_value[0]), \
-		ft_strdup(key_value[1])));
+	info->env_head->next = ft_create_elem(create_env_struct(\
+		ft_strdup(key_value[0]), ft_strdup(key_value[1])));
 	free_tab(&key_value);
 	i++;
 	while (envp[i])
