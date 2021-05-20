@@ -106,9 +106,6 @@ void	set_n_first(t_info *info, int first)
 
 void	process_line(t_info *info, int first)
 {
-	int		crashed;
-
-	crashed = FALSE;
 	set_n_first(info, first);
 	if (transform_line(info, 0, 0, 0))
 	{
@@ -126,6 +123,8 @@ void	process_line(t_info *info, int first)
 	while (info->cmd_tab && info->cmd_tab[info->index_cmd])
 	{
 		read_cmd(info, info->cmd_tab[info->index_cmd]);
+		if (g_signal->kill == 130)
+			break ;
 		info->index_cmd += 1;
 	}
 	ft_list_clear(info->cmd_head, free_cmd_struct);

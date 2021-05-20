@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 15:24:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/19 11:32:00 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/20 12:25:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ int	space_in_arg(t_cmd *cmd, int i)
 	else
 		return (FAILURE);
 }
-
-
 
 int	open_file(t_cmd *cmd, int start, int separator)
 {

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/18 20:16:18 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/20 12:25:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ int	parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 	waitpid(cpid, NULL, 1);
 	saved_status = exec_cmd(info, cmd, TRUE, FALSE);
 	close(pipefd[0]);
-	g_signal->bin_running = FALSE;
 	init_termcap(info);
 	return (saved_status % 255);
 }

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:03:40 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/11 18:05:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/20 12:28:30 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	ft_sigint(int sig)
 	char	*prompt;
 
 	(void)sig;
+	g_signal->kill = 130;
 	if (!g_signal->bin_running)
 		ft_putstr_fd("^C", STDOUT_FILENO);
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	g_signal->kill = 130;
 	if (!g_signal->bin_running)
 	{
 		cur_dir = get_cur_dir();

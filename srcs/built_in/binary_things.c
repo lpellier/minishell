@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/18 19:01:59 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/20 12:25:37 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 	else
 	{
 		waitpid(cpid, &status, 0);
-		g_signal->bin_running = FALSE;
 		init_termcap(info);
 		return (status % 255);
 	}
