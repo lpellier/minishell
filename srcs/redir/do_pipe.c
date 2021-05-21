@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/20 12:25:30 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 18:23:04 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 	pid_t	cpid;
 
 	g_signal->bin_running = TRUE;
-	restore_term(info);
 	info->piped = TRUE;
 	if (pipe(pipefd) == -1)
 		return (FAILURE);
@@ -96,6 +95,24 @@ int	pipe_for_exec(t_info *info, t_cmd *cmd)
 	}
 }
 
+int	fork_last_pipe(t_info *info, t_cmd *cmd)
+{
+	int		status;
+	pid_t	cpid;
+
+	g_signal->bin_running = TRUE;
+	cpid = fork();
+	if (cpid == -1)
+		return (FAILURE);
+	else if (cpid == 0)
+		_exit(info->built_in[cmd->bui](info, cmd));
+	else
+	{
+		waitpid(cpid, &status, 0);
+		return (status % 255);
+	}
+}
+
 int	parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 {
 	int	saved_status;
@@ -105,6 +122,5 @@ int	parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
 	waitpid(cpid, NULL, 1);
 	saved_status = exec_cmd(info, cmd, TRUE, FALSE);
 	close(pipefd[0]);
-	init_termcap(info);
 	return (saved_status % 255);
 }

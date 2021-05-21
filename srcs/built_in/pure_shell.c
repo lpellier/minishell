@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 17:26:00 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 14:27:49 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 17:44:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,65 @@ int	print_error(char *cmd, char *arg, char *error, int code)
 	return (code);
 }
 
+int	gross_check(char *arg, int i, int neg)
+{
+	int	eighteen;
+
+	eighteen = c_to_int(arg[18 + i]);
+	if (neg == 0 && eighteen > 7)
+		eighteen = 1;
+	else if (neg == 1 && eighteen > 8)
+		eighteen = 1;
+	else
+		eighteen = 0;
+	if (c_to_int(arg[1 + i]) > 2 || c_to_int(arg[2 + i]) > 2 || \
+		c_to_int(arg[3 + i]) > 3 || c_to_int(arg[4 + i]) > 3 || \
+		c_to_int(arg[5 + i]) > 7 || c_to_int(arg[6 + i]) > 2 || \
+		c_to_int(arg[7 + i]) > 0 || c_to_int(arg[8 + i]) > 3 || \
+		c_to_int(arg[9 + i]) > 6 || c_to_int(arg[10 + i]) > 8 || \
+		c_to_int(arg[11 + i]) > 5 || c_to_int(arg[12 + i]) > 4 || \
+		c_to_int(arg[13 + i]) > 7 || c_to_int(arg[14 + i]) > 7 || \
+		c_to_int(arg[15 + i]) > 5 || c_to_int(arg[16 + i]) > 8 || \
+		c_to_int(arg[17 + i]) > 0 || eighteen)
+		return (SUCCESS);
+	else
+		return (FAILURE);
+}
+
+int	exceeds_limit(char *arg)
+{
+	int	i;
+	int	neg;
+
+	i = 0;
+	neg = 0;
+	while (arg[i] == '+' || arg[i] == '-')
+		i++;
+	if (arg[0] == '-')
+		neg = 1;
+	if (ft_strlen(arg) < 19 + i)
+		return (FAILURE);
+	else if (ft_strlen(arg) > 19 + i)
+		return (SUCCESS);
+	return (gross_check(arg, i, neg));
+}
+
+int	int_errors(char *arg)
+{
+	int			i;
+	long long	value;
+
+	i = 0;
+	while (arg[i] == '+' || arg[i] == '-')
+		i++;
+	if (i > 1)
+		return (SUCCESS);
+	if (!str_is_alpha(arg) || !exceeds_limit(arg))
+		return (SUCCESS);
+	value = ft_llong_atoi(arg);
+	return (FAILURE);
+}
+
 // /*
 // ** exits terminal
 // */
@@ -48,13 +107,12 @@ int	ft_exit(t_info *info, t_cmd *cmd)
 	arg_index = cmd->arg_index + 1;
 	if (cmd->limit_index - arg_index <= 1)
 	{
-		if (!info->piped)
-			info->crashed = TRUE;
-		if (cmd->args[arg_index] && !str_is_alpha(cmd->args[arg_index]))
+		info->crashed = TRUE;
+		if (cmd->args[arg_index] && !int_errors(cmd->args[arg_index]))
 			return (print_error("exit", cmd->args[arg_index], \
-				"numeric argument required", 1));
+				"numeric argument required", 2));
 		if (cmd->args[arg_index])
-			info->exit_code = ft_atoi(cmd->args[arg_index]);
+			return (ft_atoi(cmd->args[arg_index]));
 		return (SUCCESS);
 	}
 	return (print_error("exit", NULL, "too many arguments", 1));

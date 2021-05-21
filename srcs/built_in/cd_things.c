@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 16:44:07 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/12 14:09:08 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 17:43:31 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	just_secure_free(char *path)
 int	chdir_n_free(t_info *info, char *path)
 {
 	check_for_cdpath(info, &path);
-	if (!info->piped && chdir(path))
+	if (chdir(path))
 	{
 		print_error("cd", path, "no such file or directory", 1);
 		secure_free(path);

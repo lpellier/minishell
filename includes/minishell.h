@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/18 19:49:02 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 18:23:33 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -380,6 +380,7 @@ int			count_exceptions(int quote, int dquote);
 // do_pipe
 int			pipe_for_exec(t_info *info, t_cmd *cmd);
 int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
+int			fork_last_pipe(t_info *info, t_cmd *cmd);
 int			parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
 void		free_in_children(t_info *info);
 void		interpret_errors(t_info *info);
@@ -413,7 +414,7 @@ void		update_cmd_status(t_info *info, int new_code);
 // init_info
 int			init_info(t_info *info, char **envp);
 void		reset_info(t_info *info);
-void		wait_for_children(void);
+void		wait_for_children(t_info *info);
 void		increment_shlvl(t_info *info);
 
 // init

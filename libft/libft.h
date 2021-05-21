@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 15:15:06 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/07 15:31:07 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 16:34:15 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int					ft_calloc(void **ptr, size_t count, size_t size);
 int					ft_putchar(int c);
 int					ft_intlen(long n);
 int					ft_atoi(const char *str);
+int					c_to_int(const char c);
+long long			ft_llong_atoi(const char *str);
 int					ft_uintlen(unsigned long n);
 int					ft_checkc(char c, const char *set);
 int					ft_isalpha(int c);

@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:15:26 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 18:06:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 17:30:35 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	update_cmd_status(t_info *info, int new_code)
 	t_env	*data;
 
 	data = (t_env *)info->env_head->data;
+	info->exit_code = new_code;
 	secure_free(data->value);
 	if (new_code == EACCES)
 		new_code = 126;

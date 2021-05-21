@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:21:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/20 12:25:37 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 18:10:47 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 	pid_t	cpid;
 
 	g_signal->bin_running = TRUE;
-	restore_term(info);
 	cpid = fork();
 	if (cpid == -1)
 		return (FAILURE);
@@ -63,7 +62,6 @@ int	exec_binary(t_info *info, t_cmd *cmd)
 	else
 	{
 		waitpid(cpid, &status, 0);
-		init_termcap(info);
 		return (status % 255);
 	}
 }

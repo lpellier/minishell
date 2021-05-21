@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/18 19:49:27 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 18:22:16 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ int	exec_cmd(t_info *info, t_cmd *cmd, int piped, int child)
 		code = pipe_for_exec(info, cmd);
 	else if (!is_redir(cmd, next_redir))
 		code = redir(info, cmd, child);
+	else if (info->piped && next_pipe == cmd->arg_nbr)
+		code = fork_last_pipe(info, cmd);
 	else if (cmd->bui <= 8)
 		code = info->built_in[cmd->bui](info, cmd);
 	return (code);
@@ -111,9 +113,10 @@ void	read_cmd(t_info *info, char *cmd_line)
 	update_arg_index(cmd, TRUE);
 	if (info->debug_option)
 		print_cmd_info(cmd);
+	restore_term(info);
 	update_cmd_status(info, exec_cmd(info, cmd, FALSE, FALSE));
 	dup2(info->saved_stdin, STDIN_FILENO);
 	dup2(info->saved_stdout, STDOUT_FILENO);
-	wait_for_children();
+	wait_for_children(info);
 	interpret_errors(info);
 }
