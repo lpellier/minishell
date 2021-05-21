@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/21 18:23:33 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 19:09:02 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,11 @@ int			arg_is_option(char *arg);
 int			str_is_alpha(char *str);
 int			print_error(char *cmd, char *arg, char *error, int code);
 
+// exit_error
+int			int_errors(char *arg);
+int			exceeds_limit(char *arg);
+int			gross_check(char *arg, int i, int neg);
+
 // built_in2
 char		*define_path(t_info *info, t_cmd *cmd, int arg_index);
 char		**list_to_tab(t_list *begin_list);
@@ -372,6 +377,7 @@ void		swap_first_redir(t_cmd *cmd, int i, int saved_i, int count);
 int			redir_in_cmd(t_cmd *cmd);
 int			redirs_first(t_cmd *cmd);
 int			count_exceptions(int quote, int dquote);
+int			fork_last_pipe(t_info *info, t_cmd *cmd);
 
 /**********
 ** redir **
@@ -380,7 +386,6 @@ int			count_exceptions(int quote, int dquote);
 // do_pipe
 int			pipe_for_exec(t_info *info, t_cmd *cmd);
 int			child_process(t_info *info, t_cmd *cmd, int *pipefd);
-int			fork_last_pipe(t_info *info, t_cmd *cmd);
 int			parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2]);
 void		free_in_children(t_info *info);
 void		interpret_errors(t_info *info);

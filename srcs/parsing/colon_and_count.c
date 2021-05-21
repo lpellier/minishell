@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:13:27 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/17 15:53:19 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 18:27:06 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,16 @@ void	swap_first_redir(t_cmd *cmd, int i, int saved_i, int count)
 		saved_count--;
 		i++;
 	}
+}
+
+int	parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
+{
+	int	saved_status;
+
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	waitpid(cpid, NULL, 1);
+	saved_status = exec_cmd(info, cmd, TRUE, FALSE);
+	close(pipefd[0]);
+	return (saved_status % 255);
 }

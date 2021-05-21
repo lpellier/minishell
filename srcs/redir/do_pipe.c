@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 14:41:42 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/21 18:23:04 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/21 18:26:58 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,16 +111,4 @@ int	fork_last_pipe(t_info *info, t_cmd *cmd)
 		waitpid(cpid, &status, 0);
 		return (status % 255);
 	}
-}
-
-int	parent_process(t_info *info, t_cmd *cmd, pid_t cpid, int pipefd[2])
-{
-	int	saved_status;
-
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	waitpid(cpid, NULL, 1);
-	saved_status = exec_cmd(info, cmd, TRUE, FALSE);
-	close(pipefd[0]);
-	return (saved_status % 255);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tefroiss <tefroiss@student.42.fr>          +#+  +:+       +#+         #
+#    By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/25 19:17:20 by lucaspellie       #+#    #+#              #
-#    Updated: 2021/05/07 11:30:43 by tefroiss         ###   ########.fr        #
+#    Updated: 2021/05/21 19:09:17 by lpellier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRCS = srcs/main.c \
 		srcs/built_in/env_things.c \
 		srcs/built_in/key_n_value_error.c \
 		srcs/built_in/pure_shell.c \
+		srcs/built_in/exit_error.c \
 		srcs/free/free.c \
 		srcs/parsing/backsl_and_quote.c \
 		srcs/parsing/char_and_int.c \
