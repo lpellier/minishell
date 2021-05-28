@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:24:47 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/21 18:22:16 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/22 12:46:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,17 @@ void	init_cmd_lint(t_info *info, t_cmd *cmd)
 
 int	continue_despite_error(t_info *info, t_cmd *cmd)
 {
-	int		next_pipe;
+	int		next_sep;
 	int		code;
 
-	next_pipe = pipe_in_args(cmd, cmd->arg_index);
+	next_sep = sep_in_args(cmd, cmd->arg_index);
 	code = print_error(NULL, cmd->args[cmd->arg_index], \
 		"command not found", 127);
-	if (next_pipe > cmd->arg_index && next_pipe < cmd->arg_nbr)
-		code = exec_cmd(info, cmd, TRUE, FALSE);
+	if (next_sep > cmd->arg_index && next_sep <= cmd->arg_nbr)
+	{
+		cmd->arg_index = next_sep;
+		code = exec_cmd(info, cmd, FALSE, FALSE);
+	}
 	return (code);
 }
 

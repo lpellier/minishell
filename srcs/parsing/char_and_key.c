@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 13:31:03 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/10 13:58:58 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/05/28 11:56:13 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,11 @@ void	delete_key(t_info *info, char *dest)
 	{
 		while (dest[i] && i < cursor)
 			i++;
-		if (dest && dest[i - 1])
+		if (i > 0 && dest && dest[i - 1])
 			i--;
 		move_and_remove(dest, info, i);
 		j = info->terminfo.prompt_len + ft_strlen(dest);
-		while (j >= info->terminfo.col && info->cursor.posy != count + 1)
+		while (j >= info->terminfo.col)
 		{
 			count += 1;
 			tputs(tgetstr("do", NULL), 1, ft_putchar);
