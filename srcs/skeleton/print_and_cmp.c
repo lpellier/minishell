@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/11 22:43:39 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/06/08 14:37:40 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	**ascii_sort(t_list *head, int len)
 		{
 			if (ft_strncmp(keys[j], keys[i], ft_strlen(keys[j])) < 0)
 			{
-				tmp = ft_strdup(keys[i]);
+				tmp = keys[i];
 				keys[i] = keys[j];
 				keys[j] = tmp;
 			}

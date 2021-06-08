@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 15:49:53 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/05/21 17:59:30 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/06/08 14:37:50 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	print_declare_env(t_info *info)
 		print_env_declare(get_env_custom(info, sorted[i]));
 		i++;
 	}
+	free_tab(&sorted);
 	return (SUCCESS);
 }
 
