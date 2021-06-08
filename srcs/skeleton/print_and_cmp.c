@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/06/08 14:37:40 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/06/08 14:39:51 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ char	**list_to_char(t_list *head, int len)
 		ret[i] = ft_strdup(cur->key);
 		i++;
 	}
+	ret[i] = NULL;
 	return (ret);
 }
 
