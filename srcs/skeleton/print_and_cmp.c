@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 11:26:38 by tefroiss          #+#    #+#             */
-/*   Updated: 2021/06/08 14:39:51 by lpellier         ###   ########.fr       */
+/*   Updated: 2021/06/08 14:41:44 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	**list_to_char(t_list *head, int len)
 	char	**ret;
 
 	i = 0;
-	if (ft_calloc((void **)&ret, len, sizeof(char *)))
+	if (ft_calloc((void **)&ret, len + 1, sizeof(char *)))
 		return (NULL);
 	while (i < len)
 	{
