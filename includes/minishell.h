@@ -6,7 +6,7 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 23:55:52 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/21 19:09:02 by lpellier         ###   ########.fr       */
+/*   Updated: 2022/03/03 17:05:25 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ typedef struct s_info
 	int				(*built_in[9])();
 }					t_info;
 
-t_signal			*g_signal;
+extern t_signal * g_signal;
 
 enum				e_separator
 {

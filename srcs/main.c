@@ -6,11 +6,13 @@
 /*   By: lpellier <lpellier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 22:48:26 by lpellier          #+#    #+#             */
-/*   Updated: 2021/05/12 13:05:45 by lpellier         ###   ########.fr       */
+/*   Updated: 2022/03/03 17:05:57 by lpellier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../includes/minishell.h"
+t_signal *g_signal;
 
 int	main(int argc, char **argv, char **envp)
 {
