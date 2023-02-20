@@ -4,6 +4,8 @@
 
 [![Built With][built-with-C++]][project-url]
  
+<img class="banner-image" src="./minishell.gif" alt="a gif of the project building.."/>
+
 # 1. Getting started 
 This project is about recreating a shell.
 
